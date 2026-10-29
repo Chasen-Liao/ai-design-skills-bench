@@ -1,0 +1,11 @@
+{
+  "id": "08-taste-skill",
+  "skill": "design-taste-frontend",
+  "start": "2026-10-29 16:08:21 CST",
+  "end": "2026-10-29 16:31:49 CST",
+  "duration_s": 1408,
+  "exit": 0,
+  "index_html": "runs/2026-10-29/08-taste-skill/index.html",
+  "bytes": 42485,
+  "notes": "interrupted after html written (pi exited mid-inspect loop), finalized without rerun"
+}
