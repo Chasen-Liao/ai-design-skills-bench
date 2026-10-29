@@ -132,8 +132,8 @@ const pageShell = ({ title, description, body, depth }) => {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#0f172a">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F4EFE6">
 <link rel="stylesheet" href="${css}">
 </head>
 <body>
