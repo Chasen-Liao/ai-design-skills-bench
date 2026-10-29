@@ -11,6 +11,13 @@ const REPO_ROOT = resolve(HERE, '..');
 const RUNS_DIR = join(REPO_ROOT, 'runs', RUN_DATE);
 const THUMBS_SRC = join(HERE, 'thumbs');
 const DIST = join(HERE, 'dist');
+const TOKENS_MD = join(HERE, 'data', '_tokens.md');
+const TOKEN_NOTES = [
+  '数据来自 ZenMux 日志，按每轮运行时间段归总。',
+  '两轮交界那几分钟两边都算了，每轮会略偏多。',
+  '05 和 08 两轮中途断过，数字不完整（表中已标「不完整」）。',
+  '输入 token 大部分是缓存命中（97%–99%）。',
+];
 const REPO_URL = 'https://github.com/Chasen-Liao/ai-design-skills-bench';
 
 const MODEL_NAME = 'DeepSeek V4.1 Flash 1017';
@@ -53,12 +60,12 @@ function isPlainFile(dir, name) {
  * Parse the first markdown table that follows an exact heading line.
  * Returns { header: string[], rows: Object<string,string>[] }.
  */
-function parseTable(markdown, heading) {
+function parseTable(markdown, heading, headingIsHeader = false) {
   const lines = markdown.split(/\r?\n/);
   const start = lines.findIndex((line) => line.trim() === heading);
   if (start === -1) return { header: [], rows: [] };
 
-  let i = start + 1;
+  let i = headingIsHeader ? start : start + 1;
   while (i < lines.length && !lines[i].trim().startsWith('|')) i += 1;
   if (i >= lines.length) return { header: [], rows: [] };
 
@@ -102,6 +109,16 @@ function loadRuns() {
   const summaryByRun = new Map(summary.map((row) => [row.run, row]));
   const weightByRun = new Map(weightDetail.map((row) => [row.run, row]));
 
+  // Token table copied verbatim; numbers are shown as written, never computed.
+  const tokenRows = existsSync(TOKENS_MD) ? parseTable(readText(TOKENS_MD), '| Run | Requests | Input | Output |', true).rows : [];
+  const tokensByRun = new Map(
+    tokenRows.map((row) => {
+      const raw = row.Run || '';
+      const id = raw.split(/\s+/)[0];
+      return [id, { requests: row.Requests || '', input: row.Input || '', output: row.Output || '', interrupted: /interrupted/i.test(raw) }];
+    }),
+  );
+
   const dirs = readdirSync(RUNS_DIR, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && /^\d\d/.test(entry.name))
     .map((entry) => entry.name)
@@ -127,6 +144,7 @@ function loadRuns() {
       loop: weightRow['what happened in the loop'] || '',
       notes: summaryRow['notes / issues'] || meta.notes || '',
       review,
+      tokens: tokensByRun.get(name) ?? null,
     };
   });
 }
@@ -149,6 +167,12 @@ ${body}
 </html>
 `;
 };
+
+const MISSING = '缺';
+const tokVal = (run, key) => (run.tokens && run.tokens[key] ? run.tokens[key] : MISSING);
+const incompleteMark = (run) => (run.tokens && run.tokens.interrupted ? '<span class="flag">不完整</span>' : '');
+const tokenNotesHtml = () =>
+  `<ol class="fine token-notes">${TOKEN_NOTES.map((note) => `<li>${esc(note)}</li>`).join('')}</ol>`;
 
 const reviewBlock = (review) =>
   review
@@ -185,7 +209,9 @@ function buildIndex(runs, prompt) {
             <td class="num">${esc(run.duration)}</td>
             <td class="num">${esc(run.exit)}</td>
             <td class="num">${esc(run.bytes)}</td>
-            <td class="na">n/a</td>
+            <td class="num">${esc(tokVal(run, 'requests'))}</td>
+            <td class="num">${esc(tokVal(run, 'input'))}${incompleteMark(run)}</td>
+            <td class="num">${esc(tokVal(run, 'output'))}</td>
             <td class="na">n/a</td>
             <td>${esc(run.processWeight)}</td>
             <td class="notes">${esc(run.notes)}</td>
@@ -229,7 +255,9 @@ ${cards}
               <th>耗时(s)</th>
               <th>exit</th>
               <th>HTML 字节</th>
-              <th>tokens</th>
+              <th>请求数</th>
+              <th>输入 token</th>
+              <th>输出 token</th>
               <th>费用</th>
               <th>流程轻重</th>
               <th>备注</th>
@@ -240,7 +268,9 @@ ${tableRows}
           </tbody>
         </table>
       </div>
-      <p class="fine">token 与费用不可得（run 使用 <code>--no-session</code>，未保留 usage），记为 n/a，不做估算。</p>
+      <p class="fine">token 说明：</p>
+      ${tokenNotesHtml()}
+      <p class="fine">费用未取得实际账单，记为 n/a，不做估算。数字仅为实测记录，不代表排名。</p>
     </section>
 
     <section aria-labelledby="prompt-title">
@@ -280,7 +310,9 @@ function buildDetail(run, prev, next) {
     ['耗时', formatDuration(run.duration)],
     ['exit', run.exit],
     ['HTML 字节', run.bytes],
-    ['tokens', 'n/a'],
+    ['请求数', tokVal(run, 'requests') + (run.tokens?.interrupted ? '（不完整）' : '')],
+    ['输入 token', tokVal(run, 'input') + (run.tokens?.interrupted ? '（不完整）' : '')],
+    ['输出 token', tokVal(run, 'output') + (run.tokens?.interrupted ? '（不完整）' : '')],
     ['费用', 'n/a'],
     ['流程轻重', run.processWeight],
     ['循环中发生了什么', run.loop || 'n/a'],
@@ -310,6 +342,8 @@ ${facts}
           </tbody>
         </table>
       </div>
+      <p class="fine">token 说明：</p>
+      ${tokenNotesHtml()}
     </section>
 
     <section aria-labelledby="live-title">
