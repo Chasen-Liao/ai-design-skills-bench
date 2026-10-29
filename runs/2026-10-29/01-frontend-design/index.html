@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chasen — AI 开发工程师，做 Pi 的桌面客户端</title>
+<meta name="description" content="Chasen Liao，20 岁，计算机科学大四，广州。AI 开发工程师，做 Pi 桌面客户端和 Agent Skills，开放 AI 开发工程师 / AI 产品经理机会。">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#E9EBE3">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23233CE8'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='40' font-weight='700' fill='%23E9EBE3' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E9EBE3;
+    --paper-2:#F4F5EE;
+    --ink:#12211C;
+    --ink-2:#4A5A51;
+    --blue:#233CE8;
+    --line:rgba(18,33,28,.16);
+    --line-strong:rgba(18,33,28,.9);
+    --display:"Bricolage Grotesque","Noto Sans SC",sans-serif;
+    --serif:"Noto Serif SC",Georgia,serif;
+    --sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:clip;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:90;
+    pointer-events:none;
+    opacity:.045;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  img{display:block;max-width:100%;height:auto}
+  a{color:inherit}
+  p{margin:0}
+  ::selection{background:var(--blue);color:#fff}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+
+  .wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(20px,4vw,48px)}
+  section[id]{scroll-margin-top:84px}
+  .skip{
+    position:absolute;left:16px;top:-60px;z-index:200;
+    background:var(--ink);color:var(--paper);padding:8px 14px;
+    text-decoration:none;font-size:.85rem;
+  }
+  .skip:focus{top:12px}
+
+  /* ---------- header ---------- */
+  .site-header{
+    position:sticky;top:0;z-index:50;
+    background:var(--paper);
+    background:color-mix(in srgb,var(--paper) 88%,transparent);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    height:64px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .brand{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--display);font-weight:800;font-size:1.05rem;
+    letter-spacing:-.025em;text-decoration:none;white-space:nowrap;
+  }
+  .brand::before{content:"";width:8px;height:8px;background:var(--blue);flex:none}
+  .nav{display:flex;gap:clamp(16px,2.6vw,30px);font-size:.88rem}
+  .nav a{text-decoration:none;position:relative;padding:3px 0;color:var(--ink)}
+  .nav a::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+    background:var(--blue);transform:scaleX(0);transform-origin:left;
+    transition:transform .2s ease;
+  }
+  .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+  .header-status{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--mono);font-size:.67rem;color:var(--ink-2);
+    white-space:nowrap;
+  }
+  .live{display:inline-flex;align-items:center;gap:6px}
+  .live::before{content:"";width:6px;height:6px;border-radius:50%;background:#1C7A4A}
+  .clock{color:var(--ink);font-variant-numeric:tabular-nums}
+
+  /* ---------- hero ---------- */
+  .hero{padding-block:clamp(46px,7vw,92px) clamp(40px,6vw,68px)}
+  .hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(230px,300px);
+    gap:clamp(30px,5vw,76px);
+    align-items:start;
+  }
+  .hero-main{min-width:0}
+  .hero-title{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:clamp(4.4rem,13.2vw,11rem);
+    line-height:.82;
+    letter-spacing:-.055em;
+    margin:0 0 clamp(16px,2.4vw,26px);
+    font-optical-sizing:auto;
+  }
+  .hero-title .line{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+  .hero-title .line > span{display:inline-block;transform:translateY(108%);animation:rise .9s cubic-bezier(.19,.72,.22,1) .08s forwards}
+  .hero-title .dot{color:var(--blue)}
+  .hero-role{
+    font-family:var(--serif);font-weight:900;
+    font-size:clamp(1.45rem,2.7vw,2.1rem);
+    line-height:1.55;letter-spacing:.005em;
+    margin:0 0 16px;
+    animation:fadeUp .8s cubic-bezier(.19,.72,.22,1) .38s both;
+  }
+  .hero-copy{
+    max-width:38em;color:var(--ink-2);
+    font-size:1rem;line-height:1.95;
+    margin:0 0 30px;
+    animation:fadeUp .8s cubic-bezier(.19,.72,.22,1) .48s both;
+  }
+  .hero-copy strong{color:var(--ink);font-weight:500}
+
+  .cta-row{
+    display:flex;flex-wrap:wrap;gap:16px 22px;align-items:flex-start;
+    animation:fadeUp .8s cubic-bezier(.19,.72,.22,1) .58s both;
+  }
+  .cta-item{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-weight:700;font-size:.95rem;
+    padding:13px 22px;border:1.5px solid var(--ink);border-radius:2px;
+    text-decoration:none;line-height:1.4;
+    transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+  }
+  .btn-primary{
+    background:var(--blue);border-color:var(--blue);color:#fff;
+    box-shadow:4px 4px 0 var(--ink);
+  }
+  .btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .btn-primary:focus-visible{outline-color:var(--ink)}
+  .btn-ghost{
+    background:transparent;color:var(--ink);
+    box-shadow:4px 4px 0 rgba(18,33,28,.18);
+  }
+  .btn-ghost:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(18,33,28,.22)}
+  .tbd{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:.63rem;letter-spacing:.03em;
+    color:var(--ink-2);white-space:nowrap;
+  }
+  .tbd::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--blue);flex:none}
+
+  .hero-side{display:flex;justify-content:flex-end;padding-top:clamp(6px,3vw,40px)}
+  .portrait{
+    position:relative;width:100%;max-width:290px;margin:0;
+    transform:rotate(2.4deg);
+    animation:portraitIn 1s cubic-bezier(.19,.72,.22,1) .3s both;
+  }
+  .portrait-frame{
+    border:1.5px solid var(--ink);background:var(--paper-2);
+    padding:10px 10px 12px;
+    box-shadow:10px 10px 0 var(--blue);
+  }
+  .portrait img{width:100%;aspect-ratio:1;object-fit:cover;filter:saturate(.94) contrast(1.03)}
+  .portrait figcaption{
+    display:flex;justify-content:space-between;gap:10px;
+    margin-top:10px;font-family:var(--mono);font-size:.62rem;
+    line-height:1.5;color:var(--ink-2);
+  }
+  .portrait figcaption span:last-child{text-align:right}
+  .stamp{
+    position:absolute;left:-36px;bottom:-42px;
+    width:110px;height:110px;border-radius:50%;
+    background:var(--paper);box-shadow:0 0 0 1.5px var(--ink);
+    display:grid;place-items:center;
+  }
+  .stamp svg{width:100%;height:100%;display:block}
+  .stamp .ring{animation:spin 52s linear infinite;transform-origin:60px 60px}
+  .stamp textPath{
+    font-family:var(--mono);font-size:9.1px;letter-spacing:1.05px;
+    fill:var(--blue);
+  }
+  .stamp .pi{
+    font-family:var(--display);font-weight:700;font-size:27px;
+    fill:var(--ink);
+  }
+
+  /* ---------- sections ---------- */
+  .section{padding-block:clamp(58px,8vw,104px) 0}
+  .section:last-of-type{padding-bottom:0}
+  .section-head{
+    position:relative;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:24px 40px;
+    border-top:1px solid var(--ink);
+    padding-top:20px;
+    margin-bottom:clamp(30px,4.6vw,54px);
+  }
+  .section-head::before{content:"";position:absolute;top:-4px;left:0;width:30px;height:7px;background:var(--blue)}
+  .section-title{
+    font-family:var(--serif);font-weight:900;
+    font-size:clamp(1.9rem,3.6vw,2.9rem);
+    line-height:1.3;margin:0;letter-spacing:-.01em;
+  }
+  .section-note{
+    margin:0;flex:none;max-width:31em;
+    text-align:right;color:var(--ink-2);
+    font-size:.88rem;line-height:1.8;
+  }
+
+  /* ---------- about ---------- */
+  .about-grid{
+    display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+    gap:clamp(36px,6vw,84px);align-items:start;
+  }
+  .chibi-card{
+    margin:0;transform:rotate(-2deg);
+    border:1.5px solid var(--ink);background:var(--paper-2);
+    padding:8px 8px 10px;
+    box-shadow:7px 7px 0 var(--ink);
+  }
+  .chibi-card img{width:100%;aspect-ratio:4/3;object-fit:cover}
+  .chibi-card figcaption{
+    display:flex;justify-content:space-between;gap:10px;
+    padding-top:8px;font-family:var(--mono);font-size:.61rem;
+    line-height:1.5;color:var(--ink-2);
+  }
+  .name-note{
+    margin:30px 0 0;padding-left:16px;
+    border-left:3px solid var(--blue);
+    font-family:var(--serif);font-weight:600;
+    font-size:1.02rem;line-height:1.95;
+  }
+  .name-note b{color:var(--blue);font-weight:900}
+  .about-body .lead{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(1.35rem,2.2vw,1.72rem);
+    line-height:1.8;margin:0 0 20px;color:var(--ink);
+  }
+  .about-body p{color:var(--ink-2);margin:0 0 18px;max-width:44em}
+  .about-body p strong{color:var(--ink);font-weight:700}
+  .pullquote{
+    margin:30px 0 0;padding:16px 0 16px 22px;
+    border-left:3px solid var(--blue);
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(1.2rem,2vw,1.45rem);
+    line-height:1.75;color:var(--ink);
+  }
+
+  /* ---------- work ---------- */
+  .work-band{
+    background:var(--ink);color:var(--paper);
+    padding:clamp(26px,4vw,48px);
+    border-radius:2px;
+  }
+  .flag-grid{
+    display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);
+    gap:clamp(30px,4.5vw,56px);align-items:center;
+  }
+  .flag-label{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid rgba(233,235,227,.34);
+    padding:3px 9px;margin:0 0 20px;
+    font-size:.7rem;letter-spacing:.08em;color:#D7DED5;
+  }
+  .flag-label::before{content:"";width:5px;height:5px;background:#8E9BFF}
+  .flag-title{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(1.75rem,3.2vw,2.5rem);
+    letter-spacing:-.035em;line-height:1.1;
+    margin:0 0 14px;color:#fff;
+  }
+  .flag-desc{color:#C6D0C7;font-size:.96rem;line-height:1.95;margin:0 0 18px;max-width:39em}
+  .flag-features{
+    list-style:none;display:flex;flex-wrap:wrap;gap:7px 18px;
+    margin:0 0 26px;padding:0;
+  }
+  .flag-features li{
+    position:relative;padding-left:11px;
+    font-size:.76rem;line-height:1.8;color:#DCE3DA;
+  }
+  .flag-features li::before{
+    content:"";position:absolute;left:0;top:.78em;
+    width:4px;height:4px;background:#8E9BFF;
+  }
+  .flag-meta{display:flex;flex-wrap:wrap;align-items:center;gap:22px 26px;margin-top:4px}
+  .stars-big{display:flex;align-items:center;gap:9px}
+  .stars-big b{
+    font-family:var(--display);font-weight:700;
+    font-size:2.3rem;line-height:1;letter-spacing:-.03em;color:#fff;
+  }
+  .stars-big span{
+    font-family:var(--mono);font-size:.6rem;line-height:1.5;
+    color:#9FB0A3;max-width:5.5em;
+  }
+  .flag-tech{font-family:var(--mono);font-size:.65rem;line-height:1.7;color:#9FB0A3}
+  .flag-link{
+    display:inline-flex;align-items:center;gap:9px;
+    margin-left:auto;padding-bottom:3px;
+    color:var(--paper);text-decoration:none;
+    border-bottom:1px solid rgba(233,235,227,.45);
+    font-size:.88rem;font-weight:500;
+    transition:color .2s ease,border-color .2s ease;
+  }
+  .flag-link svg{transition:transform .2s ease}
+  .flag-link:hover{color:#fff;border-color:#8E9BFF}
+  .flag-link:hover svg{transform:translate(2px,-2px)}
+  .flag-link:focus-visible{outline-color:#8E9BFF}
+
+  .app{
+    background:#F3F4ED;color:#17251F;
+    border:1.5px solid #0A1510;
+    box-shadow:12px 12px 0 rgba(35,60,232,.6);
+    transform:rotate(-1.4deg);
+    font-family:var(--sans);font-size:12px;line-height:1.5;
+    min-width:0;
+  }
+  .app-bar{
+    display:flex;align-items:center;gap:8px;
+    padding:9px 12px;border-bottom:1.5px solid #0A1510;background:#E4E7DC;
+  }
+  .dots{display:flex;gap:4px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:#BFC5B8;border:1px solid rgba(10,21,16,.22)}
+  .dots i:first-child{background:var(--blue);border-color:var(--blue)}
+  .app-title{font-family:var(--mono);font-size:9.5px;font-weight:500;margin-left:4px}
+  .app-tag{
+    margin-left:auto;font-family:var(--mono);font-size:8px;
+    border:1px solid rgba(10,21,16,.32);padding:1px 5px;color:#4A5A51;
+  }
+  .app-body{display:grid;grid-template-columns:120px minmax(0,1fr);min-height:256px}
+  .app-side{
+    border-right:1.5px solid #0A1510;background:#E7EADF;
+    padding:10px 8px;display:flex;flex-direction:column;gap:3px;min-width:0;
+  }
+  .side-head{
+    display:flex;justify-content:space-between;
+    font-family:var(--mono);font-size:8px;color:#66756B;margin-bottom:4px;
+  }
+  .side-item{padding:5px 6px;font-size:9.5px;line-height:1.35;color:#3C4C42}
+  .side-item.active{background:var(--blue);color:#fff}
+  .side-item .branch{display:block;font-size:8px;opacity:.82;margin-top:2px}
+  .files{
+    margin-top:auto;padding-top:10px;
+    border-top:1px solid rgba(10,21,16,.14);
+    font-family:var(--mono);font-size:8px;line-height:1.95;color:#66756B;
+  }
+  .files b{display:flex;justify-content:space-between;color:#3C4C42;font-weight:500}
+  .app-main{padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .chat-top{
+    display:flex;align-items:center;gap:6px;
+    padding-bottom:7px;border-bottom:1px solid rgba(10,21,16,.14);
+    font-family:var(--mono);font-size:8px;
+  }
+  .model{border:1px solid rgba(10,21,16,.28);padding:1px 5px;background:#fff}
+  .switch{margin-left:auto;color:var(--blue);text-decoration:underline dotted}
+  .msg{font-size:10px;line-height:1.65;max-width:94%}
+  .msg.user{align-self:flex-end;background:#fff;border:1px solid rgba(10,21,16,.18);padding:5px 8px}
+  .msg.ai{color:#33453B}
+  .msg.ai .who{font-family:var(--mono);font-size:8px;color:var(--blue);margin-right:5px}
+  .caret{
+    display:inline-block;width:5px;height:10px;margin-left:2px;
+    background:var(--blue);vertical-align:-1px;
+    animation:blink 1.1s steps(2) infinite;
+  }
+  .composer{
+    margin-top:auto;padding:6px 8px;
+    border:1px solid rgba(10,21,16,.24);background:#fff;
+    display:flex;justify-content:space-between;gap:10px;
+    font-size:9px;color:#8B978E;
+  }
+  .composer .send{color:var(--blue)}
+
+  .project-list{border-top:1px solid var(--ink);margin-top:clamp(28px,4vw,42px)}
+  .project{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;gap:20px;
+    padding:23px clamp(0px,.8vw,10px);
+    border-bottom:1px solid var(--line);
+    text-decoration:none;color:var(--ink);
+    transition:background .2s ease;
+  }
+  .project:hover{background:var(--paper-2)}
+  .project-name{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(1.25rem,2.2vw,1.6rem);
+    letter-spacing:-.025em;line-height:1.25;
+    margin:0 0 5px;transition:color .2s ease;
+  }
+  .project:hover .project-name{color:var(--blue)}
+  .project p{font-size:.91rem;line-height:1.8;color:var(--ink-2);max-width:64ch}
+  .project-side{display:flex;align-items:center;gap:18px;flex:none}
+  .stars{font-family:var(--mono);font-size:.68rem;color:var(--ink-2);white-space:nowrap}
+  .stars b{font-weight:500;color:var(--ink)}
+  .project-arrow{
+    width:31px;height:31px;border:1px solid var(--ink);border-radius:50%;
+    display:grid;place-items:center;flex:none;
+    transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+  }
+  .project-arrow svg{width:13px;height:13px}
+  .project:hover .project-arrow{
+    background:var(--blue);border-color:var(--blue);color:#fff;
+    transform:translate(2px,-2px);
+  }
+
+  /* ---------- skills ---------- */
+  .skills-grid{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(24px,4vw,56px);
+  }
+  .skill-col{border-top:1px solid var(--ink);padding-top:16px}
+  .skill-col h3{
+    display:flex;align-items:center;gap:8px;
+    margin:0 0 14px;font-size:.77rem;font-weight:700;
+    letter-spacing:.04em;
+  }
+  .skill-col h3::before{content:"";width:6px;height:6px;background:var(--blue);flex:none}
+  .skill-list{list-style:none;margin:0 0 14px;padding:0}
+  .skill-list li{font-family:var(--display);font-weight:600;letter-spacing:-.025em;line-height:1.4;padding:3px 0}
+  .col-every .skill-list li{font-size:clamp(1.65rem,2.7vw,2.1rem)}
+  .col-main .skill-list li{font-size:clamp(1.25rem,2.1vw,1.55rem)}
+  .col-used .skill-list li{font-family:var(--sans);font-weight:500;font-size:.98rem;line-height:1.95;color:var(--ink-2)}
+  .skill-desc{font-size:.85rem;line-height:1.85;color:var(--ink-2);max-width:31em}
+
+  .now{
+    display:grid;grid-template-columns:190px minmax(0,1fr);
+    gap:18px 28px;
+    margin-top:clamp(38px,5vw,62px);
+    padding-top:22px;border-top:1px solid var(--line);
+  }
+  .now h3{font-family:var(--serif);font-weight:900;font-size:1.08rem;line-height:1.6;margin:0}
+  .now ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 36px}
+  .now li{display:flex;gap:10px;font-size:.9rem;line-height:1.8;color:var(--ink-2)}
+  .now li::before{content:"✳";color:var(--blue);font-size:.85em;line-height:2.1;flex:none}
+
+  /* ---------- contact ---------- */
+  .contact-grid{
+    display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+    gap:clamp(38px,6vw,80px);align-items:start;
+  }
+  .contact-title{
+    font-family:var(--serif);font-weight:900;
+    font-size:clamp(1.9rem,4.4vw,3.3rem);
+    line-height:1.42;letter-spacing:-.01em;
+    margin:0 0 18px;max-width:14em;
+  }
+  .contact-copy{color:var(--ink-2);margin:0 0 22px;max-width:34em;font-size:.98rem;line-height:1.9}
+  .role-list{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px}
+  .role{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1.5px solid var(--ink);padding:8px 14px;
+    font-size:.86rem;font-weight:700;line-height:1.4;
+  }
+  .role::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none}
+  .contact-note{
+    margin:0;padding-left:14px;border-left:2px solid var(--line);
+    font-size:.88rem;line-height:1.9;color:var(--ink-2);max-width:38em;
+  }
+  .contact-note strong{color:var(--ink);font-weight:700}
+
+  .link-list{border-top:1px solid var(--ink)}
+  .link-slot{
+    display:grid;grid-template-columns:1fr auto;
+    gap:3px 16px;align-items:center;
+    padding:14px 2px;border-bottom:1px solid var(--line);
+    text-decoration:none;color:var(--ink);
+  }
+  .link-slot .name{
+    font-family:var(--display);font-size:1.28rem;font-weight:700;
+    letter-spacing:-.025em;line-height:1.4;
+    transition:color .2s ease;
+  }
+  .link-slot .sub{font-size:.77rem;line-height:1.6;color:var(--ink-2)}
+  .link-slot .tbd{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .link-slot:hover .name{color:var(--blue)}
+
+  /* ---------- footer ---------- */
+  .site-footer{
+    margin-top:clamp(60px,8vw,100px);
+    background:var(--ink);color:var(--paper);
+    border-top:4px solid var(--blue);
+  }
+  .footer-inner{
+    display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;
+    align-items:end;padding-block:42px 34px;
+  }
+  .footer-brand{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(1.55rem,3vw,2.1rem);
+    letter-spacing:-.035em;line-height:1.1;
+    margin:0 0 8px;color:#fff;
+  }
+  .footer-brand .dot{color:#8E9BFF}
+  .footer-phrase{font-family:var(--serif);font-size:.92rem;color:#B9C4BA;margin:0;line-height:1.9}
+  .footer-meta{
+    text-align:right;font-family:var(--mono);
+    font-size:.64rem;line-height:2;color:#8FA095;
+  }
+  .footer-meta span{display:block}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:22px;z-index:120;
+    transform:translate(-50%,16px);
+    max-width:calc(100vw - 32px);
+    background:var(--ink);color:var(--paper);
+    border-left:3px solid var(--blue);
+    padding:11px 18px;font-size:.85rem;line-height:1.6;
+    opacity:0;pointer-events:none;
+    transition:opacity .2s ease,transform .2s ease;
+    box-shadow:5px 5px 0 rgba(35,60,232,.5);
+  }
+  .toast.is-visible{opacity:1;transform:translate(-50%,0)}
+  .toast:empty{display:none}
+
+  /* ---------- motion ---------- */
+  @keyframes rise{to{transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes portraitIn{
+    from{opacity:0;transform:rotate(5.5deg) translateY(18px)}
+    to{opacity:1;transform:rotate(2.4deg) translateY(0)}
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:960px){
+    .header-status .live-text{display:none}
+    .hero-grid{grid-template-columns:1fr;gap:34px}
+    .hero-side{justify-content:flex-start;padding-top:6px;padding-left:4px}
+    .portrait{max-width:240px}
+    .stamp{left:-14px;bottom:-34px;width:100px;height:100px}
+    .about-grid{grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:44px}
+    .flag-grid{grid-template-columns:1fr;gap:34px}
+    .flag-link{margin-left:0}
+    .contact-grid{grid-template-columns:1fr;gap:36px}
+  }
+  @media (max-width:780px){
+    .nav{display:none}
+    .header-status .clock{font-size:.64rem}
+    .hero-title{font-size:clamp(4.3rem,19vw,8rem)}
+    .portrait{max-width:250px}
+    .section-head{display:block}
+    .section-note{text-align:left;margin-top:10px;max-width:38em}
+    .about-grid{grid-template-columns:1fr;gap:38px}
+    .about-side{max-width:290px}
+    .skills-grid{grid-template-columns:1fr;gap:30px}
+    .col-every .skill-list li{font-size:1.8rem}
+    .col-main .skill-list li{font-size:1.35rem}
+    .now{grid-template-columns:1fr;gap:10px}
+    .now ul{grid-template-columns:1fr}
+    .footer-inner{grid-template-columns:1fr;align-items:start}
+    .footer-meta{text-align:left}
+    .project{padding-block:20px}
+    .project-side{gap:14px}
+  }
+  @media (max-width:560px){
+    body{font-size:16px}
+    .header-inner{height:58px}
+    .live{display:none}
+    .hero-title{font-size:clamp(4rem,23vw,6.4rem)}
+    .cta-row{gap:16px}
+    .btn{width:100%;padding:13px 18px}
+    .cta-item{flex:1 1 calc(50% - 8px)}
+    .portrait{max-width:232px}
+    .portrait figcaption{font-size:.58rem}
+    .stamp{width:86px;height:86px;left:-10px;bottom:-30px}
+    .app-body{grid-template-columns:88px minmax(0,1fr);min-height:236px}
+    .side-item{font-size:8.5px;padding:4px 5px}
+    .side-item .branch{font-size:7px}
+    .files{font-size:7px}
+    .app-main{padding:9px 10px}
+    .msg{font-size:9.5px}
+    .project{grid-template-columns:1fr;gap:12px}
+    .project-side{justify-content:flex-start}
+    .project-arrow{width:28px;height:28px}
+    .contact-title{font-size:clamp(1.8rem,7.4vw,2.4rem)}
+    .footer-inner{padding-block:34px 28px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+    }
+    .caret{opacity:1}
+    .toast{transition:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="Chasen，回到顶部">Chasen Liao</a>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#about">关于</a>
+      <a href="#work">作品</a>
+      <a href="#skills">日常</a>
+      <a href="#contact">联系</a>
+    </nav>
+    <div class="header-status">
+      <span class="live"><span class="live-text">开放机会</span></span>
+      <span class="clock"><span aria-hidden="true">广州 </span><span id="clock">--:--</span></span>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-main">
+        <h1 class="hero-title" id="hero-title">
+          <span class="line"><span>Chasen<span class="dot">.</span></span></span>
+        </h1>
+        <p class="hero-role">AI 开发工程师，AI 原住民。</p>
+        <p class="hero-copy">
+          <strong>20 岁，计算机科学大四，在广州。</strong>
+          做 Pi 的桌面客户端，也做一套自己在用的 Agent Skills；最近在认真考虑，往 AI 产品经理走一步。
+        </p>
+        <div class="cta-row">
+          <div class="cta-item">
+            <a class="btn btn-primary" href="#" data-tbd="X 的链接还没填。先在 X 搜 @chasen_liao，或者看下面的作品。">去 X 找我</a>
+            <span class="tbd">链接待填</span>
+          </div>
+          <div class="cta-item">
+            <a class="btn btn-ghost" href="#work">看作品</a>
+            <span class="tbd">五个项目</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <figure class="portrait">
+          <div class="portrait-frame">
+            <img src="avatar.jpg" alt="Chasen 的头像" width="400" height="400">
+          </div>
+          <figcaption>
+            <span>Chasen Liao</span>
+            <span>广州<br>大四在读</span>
+          </figcaption>
+          <div class="stamp" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <defs>
+                <path id="stampPath" d="M60,60 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0"></path>
+              </defs>
+              <g class="ring">
+                <text><textPath href="#stampPath" startOffset="0">PI DESKTOP · 331 STARS · OPEN SOURCE · </textPath></text>
+              </g>
+              <text class="pi" x="60" y="60" text-anchor="middle" dominant-baseline="central">π</text>
+            </svg>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title" id="about-title">关于</h2>
+        <p class="section-note">一个还在长的人，一些已经跑起来的东西。</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-side">
+          <figure class="chibi-card">
+            <img src="chibi.jpg" alt="Chasen 的 Q 版角色设定卡：浅棕短发、青蓝耳机、粉色点缀" width="1152" height="864" loading="lazy">
+            <figcaption>
+              <span>Q 版的我</span>
+              <span>耳机是青蓝色</span>
+            </figcaption>
+          </figure>
+          <p class="name-note">
+            名字取自 <b>chase</b>：<br>
+            不停追逐，无限进步。
+          </p>
+        </div>
+
+        <div class="about-body">
+          <p class="lead">我是 Chasen，20 岁，计算机科学大四，人在广州。</p>
+          <p>
+            本职是 AI 开发工程师，一边实习，一边做 Agent 工具。pi-agent-desktop 是给 Pi 编程智能体做的桌面客户端；resume-skills、Chasen-Skills 这些，是我自己做的 Skills，也顺手开源了。
+          </p>
+          <p>
+            名字取自 chase，听着有点满，但确实是我做事的方式：先上手做一遍，再回头把道理补上。作为 AI 原住民，查资料、写代码、改稿子都在和模型协作，所以对工具有点挑——步骤能不能少一点，上下文能不能接住，中途换个模型会不会把刚才的思路弄丢。
+          </p>
+          <p>
+            最近在认真考虑转产品。不是不做开发，而是想更早参与「做什么、给谁做、怎么讲清楚」这些事。这个念头，连同大四找工作的进度，都写在 X 上，那里大约有 6k 关注。
+          </p>
+          <p class="pullquote">先解决自己的问题，再把它交给别人用。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title" id="work-title">精选作品</h2>
+        <p class="section-note">五个项目。旗舰是 Pi 的桌面客户端，其余是 Skills 和一些整理。</p>
+      </div>
+
+      <div class="work-band">
+        <div class="flag-grid">
+          <div class="flag-copy">
+            <p class="flag-label">旗舰项目</p>
+            <h3 class="flag-title">pi-agent-desktop</h3>
+            <p class="flag-desc">
+              给 Pi 编程智能体做的 Electron 桌面客户端。原生窗口，支持会话分叉、SSE 流式对话、对话中途切换模型，还带一个内置文件浏览器。
+            </p>
+            <ul class="flag-features">
+              <li>原生窗口</li>
+              <li>会话分叉</li>
+              <li>SSE 流式对话</li>
+              <li>中途换模型</li>
+              <li>内置文件浏览器</li>
+            </ul>
+            <div class="flag-meta">
+              <div class="stars-big">
+                <b>331</b>
+                <span>GitHub<br>stars</span>
+              </div>
+              <span class="flag-tech">TypeScript / Electron / React</span>
+              <a class="flag-link" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">
+                看仓库
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="app" aria-hidden="true">
+            <div class="app-bar">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="app-title">pi-agent-desktop</span>
+              <span class="app-tag">Electron</span>
+            </div>
+            <div class="app-body">
+              <aside class="app-side">
+                <div class="side-head"><span>会话</span><span>＋</span></div>
+                <div class="side-item">新会话</div>
+                <div class="side-item active">落地页改版<span class="branch">↳ 分叉：更安静的一版</span></div>
+                <div class="side-item">Skills 复盘</div>
+                <div class="side-item">求职清单</div>
+                <div class="files">
+                  <b><span>文件</span><span>▾</span></b>
+                  index.html<br>
+                  avatar.jpg
+                </div>
+              </aside>
+              <div class="app-main">
+                <div class="chat-top">
+                  <span class="model">Sonnet</span>
+                  <span class="switch">切换模型</span>
+                </div>
+                <div class="msg user">首屏再收紧一点，别太像简历。</div>
+                <div class="msg ai"><span class="who">Pi</span>好，去掉并排的卡片，把名字放大，留白留给一句话。<span class="caret"></span></div>
+                <div class="composer"><span>继续输入…</span><span class="send">↵</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-list">
+        <a class="project" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener">
+          <div>
+            <h3 class="project-name">resume-skills</h3>
+            <p>一句话让 Agent 生成精美简历，还能按 JD 匹配。</p>
+          </div>
+          <div class="project-side">
+            <span class="stars"><b>38</b> star</span>
+            <span class="project-arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="project" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener">
+          <div>
+            <h3 class="project-name">Chasen-Skills</h3>
+            <p>自用 Agent Skills 合集，npx skills 就能装。里面有并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建。</p>
+          </div>
+          <div class="project-side">
+            <span class="stars"><b>33</b> star</span>
+            <span class="project-arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="project" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener">
+          <div>
+            <h3 class="project-name">Everything-claude-code-Doc</h3>
+            <p>Everything Claude Code 的使用指南，边用边补，持续更新。</p>
+          </div>
+          <div class="project-side">
+            <span class="stars"><b>15</b> star</span>
+            <span class="project-arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="project" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener">
+          <div>
+            <h3 class="project-name">SuperMew</h3>
+            <p>Agentic RAG 实验，关注 Context Engineering 和三层记忆架构。</p>
+          </div>
+          <div class="project-side">
+            <span class="stars">实验</span>
+            <span class="project-arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.6"/></svg>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills" aria-labelledby="skills-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title" id="skills-title">日常与工具箱</h2>
+        <p class="section-note">按使用频率排。会就是会，还在学就说还在学。</p>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-col col-every">
+          <h3>每天都在用</h3>
+          <ul class="skill-list">
+            <li>Pi</li>
+            <li>Claude Code</li>
+            <li>Codex</li>
+          </ul>
+          <p class="skill-desc">写代码、跑任务、整理资料，一天里大部分时间在这三个之间来回。</p>
+        </div>
+
+        <div class="skill-col col-main">
+          <h3>主力</h3>
+          <ul class="skill-list">
+            <li>Python</li>
+            <li>TypeScript / React</li>
+            <li>Agent / RAG</li>
+          </ul>
+          <p class="skill-desc">从脚本到界面都能自己写；Agent 和 RAG 是最近投入最多的部分。</p>
+        </div>
+
+        <div class="skill-col col-used">
+          <h3>做过</h3>
+          <ul class="skill-list">
+            <li>Electron</li>
+            <li>FastAPI</li>
+            <li>向量检索</li>
+            <li>HTML / CSS</li>
+          </ul>
+          <p class="skill-desc">在项目里真用过，踩过坑，也修过。</p>
+        </div>
+      </div>
+
+      <div class="now">
+        <h3>最近在折腾</h3>
+        <ul>
+          <li>pi-agent-desktop 继续迭代，桌面端还有想补的东西</li>
+          <li>维护 Chasen-Skills，把自用的 Skills 继续往里加</li>
+          <li>在 X 写 Pi / Agent 工具实测、新模型上手、大四找工作</li>
+          <li>从开发往产品探路，两边的机会都开放</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact" aria-labelledby="contact-section-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title" id="contact-section-title">联系与机会</h2>
+        <p class="section-note">入口先摆在这里，链接还在填。作品是现成的，可以先翻。</p>
+      </div>
+
+      <div class="contact-grid">
+        <div>
+          <h3 class="contact-title">有岗位，或者一个想做的工具，都可以聊。</h3>
+          <p class="contact-copy">开放 AI 开发工程师、AI 产品经理两个方向，广州或深圳。想聊 Pi、Agent 工具，或者从开发转产品这件事，也欢迎。</p>
+          <div class="role-list">
+            <span class="role">AI 开发工程师</span>
+            <span class="role">AI 产品经理</span>
+          </div>
+          <p class="contact-note">
+            <strong>在 X 上写：</strong>Pi / Agent 工具实测、新模型上手、大四找工作，以及从开发转产品的真实记录。账号是 @chasen_liao。
+          </p>
+        </div>
+
+        <nav class="link-list" aria-label="外部链接，链接待填">
+          <a class="link-slot" href="#" data-tbd="个人站的链接还没填。">
+            <span class="name">个人站</span>
+            <span class="sub">作品和文章以后放这里</span>
+            <span class="tbd">链接待填</span>
+          </a>
+          <a class="link-slot" href="#" data-tbd="博客的链接还没填。">
+            <span class="name">博客</span>
+            <span class="sub">长一点的想法和记录</span>
+            <span class="tbd">链接待填</span>
+          </a>
+          <a class="link-slot" href="#" data-tbd="GitHub 主页的链接还没填。项目仓库可以从作品区点进去。">
+            <span class="name">GitHub</span>
+            <span class="sub">Chasen-Liao</span>
+            <span class="tbd">链接待填</span>
+          </a>
+          <a class="link-slot" href="#" data-tbd="X 的链接还没填。账号是 @chasen_liao。">
+            <span class="name">X</span>
+            <span class="sub">@chasen_liao</span>
+            <span class="tbd">链接待填</span>
+          </a>
+          <a class="link-slot" href="#" data-tbd="Email 还没填。先通过 X 找我也可以。">
+            <span class="name">Email</span>
+            <span class="sub">写邮件给我</span>
+            <span class="tbd">链接待填</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div>
+      <p class="footer-brand">Chasen Liao<span class="dot">.</span></p>
+      <p class="footer-phrase">名字来自 chase：不停追逐，无限进步。</p>
+    </div>
+    <div class="footer-meta">
+      <span>© <span id="year">2026</span> Chasen Liao</span>
+      <span>广州 · 这个页面是手写的 HTML</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  (function () {
+    // 广州时间
+    var clock = document.getElementById('clock');
+    var timeFmt = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+    function tick() {
+      if (clock) clock.textContent = timeFmt.format(new Date());
+    }
+    tick();
+    setInterval(tick, 30000);
+
+    var year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
+
+    // 外链占位：点击时说明链接还没填
+    var toast = document.getElementById('toast');
+    var timer = null;
+    document.querySelectorAll('[data-tbd]').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        if (link.getAttribute('href') === '#') event.preventDefault();
+        if (!toast) return;
+        toast.textContent = link.getAttribute('data-tbd') || '这个链接还没填。';
+        toast.classList.add('is-visible');
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          toast.classList.remove('is-visible');
+        }, 3200);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

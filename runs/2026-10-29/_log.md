@@ -7,3 +7,4 @@
 | run | skill | start (CST) | end (CST) | duration | index.html | bytes | exit | notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 00-bare | none | 2026-10-29 14:50:10 CST | 2026-10-29 14:55:06 CST | 296s | runs/2026-10-29/00-bare/index.html | 58247 | 0 | bare 对照；纸张暖色杂志式 |
+| 01-frontend-design | frontend-design | 2026-10-29 14:56:00 CST | 2026-10-29 15:03:13 CST | 433s | runs/2026-10-29/01-frontend-design/index.html | 40735 | 0 | see run.log |
