@@ -6,3 +6,7 @@
 **/secrets.env
 **/auth.json
 **/.DS_Store
+
+# Per-run installed skill copies (large); only commit deliverables
+**/.pi/
+**/node_modules/
