@@ -10,3 +10,7 @@
 # Per-run installed skill copies (large); only commit deliverables
 **/.pi/
 **/node_modules/
+**/.oil-ui/
+**/.huashu*/
+**/shot-work/
+**/*.png.bak
