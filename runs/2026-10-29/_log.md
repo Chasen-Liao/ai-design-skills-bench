@@ -15,3 +15,4 @@
 | 06-huashu-design | huashu-design | 2026-10-29 15:44:10 CST | 2026-10-29 15:54:11 CST | 601s | runs/2026-10-29/06-huashu-design/index.html | 178290 | 0 | see run.log |
 | 07-hallmark | hallmark | 2026-10-29 15:54:17 CST | 2026-10-29 16:08:16 CST | 839s | runs/2026-10-29/07-hallmark/index.html | 27836 | 0 | see run.log |
 | 08-taste-skill | design-taste-frontend | 2026-10-29 16:08:21 CST | 2026-10-29 16:31:49 CST | 1408s | runs/2026-10-29/08-taste-skill/index.html | 42485 | 0 | interrupted after html written (pi exited mid-inspect loop), finalized without rerun |
+| 09-awesome-design-md | DESIGN.md(claude) | 2026-10-29 16:45:59 CST | 2026-10-29 16:54:05 CST | 486s | runs/2026-10-29/09-awesome-design-md/index.html | 54239 | 0 | see run.log |
