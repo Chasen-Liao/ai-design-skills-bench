@@ -2,17 +2,15 @@
 // Zero-dependency static site builder for the A1 design-skills benchmark.
 // Usage: node site/build.mjs   ->   site/dist/
 //
-// 数据来源：runs/<RUN_DATE>/_metrics.json（会话 jsonl 精确统计）+ 各轮 meta.json。
-// 旧版按 ZenMux 时间段估算的 site/data/_tokens.md 已弃用，构建不再读取。
+// 支持多版并列（V2 / V3）：总览可切换，详情按版本分目录。
+// 数据来源：runs/<RUN_DATE>/_metrics.json + 各轮 meta.json。
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, readdirSync, statSync, copyFileSync } from 'node:fs';
 import { join, resolve, basename } from 'node:path';
 import { SKILL_LABEL, NOTE_ZH } from './data/zh.mjs';
 
-const RUN_DATE = '2026-10-29-r2';
 const HERE = import.meta.dirname;
 const REPO_ROOT = resolve(HERE, '..');
-const RUNS_DIR = join(REPO_ROOT, 'runs', RUN_DATE);
 const THUMBS_SRC = join(HERE, 'thumbs');
 const DIST = join(HERE, 'dist');
 const REPO_URL = 'https://github.com/Chasen-Liao/ai-design-skills-bench';
@@ -20,8 +18,60 @@ const REPO_URL = 'https://github.com/Chasen-Liao/ai-design-skills-bench';
 const MODEL_NAME = 'DeepSeek V4.1 Flash 1017';
 const MODEL_LABEL = `${MODEL_NAME}（ZenMux / deepseek/deepseek-v4.1-flash）`;
 const MODEL_ID = 'deepseek/deepseek-v4.1-flash';
-const ROUND_LABEL = '2026-10-29 · r2';
-const VERSION_LABEL = '未约束版 / V2';
+
+/** @type {Array<{
+ *   key: string,
+ *   runDate: string,
+ *   versionShort: string,
+ *   versionLabel: string,
+ *   badgeClass: string,
+ *   roundLabel: string,
+ *   constraintTitle: string,
+ *   constraintBlurb: string,
+ *   constraintPoints: string[],
+ *   eyebrow: string,
+ *   heroLede: string,
+ * }>} */
+const EDITIONS = [
+  {
+    key: 'v2',
+    runDate: '2026-10-29-r2',
+    versionShort: 'V2',
+    versionLabel: '未约束版（会过度自检）',
+    badgeClass: 'badge-v2',
+    roundLabel: '2026-10-29 · r2',
+    constraintTitle: '未约束：会过度自检',
+    constraintBlurb:
+      '提示词只要求用上 skill，没有禁止自检，也没有要求一次成版。实测：多数跑次写完后反复截图、lint、DOM 探测、CSS 微调。',
+    constraintPoints: [
+      '每个目录只装一个被测 skill，00-bare 为不装 skill 的对照。',
+      '提示词只要求「用上这个 skill」，没有禁止自检，也没有要求一次成版。',
+      '多数跑次写完后反复自检——多轮截图、lint、DOM 探测、CSS 微调。',
+    ],
+    eyebrow: 'A1 个人介绍落地页 · 第二轮实测 · 10 组',
+    heroLede:
+      '只差「给不给 skill」和「给哪一个」。这一版是未约束版：提示词只要求用 skill，没有限制模型自检多少轮，于是它写了又测、测了又改。',
+  },
+  {
+    key: 'v3',
+    runDate: '2026-10-29-r3',
+    versionShort: 'V3',
+    versionLabel: '一次成版 + thinking high',
+    badgeClass: 'badge-v3',
+    roundLabel: '2026-10-29 · r3',
+    constraintTitle: '一次成版 + thinking high',
+    constraintBlurb:
+      '同一提示词族追加硬约束：禁止反复自检与无头浏览器验证，最多一次小幅修正；模型侧开启 thinking high。',
+    constraintPoints: [
+      '提示词追加「一次性成版交付」：禁止反复自检、截图循环与多轮大改，最多一次小幅修正。',
+      '模型参数：`--thinking high`（ZenMux / deepseek/deepseek-v4.1-flash）。',
+      '其余设定与 V2 相同：同一 A1 资料、同一极简 Pi 四工具、每目录只装一个 skill。',
+    ],
+    eyebrow: 'A1 个人介绍落地页 · 第三轮实测 · 10 组',
+    heroLede:
+      '与 V2 同一提示词族、同一模型。差别只在约束：要求一次成版，并打开 thinking high，用来对照「限制自检」本身值多少时间与 token。',
+  },
+];
 
 // ---------------------------------------------------------------- utilities
 
@@ -70,23 +120,54 @@ const zhNote = (raw) => {
   return raw;
 };
 
+const sum = (runs, pick) =>
+  runs.reduce((total, run) => {
+    const value = pick(run);
+    return Number.isFinite(Number(value)) ? total + Number(value) : total;
+  }, 0);
+
+const tokenCells = (tokens, key) => (tokens && hasNumber(tokens[key]) ? fmtInt(tokens[key]) : '暂无');
+
+const flag = (kind, text) => `<span class="flag flag-${kind}">${esc(text)}</span>`;
+const interruptedFlag = (run) => (run.interrupted ? flag('warn', '中途断过') : '');
+const readSkillFlag = (run) => (run.readSkill ? flag('ok', '是') : flag('mute', '否'));
+const exitCell = (run) => (hasNumber(run.exit) ? esc(run.exit) : flag('warn', '中断'));
+
+const reviewBlock = (review) =>
+  review
+    ? review
+        .split(/\n\s*\n/)
+        .map((paragraph) => `      <p>${esc(paragraph.trim()).replace(/\n/g, '<br>')}</p>`)
+        .join('\n')
+    : '      <p class="placeholder">待 Chasen 填写</p>';
+
+function findThumb(editionKey, runId) {
+  const candidates = [
+    join(THUMBS_SRC, editionKey, `${runId}.webp`),
+    join(THUMBS_SRC, `${editionKey}-${runId}.webp`),
+    join(THUMBS_SRC, `${runId}.webp`),
+  ];
+  return candidates.find((path) => existsSync(path)) ?? null;
+}
+
 // ------------------------------------------------------------------ data load
 
-function loadRuns() {
-  const metricsPath = join(RUNS_DIR, '_metrics.json');
+function loadRuns(edition) {
+  const runsDir = join(REPO_ROOT, 'runs', edition.runDate);
+  const metricsPath = join(runsDir, '_metrics.json');
   if (!existsSync(metricsPath)) throw new Error(`missing ${metricsPath}`);
   const metrics = JSON.parse(readText(metricsPath));
 
-  const dirs = readdirSync(RUNS_DIR, { withFileTypes: true })
+  const dirs = readdirSync(runsDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && /^\d\d/.test(entry.name))
     .map((entry) => entry.name)
     .sort();
 
   return dirs.map((name) => {
-    const dir = join(RUNS_DIR, name);
+    const dir = join(runsDir, name);
     const meta = JSON.parse(readText(join(dir, 'meta.json')));
     const m = metrics[name];
-    if (!m) console.warn(`warning: ${name} missing from _metrics.json`);
+    if (!m) console.warn(`warning: ${name} missing from _metrics.json (${edition.key})`);
     const mm = m?.meta ?? {};
 
     const reviewPath = join(dir, 'review.md');
@@ -115,11 +196,14 @@ function loadRuns() {
   });
 }
 
-const sum = (runs, pick) =>
-  runs.reduce((total, run) => {
-    const value = pick(run);
-    return Number.isFinite(Number(value)) ? total + Number(value) : total;
-  }, 0);
+function loadPrompt(edition) {
+  const runsDir = join(REPO_ROOT, 'runs', edition.runDate);
+  const candidates = [join(runsDir, '_prompt-a1.txt'), join(runsDir, '00-bare', 'prompt.txt')];
+  for (const path of candidates) {
+    if (existsSync(path)) return readText(path);
+  }
+  return '（提示词原文缺失）';
+}
 
 // --------------------------------------------------------------- page helpers
 
@@ -144,38 +228,24 @@ ${body}
 `;
 };
 
-const topbar = ({ depth, right = '' }) => {
+const topbar = ({ depth, edition = null, right = '' }) => {
   const home = depth === 0 ? 'index.html' : `${'../'.repeat(depth)}index.html`;
+  const badge = edition
+    ? `<span class="badge ${esc(edition.badgeClass)}">${esc(edition.versionShort)} · ${esc(edition.versionLabel)}</span>
+    <span class="topbar-meta">${esc(edition.roundLabel)}</span>`
+    : `<span class="badge badge-outline">V2 · V3 并列</span>
+    <span class="topbar-meta">2026-10-29 · r2 / r3</span>`;
   return `  <header class="topbar">
     <a class="brand" href="${home}">设计 Skill 横评</a>
-    <span class="badge badge-v2">${esc(VERSION_LABEL)}</span>
-    <span class="topbar-meta">${esc(ROUND_LABEL)}</span>
+    ${badge}
     <span class="spacer"></span>
     ${right}
     <a class="topbar-link repo-link" href="${esc(REPO_URL)}">GitHub</a>
   </header>`;
 };
 
-const flag = (kind, text) => `<span class="flag flag-${kind}">${esc(text)}</span>`;
-const interruptedFlag = (run) => (run.interrupted ? flag('warn', '中途断过') : '');
-const readSkillFlag = (run) => (run.readSkill ? flag('ok', '是') : flag('mute', '否'));
-
-const exitCell = (run) => (hasNumber(run.exit) ? esc(run.exit) : flag('warn', '中断'));
-
-const reviewBlock = (review) =>
-  review
-    ? review
-        .split(/\n\s*\n/)
-        .map((paragraph) => `      <p>${esc(paragraph.trim()).replace(/\n/g, '<br>')}</p>`)
-        .join('\n')
-  : '      <p class="placeholder">待 Chasen 填写</p>';
-
-const tokenCells = (tokens, key) => (tokens && hasNumber(tokens[key]) ? fmtInt(tokens[key]) : '暂无');
-
-// ------------------------------------------------------------------- overview
-
-function buildIndex(runs, prompt) {
-  const totals = {
+function editionTotals(runs) {
+  return {
     llmCalls: sum(runs, (run) => run.llmCalls),
     toolCalls: sum(runs, (run) => run.toolCalls),
     input: sum(runs, (run) => run.tokens?.input),
@@ -183,15 +253,20 @@ function buildIndex(runs, prompt) {
     cacheRead: sum(runs, (run) => run.tokens?.cacheRead),
     readSkill: runs.filter((run) => run.readSkill).length,
     withPage: runs.filter((run) => hasNumber(run.bytes) && Number(run.bytes) > 0).length,
+    duration: sum(runs, (run) => run.duration),
   };
+}
 
+function buildEditionPanel(edition, runs) {
+  const totals = editionTotals(runs);
   const cards = runs
     .map((run, index) => {
-      const thumbPath = join(DIST, 'thumbs', `${run.id}.webp`);
+      const thumbRel = `thumbs/${edition.key}/${run.id}.webp`;
+      const thumbPath = join(DIST, 'thumbs', edition.key, `${run.id}.webp`);
       const thumb = existsSync(thumbPath)
-        ? `<img src="thumbs/${esc(run.id)}.webp" alt="${esc(run.id)} 页面缩略图" loading="lazy" width="720" height="450">`
+        ? `<img src="${esc(thumbRel)}" alt="${esc(run.id)} 页面缩略图" loading="lazy" width="720" height="450">`
         : '<div class="thumb-missing">缩略图缺失</div>';
-      return `      <a class="card" href="runs/${esc(run.id)}/detail.html">
+      return `      <a class="card" href="${esc(edition.key)}/runs/${esc(run.id)}/detail.html">
         <div class="card-thumb">
           ${thumb}
           <span class="card-idx">${String(index).padStart(2, '0')}</span>
@@ -213,7 +288,7 @@ function buildIndex(runs, prompt) {
   const tableRows = runs
     .map(
       (run) => `          <tr>
-            <th scope="row" class="col-id"><a href="runs/${esc(run.id)}/detail.html">${esc(run.id)}</a></th>
+            <th scope="row" class="col-id"><a href="${esc(edition.key)}/runs/${esc(run.id)}/detail.html">${esc(run.id)}</a></th>
             <td class="skill">${esc(run.skill)}</td>
             <td class="num">${esc(formatDuration(run.duration))}${interruptedFlag(run)}</td>
             <td class="num">${exitCell(run)}</td>
@@ -229,128 +304,227 @@ function buildIndex(runs, prompt) {
     )
     .join('\n');
 
+  const points = edition.constraintPoints.map((item) => `            <li>${item}</li>`).join('\n');
+
+  return `    <section class="edition-panel" id="${esc(edition.key)}" data-edition="${esc(edition.key)}" hidden>
+      <header class="edition-head">
+        <div class="edition-head-text">
+          <p class="eyebrow">${esc(edition.eyebrow)}</p>
+          <h2><span class="badge ${esc(edition.badgeClass)}">${esc(edition.versionShort)}</span> ${esc(edition.versionLabel)}</h2>
+          <p class="lede">${esc(edition.heroLede)}</p>
+        </div>
+        <ul class="hero-tags">
+          <li>${esc(edition.versionShort)} · ${esc(edition.versionLabel)}</li>
+          <li>${esc(MODEL_NAME)}</li>
+          <li>${esc(edition.roundLabel)}</li>
+          <li>不排名 · 不打分</li>
+        </ul>
+      </header>
+
+      <div class="callout" aria-labelledby="${esc(edition.key)}-constraint">
+        <div class="callout-head">
+          <span class="badge ${esc(edition.badgeClass)}">${esc(edition.versionShort)}</span>
+          <h3 id="${esc(edition.key)}-constraint">${esc(edition.constraintTitle)}</h3>
+        </div>
+        <p>${esc(edition.constraintBlurb)}</p>
+        <ul>
+${points}
+        </ul>
+      </div>
+
+      <div class="edition-block" aria-labelledby="${esc(edition.key)}-stats">
+        <h3 id="${esc(edition.key)}-stats">会话总量</h3>
+        <p class="section-note">按 _metrics.json 逐轮累加，仅描述这一版的实测开销，不作为排名依据。</p>
+        <dl class="stats">
+          <div class="stat"><span class="label">跑次</span><span class="value">${runs.length}<small>组</small></span></div>
+          <div class="stat"><span class="label">产出页面</span><span class="value">${totals.withPage}<small>/ ${runs.length}</small></span></div>
+          <div class="stat"><span class="label">总耗时</span><span class="value">${esc(formatDuration(totals.duration))}</span></div>
+          <div class="stat"><span class="label">LLM 调用</span><span class="value">${esc(fmtInt(totals.llmCalls))}</span></div>
+          <div class="stat"><span class="label">工具调用</span><span class="value">${esc(fmtInt(totals.toolCalls))}</span></div>
+          <div class="stat"><span class="label">输入 token</span><span class="value">${esc(fmtInt(totals.input))}</span></div>
+          <div class="stat"><span class="label">输出 token</span><span class="value">${esc(fmtInt(totals.output))}</span></div>
+          <div class="stat"><span class="label">读了 skill</span><span class="value">${totals.readSkill}<small>/ ${runs.length}</small></span></div>
+        </dl>
+      </div>
+
+      <div class="edition-block" aria-labelledby="${esc(edition.key)}-grid">
+        <h3 id="${esc(edition.key)}-grid">10 组实测</h3>
+        <p class="section-note">缩略图取自各轮的 shot-hero.png；点开可看原页面、全页截图、指标与评价位。</p>
+        <div class="grid">
+${cards}
+        </div>
+      </div>
+
+      <div class="edition-block" aria-labelledby="${esc(edition.key)}-data">
+        <h3 id="${esc(edition.key)}-data">实测数据</h3>
+        <p class="section-note">向左滑动可看完整列。数字全部取自会话统计，未做四舍五入之外的加工。费用没有实际账单，统一「暂无」。</p>
+        <div class="table-wrap">
+          <table class="dense">
+            <thead>
+              <tr class="groups">
+                <th class="col-id" rowspan="2" scope="col">轮次</th>
+                <th rowspan="2" scope="col" class="skill">被测 skill</th>
+                <th colspan="3" scope="colgroup">产出</th>
+                <th colspan="7" scope="colgroup">会话开销</th>
+              </tr>
+              <tr>
+                <th scope="col">耗时</th>
+                <th scope="col">退出码</th>
+                <th scope="col">页面字节</th>
+                <th scope="col">LLM 调用</th>
+                <th scope="col">输入 token</th>
+                <th scope="col">输出 token</th>
+                <th scope="col">缓存读取</th>
+                <th scope="col">工具调用</th>
+                <th scope="col">读了 skill</th>
+                <th scope="col">费用</th>
+              </tr>
+            </thead>
+            <tbody>
+${tableRows}
+            </tbody>
+          </table>
+        </div>
+        <div class="fine">
+          <ul>
+            <li>数字来源：<code>runs/${esc(edition.runDate)}/_metrics.json</code>（按各轮 Pi 会话 jsonl 逐条累加）。</li>
+            <li>token 说明：输入 token 绝大部分是缓存命中，缓存读取单独成列；两者不要相加后当作「成本」比较。</li>
+            <li>00-bare 是裸 Pi 对照，目录里不装 skill；「读了 skill」以会话统计为准。</li>
+            <li>费用没有取得实际账单，统一记为「暂无」，不做估算。</li>
+            <li>不排名、不打分；评价位由 Chasen 手写。</li>
+          </ul>
+        </div>
+      </div>
+    </section>`;
+}
+
+function buildIndex(editionsData) {
+  const switchButtons = editionsData
+    .map(
+      ({ edition }, index) =>
+        `        <button type="button" class="edition-tab${index === 0 ? ' is-active' : ''}" data-edition-tab="${esc(edition.key)}" aria-pressed="${index === 0 ? 'true' : 'false'}">
+          <span class="badge ${esc(edition.badgeClass)}">${esc(edition.versionShort)}</span>
+          <span class="edition-tab-label">${esc(edition.versionLabel)}</span>
+          <span class="edition-tab-meta">${esc(edition.roundLabel)}</span>
+        </button>`,
+    )
+    .join('\n');
+
+  const panels = editionsData.map(({ edition, runs }) => buildEditionPanel(edition, runs)).join('\n\n');
+
+  const promptBlocks = editionsData
+    .map(({ edition, prompt }) => {
+      const open = edition.key === 'v2' ? ' open' : '';
+      return `      <details class="prompt"${open}>
+        <summary>${esc(edition.versionShort)} 提示词原文 · ${esc(edition.runDate)}</summary>
+        <pre>${esc(prompt)}</pre>
+      </details>`;
+    })
+    .join('\n');
+
   const body = `${topbar({ depth: 0 })}
   <main class="wrap" id="main">
     <header class="hero">
-      <p class="eyebrow">A1 个人介绍落地页 · 第二轮实测 · 10 组</p>
-      <h1>10 个设计 skill，同一段提示词、同一个模型</h1>
-      <p class="lede">只差「给不给 skill」和「给哪一个」。这一版是未约束版：提示词只要求用 skill，没有限制模型自检多少轮，于是它写了又测、测了又改。</p>
+      <p class="eyebrow">A1 个人介绍落地页 · V2 / V3 并列实测</p>
+      <h1>10 个设计 skill，同一提示词族、同一个模型</h1>
+      <p class="lede">两版共用 A1 个人介绍资料与 DeepSeek V4.1 Flash 1017（ZenMux）。差别只在约束：V2 未限制自检；V3 要求一次成版并开启 thinking high。不排名、不打分。</p>
       <ul class="hero-tags">
-        <li>${esc(VERSION_LABEL)}</li>
+        <li>同一提示词族</li>
         <li>${esc(MODEL_NAME)}</li>
         <li>极简 Pi 四工具</li>
         <li>不排名 · 不打分</li>
       </ul>
     </header>
 
-    <section class="callout" aria-labelledby="v2-title">
+    <section class="callout shared-callout" aria-labelledby="shared-title">
       <div class="callout-head">
-        <span class="badge badge-v2">${esc(VERSION_LABEL)}</span>
-        <h2 id="v2-title">这一版故意不约束模型</h2>
+        <span class="badge badge-outline">对照设定</span>
+        <h2 id="shared-title">三同 + 一异</h2>
       </div>
       <div class="callout-cols">
         <div>
-          <h3>三同设定</h3>
+          <h3>相同</h3>
           <ul>
-            <li><strong>同一提示词</strong>：A1 个人介绍落地页（原文见下方）。</li>
+            <li><strong>同一提示词族</strong>：A1 个人介绍落地页（资料与任务相同；V3 在文末追加一次成版约束）。</li>
             <li><strong>同一模型</strong>：${esc(MODEL_NAME)}，<code>${esc(MODEL_ID)}</code>。</li>
-            <li><strong>同一运行框架</strong>：极简 Pi，只有 read / bash / edit / write 四个工具，<code>--no-session</code>。</li>
+            <li><strong>同一运行框架</strong>：极简 Pi，只有 read / bash / edit / write，<code>--no-session</code>。</li>
           </ul>
         </div>
         <div>
-          <h3>未约束在哪</h3>
+          <h3>不同</h3>
           <ul>
-            <li>每个目录只装一个被测 skill，00-bare 为不装 skill 的对照。</li>
-            <li>提示词只要求「用上这个 skill」，<strong>没有禁止自检</strong>，也没有要求一次成版。</li>
-            <li>实测：多数跑次写完后反复自检——多轮截图、lint、DOM 探测、CSS 微调，出现明显的过度思考与重复验证。</li>
+            <li><strong>V2</strong>：未约束版（会过度自检）· 数据 <code>2026-10-29-r2</code>。</li>
+            <li><strong>V3</strong>：一次成版 + thinking high · 数据 <code>2026-10-29-r3</code>。</li>
+            <li>评价位仍空着，由 Chasen 手写；本站不做排名打分。</li>
           </ul>
         </div>
       </div>
-      <p class="soon"><strong>V3（一次成版）即将并列</strong>：会限制自检轮次、要求一次成型，届时与本站数据并排对照，才能看出约束本身值多少时间与 token。</p>
     </section>
 
-    <section aria-labelledby="stats-title">
-      <h2 id="stats-title">会话总量</h2>
-      <p class="section-note">按 _metrics.json 逐轮累加，仅描述这一轮的实测开销，不作为排名依据。</p>
-      <dl class="stats">
-        <div class="stat"><span class="label">跑次</span><span class="value">${runs.length}<small>组</small></span></div>
-        <div class="stat"><span class="label">产出页面</span><span class="value">${totals.withPage}<small>/ ${runs.length}</small></span></div>
-        <div class="stat"><span class="label">LLM 调用</span><span class="value">${esc(fmtInt(totals.llmCalls))}</span></div>
-        <div class="stat"><span class="label">工具调用</span><span class="value">${esc(fmtInt(totals.toolCalls))}</span></div>
-        <div class="stat"><span class="label">输入 token</span><span class="value">${esc(fmtInt(totals.input))}</span></div>
-        <div class="stat"><span class="label">输出 token</span><span class="value">${esc(fmtInt(totals.output))}</span></div>
-        <div class="stat"><span class="label">缓存读取</span><span class="value">${esc(fmtInt(totals.cacheRead))}</span></div>
-        <div class="stat"><span class="label">读了 skill</span><span class="value">${totals.readSkill}<small>/ ${runs.length}</small></span></div>
-      </dl>
-    </section>
+    <nav class="edition-switch" aria-label="版本切换">
+${switchButtons}
+    </nav>
 
-    <section aria-labelledby="grid-title">
-      <h2 id="grid-title">10 组实测</h2>
-      <p class="section-note">缩略图取自各轮的 shot-hero.png；点开可看原页面、全页截图与数据明细。</p>
-      <div class="grid">
-${cards}
-      </div>
-    </section>
-
-    <section aria-labelledby="data-title">
-      <h2 id="data-title">实测数据</h2>
-      <p class="section-note">向左滑动可看完整列。数字全部取自会话统计，未做四舍五入之外的加工。</p>
-      <div class="table-wrap">
-        <table class="dense">
-          <thead>
-            <tr class="groups">
-              <th class="col-id" rowspan="2" scope="col">轮次</th>
-              <th rowspan="2" scope="col" class="skill">被测 skill</th>
-              <th colspan="3" scope="colgroup">产出</th>
-              <th colspan="7" scope="colgroup">会话开销</th>
-            </tr>
-            <tr>
-              <th scope="col">耗时</th>
-              <th scope="col">退出码</th>
-              <th scope="col">页面字节</th>
-              <th scope="col">LLM 调用</th>
-              <th scope="col">输入 token</th>
-              <th scope="col">输出 token</th>
-              <th scope="col">缓存读取</th>
-              <th scope="col">工具调用</th>
-              <th scope="col">读了 skill</th>
-              <th scope="col">费用</th>
-            </tr>
-          </thead>
-          <tbody>
-${tableRows}
-          </tbody>
-        </table>
-      </div>
-      <div class="fine">
-        <ul>
-          <li>数字来源：<code>runs/${esc(RUN_DATE)}/_metrics.json</code>（按各轮 Pi 会话 jsonl 逐条累加），不再使用旧版按 ZenMux 时间段估算的 token 表。</li>
-          <li>token 说明：输入 token 绝大部分是缓存命中，缓存读取单独成列；两者不要相加后当作「成本」比较。</li>
-          <li>00-bare 是裸 Pi 对照，目录里不装 skill，所以「读了 skill」为「否」属预期。</li>
-          <li>08-taste-skill 中途断过但有页面：会话在检查循环里中断，index.html 已在磁盘并完成截图；耗时与 token 仍取会话统计，退出码没有记录。</li>
-          <li>费用没有取得实际账单，统一记为「暂无」，不做估算。</li>
-          <li>窄屏下表格会隐藏「被测 skill」列以留出数字空间，轮次与上方卡片一一对应。</li>
-          <li>不排名、不打分；评价位由 Chasen 手写。</li>
-        </ul>
-      </div>
-    </section>
+${panels}
 
     <section aria-labelledby="prompt-title">
-      <details class="prompt" open>
-        <summary id="prompt-title">统一提示词原文</summary>
-        <pre>${esc(prompt)}</pre>
-      </details>
+      <h2 id="prompt-title">统一提示词原文</h2>
+      <p class="section-note">两版同属 A1 提示词族；V3 在文末多了一次成版约束段。点开可看全文。</p>
+${promptBlocks}
     </section>
 
     <footer class="footer">
       <p class="repo"><a href="${esc(REPO_URL)}">${esc(REPO_URL)}</a></p>
-      <p>数据：runs/${esc(RUN_DATE)}/_metrics.json、各轮 meta.json 与会话日志。站点构建：node site/build.mjs。</p>
+      <p>数据：runs/2026-10-29-r2、runs/2026-10-29-r3 的 _metrics.json、各轮 meta.json 与会话日志。站点构建：node site/build.mjs。</p>
     </footer>
-  </main>`;
+  </main>
+  <script>
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-edition-tab]'));
+    var panels = Array.prototype.slice.call(document.querySelectorAll('[data-edition]'));
+    if (!tabs.length || !panels.length) return;
+
+    function show(key, pushHash) {
+      tabs.forEach(function (tab) {
+        var on = tab.getAttribute('data-edition-tab') === key;
+        tab.classList.toggle('is-active', on);
+        tab.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      panels.forEach(function (panel) {
+        var on = panel.getAttribute('data-edition') === key;
+        if (on) panel.removeAttribute('hidden');
+        else panel.setAttribute('hidden', '');
+      });
+      if (pushHash && history.replaceState) {
+        history.replaceState(null, '', '#' + key);
+      }
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        show(tab.getAttribute('data-edition-tab'), true);
+      });
+    });
+
+    var initial = (location.hash || '').replace(/^#/, '');
+    if (!tabs.some(function (tab) { return tab.getAttribute('data-edition-tab') === initial; })) {
+      initial = tabs[0].getAttribute('data-edition-tab');
+    }
+    show(initial, false);
+
+    window.addEventListener('hashchange', function () {
+      var key = (location.hash || '').replace(/^#/, '');
+      if (tabs.some(function (tab) { return tab.getAttribute('data-edition-tab') === key; })) {
+        show(key, false);
+      }
+    });
+  })();
+  </script>`;
 
   return pageShell({
-    title: `设计 Skill 横评 · ${VERSION_LABEL}`,
-    description: '10 个设计 skill 在同一提示词、同一模型下的 A1 个人介绍落地页实测记录：未约束版 V2。',
+    title: '设计 Skill 横评 · V2 / V3 并列',
+    description:
+      '10 个设计 skill 在同一提示词族、同一模型下的 A1 个人介绍落地页实测：V2 未约束版与 V3 一次成版 + thinking high 并列对照。',
     body,
     depth: 0,
   });
@@ -358,9 +532,10 @@ ${tableRows}
 
 // --------------------------------------------------------------------- detail
 
-function buildDetail(run, prev, next) {
+function buildDetail(edition, run, prev, next, siblingEdition) {
+  const root = '../../../';
   const nav = [
-    '<a class="back" href="../../index.html">← 返回总览</a>',
+    `<a class="back" href="${root}index.html#${esc(edition.key)}">← 返回总览 · ${esc(edition.versionShort)}</a>`,
     '<span class="pager">',
     prev
       ? `<a href="../${esc(prev.id)}/detail.html">← ${esc(prev.id)}</a>`
@@ -371,7 +546,14 @@ function buildDetail(run, prev, next) {
     '</span>',
   ].join('\n      ');
 
+  const cross =
+    siblingEdition != null
+      ? `<a class="compare-link" href="${root}${esc(siblingEdition.key)}/runs/${esc(run.id)}/detail.html">看同 skill 的 ${esc(siblingEdition.versionShort)} · ${esc(siblingEdition.versionLabel)}</a>`
+      : '';
+
   const facts = [
+    ['版本', `${edition.versionShort} · ${edition.versionLabel}`],
+    ['数据目录', edition.runDate],
     ['开始', cstToZh(run.start) || '暂无'],
     ['结束', cstToZh(run.end) || '暂无'],
     ['耗时', formatDuration(run.duration)],
@@ -420,20 +602,23 @@ function buildDetail(run, prev, next) {
   const reviewEmpty = run.review ? '' : ' is-empty';
 
   const body = `${topbar({
-    depth: 2,
+    depth: 3,
+    edition,
     right: `<a class="topbar-link" href="index.html" target="_blank" rel="noopener">原页面</a>`,
   })}
   <main class="wrap" id="main">
     <nav class="topnav" aria-label="页面导航">
       ${nav}
     </nav>
+${cross ? `    <p class="cross-edition">${cross}</p>` : ''}
 
     <header class="hero detail-head">
-      <p class="eyebrow">${esc(VERSION_LABEL)} · 第 ${esc(run.id.slice(0, 2))} 组</p>
+      <p class="eyebrow">${esc(edition.versionShort)} · ${esc(edition.versionLabel)} · 第 ${esc(run.id.slice(0, 2))} 组</p>
       <h1><span class="idx">${esc(run.id.slice(0, 2))}</span>${esc(run.skill)}</h1>
-      <p class="lede">同一提示词 · 同一模型 ${esc(MODEL_LABEL)} · 极简 Pi 四工具 · 只装这一个 skill。</p>
+      <p class="lede">同一提示词族 · 同一模型 ${esc(MODEL_LABEL)} · 极简 Pi 四工具 · 本版约束：${esc(edition.constraintTitle)}。</p>
       <ul class="chip-row">
         <li>${esc(run.id)}</li>
+        <li>${esc(edition.runDate)}</li>
         <li>读了 skill：${run.readSkill ? '是' : '否'}</li>
         <li>退出码：${hasNumber(run.exit) ? esc(run.exit) : '无记录'}</li>
         <li>费用：暂无</li>
@@ -457,7 +642,7 @@ ${factRows}
           </tbody>
         </table>
       </div>
-      <p class="fine">数字取自 <code>runs/${esc(RUN_DATE)}/_metrics.json</code>；费用没有实际账单，记为「暂无」。不排名、不打分。</p>
+      <p class="fine">数字取自 <code>runs/${esc(edition.runDate)}/_metrics.json</code>；费用没有实际账单，记为「暂无」。不排名、不打分。</p>
     </section>
 
     <section aria-labelledby="live-title">
@@ -465,7 +650,7 @@ ${factRows}
       <p class="section-note">直接渲染本轮产出的 index.html，未做任何修改。</p>
       <div class="browser">
         <div class="browser-bar">
-          <span class="browser-path">runs/${esc(run.id)}/index.html</span>
+          <span class="browser-path">runs/${esc(edition.runDate)}/${esc(run.id)}/index.html</span>
           <span class="spacer"></span>
           <a class="button" href="index.html" target="_blank" rel="noopener">新窗口打开</a>
         </div>
@@ -485,67 +670,74 @@ ${factRows}
       <div class="review${reviewEmpty}">
 ${reviewBlock(run.review)}
       </div>
-      <p class="fine">编辑 runs/${esc(RUN_DATE)}/${esc(run.id)}/review.md 后重新构建即可更新。</p>
+      <p class="fine">编辑 runs/${esc(edition.runDate)}/${esc(run.id)}/review.md 后重新构建即可更新。</p>
     </section>
 
     <footer class="footer">
       <p class="repo"><a href="${esc(REPO_URL)}">${esc(REPO_URL)}</a></p>
-      <p>数据：runs/${esc(RUN_DATE)}/_metrics.json · runs/${esc(RUN_DATE)}/${esc(run.id)}/meta.json</p>
+      <p>数据：runs/${esc(edition.runDate)}/_metrics.json · runs/${esc(edition.runDate)}/${esc(run.id)}/meta.json</p>
     </footer>
   </main>`;
 
   return pageShell({
-    title: `${run.id} · ${run.skill} · 设计 Skill 横评`,
-    description: `${run.id}（${run.skill}）在未约束版 V2 中的实测数据与页面。`,
+    title: `${edition.versionShort} · ${run.id} · ${run.skill} · 设计 Skill 横评`,
+    description: `${run.id}（${run.skill}）在 ${edition.versionShort}（${edition.versionLabel}）中的实测数据与页面。`,
     body,
-    depth: 2,
+    depth: 3,
   });
 }
 
 // ----------------------------------------------------------------------- main
 
 function main() {
-  const runs = loadRuns();
-  const promptPath = join(RUNS_DIR, '_prompt-a1.txt');
-  const prompt = existsSync(promptPath) ? readText(promptPath) : '（提示词原文缺失）';
+  const editionsData = EDITIONS.map((edition) => ({
+    edition,
+    runs: loadRuns(edition),
+    prompt: loadPrompt(edition),
+  }));
 
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
-  mkdirSync(join(DIST, 'thumbs'), { recursive: true });
 
-  // style
   copyFileSync(join(HERE, 'style.css'), join(DIST, 'style.css'));
 
-  // thumbs
-  for (const run of runs) {
-    const src = join(THUMBS_SRC, `${run.id}.webp`);
-    if (existsSync(src)) {
-      copyFileSync(src, join(DIST, 'thumbs', `${run.id}.webp`));
-    } else {
-      console.warn(`warning: missing thumbnail ${src}`);
+  for (const { edition, runs } of editionsData) {
+    const thumbOutDir = join(DIST, 'thumbs', edition.key);
+    mkdirSync(thumbOutDir, { recursive: true });
+
+    for (const run of runs) {
+      const src = findThumb(edition.key, run.id);
+      if (src) {
+        copyFileSync(src, join(thumbOutDir, `${run.id}.webp`));
+      } else {
+        console.warn(`warning: missing thumbnail for ${edition.key}/${run.id}`);
+      }
     }
+
+    const sibling = editionsData.find((item) => item.edition.key !== edition.key)?.edition ?? null;
+
+    runs.forEach((run, index) => {
+      const outDir = join(DIST, edition.key, 'runs', run.id);
+      mkdirSync(outDir, { recursive: true });
+
+      for (const name of readdirSync(run.dir)) {
+        if (!isPlainFile(run.dir, name)) continue;
+        copyFileSync(join(run.dir, name), join(outDir, name));
+      }
+
+      const prev = index > 0 ? runs[index - 1] : null;
+      const next = index < runs.length - 1 ? runs[index + 1] : null;
+      writeFileSync(join(outDir, 'detail.html'), buildDetail(edition, run, prev, next, sibling), 'utf8');
+    });
   }
 
-  // run assets + detail pages
-  runs.forEach((run, index) => {
-    const outDir = join(DIST, 'runs', run.id);
-    mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(DIST, 'index.html'), buildIndex(editionsData), 'utf8');
 
-    for (const name of readdirSync(run.dir)) {
-      if (!isPlainFile(run.dir, name)) continue;
-      copyFileSync(join(run.dir, name), join(outDir, name));
-    }
-
-    const prev = index > 0 ? runs[index - 1] : null;
-    const next = index < runs.length - 1 ? runs[index + 1] : null;
-    writeFileSync(join(outDir, 'detail.html'), buildDetail(run, prev, next), 'utf8');
-  });
-
-  // overview
-  writeFileSync(join(DIST, 'index.html'), buildIndex(runs, prompt), 'utf8');
-
-  console.log(`built ${runs.length} runs -> ${DIST}`);
-  for (const run of runs) console.log(`  runs/${run.id}/ (${basename(run.dir)})`);
+  for (const { edition, runs } of editionsData) {
+    console.log(`built ${edition.key} (${edition.runDate}): ${runs.length} runs`);
+    for (const run of runs) console.log(`  ${edition.key}/runs/${run.id}/ (${basename(run.dir)})`);
+  }
+  console.log(`overview -> ${DIST}/index.html`);
 }
 
 main();

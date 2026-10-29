@@ -184,6 +184,12 @@ code {
   border-color: var(--accent);
 }
 
+.badge-v3 {
+  color: var(--fg);
+  background: var(--cyan);
+  border-color: #5ec4d6;
+}
+
 .badge-outline {
   color: var(--fg-2);
   border-color: var(--line-strong);
@@ -306,6 +312,109 @@ h1 {
 
 .callout .soon strong {
   color: var(--fg);
+}
+
+/* ----------------------------------------------------------- edition switch */
+
+.edition-switch {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin: clamp(22px, 3vw, 34px) 0 0;
+}
+
+.edition-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.edition-tab:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-2);
+}
+
+.edition-tab.is-active {
+  border-color: rgba(240, 101, 46, 0.55);
+  box-shadow: 0 0 0 1px rgba(240, 101, 46, 0.25), 0 10px 24px rgba(58, 52, 45, 0.08);
+  background: linear-gradient(180deg, rgba(240, 101, 46, 0.08), rgba(251, 248, 242, 0.9));
+}
+
+.edition-tab-label {
+  font: 600 15px/1.35 var(--serif);
+  color: var(--fg);
+}
+
+.edition-tab-meta {
+  font: 500 12px/1.5 var(--mono);
+  color: var(--muted);
+}
+
+.edition-panel[hidden] {
+  display: none !important;
+}
+
+.edition-head {
+  display: grid;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.edition-head h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: clamp(22px, 2.8vw, 30px);
+}
+
+.edition-block {
+  margin-top: clamp(28px, 3.5vw, 44px);
+}
+
+.edition-block > h3 {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-size: clamp(18px, 2vw, 21px);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+.shared-callout {
+  margin-top: clamp(18px, 2.5vw, 28px);
+}
+
+.cross-edition {
+  margin: -8px 0 18px;
+}
+
+.compare-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--link);
+  font: 500 13px/1.5 var(--sans);
+}
+
+.compare-link:hover {
+  border-style: solid;
+  border-color: rgba(240, 101, 46, 0.45);
+  text-decoration: none;
+  background: var(--accent-soft);
 }
 
 /* -------------------------------------------------------------------- stats */
@@ -957,6 +1066,10 @@ table.kv td.mono {
 }
 
 @media (max-width: 640px) {
+  .edition-switch {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .wrap {
     padding-bottom: 56px;
   }
