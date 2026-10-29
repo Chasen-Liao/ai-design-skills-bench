@@ -1,0 +1,8 @@
+**/node_modules/
+**/.pi/sessions/
+**/skills-cache/
+**/*.tgz
+.env
+**/secrets.env
+**/auth.json
+**/.DS_Store
