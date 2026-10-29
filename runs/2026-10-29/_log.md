@@ -10,3 +10,4 @@
 | 01-frontend-design | frontend-design | 2026-10-29 14:56:00 CST | 2026-10-29 15:03:13 CST | 433s | runs/2026-10-29/01-frontend-design/index.html | 40735 | 0 | see run.log |
 | 02-ui-ux-pro-max | ui-ux-pro-max | 2026-10-29 15:03:19 CST | 2026-10-29 15:12:29 CST | 550s | runs/2026-10-29/02-ui-ux-pro-max/index.html | 66080 | 0 | see run.log |
 | 03-baoyu-design | baoyu-design | 2026-10-29 15:12:37 CST | 2026-10-29 15:19:02 CST | 385s | runs/2026-10-29/03-baoyu-design/index.html | 39956 | 0 | see run.log |
+| 04-oil-ui | oil-ui | 2026-10-29 15:19:09 CST | 2026-10-29 15:40:56 CST | 1307s | runs/2026-10-29/04-oil-ui/index.html | 45407 | 0 | see run.log |

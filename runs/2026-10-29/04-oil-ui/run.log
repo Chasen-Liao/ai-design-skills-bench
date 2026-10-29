@@ -1,0 +1,27 @@
+=== START 04-oil-ui at 2026-10-29 15:19:09 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29/04-oil-ui
+extra=--approve --skill .pi/skills/oil-ui
+文件：`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29/04-oil-ui/index.html`
+
+**做了什么**
+- 方向选的是「编辑型工程手稿」：暖纸底 `#F3EFE6` + 墨黑 + 单一钴蓝 `#1F3BFF`，Archivo 大字标 + Noto Sans SC + JetBrains Mono。没有走深色发光、紫蓝渐变、粒子、卡片墙那套 AI 工具默认脸。
+- 首屏是通栏满版 `CHASEN`，不是左右分栏；定位句、去 X 的主 CTA、看作品的次 CTA 都在首屏内。
+- 把「名字取自 chase」做成一整屏钴蓝滚动叙事：`CHASE` 先散开，滚动时字母收拢，多出来的 `N` 落位成 `CHASEN`，配 `chase + n = chasen`。
+- 5 个项目全放了：旗舰做成带边框的独立对象，其余 4 个做成账本式列表，hover 整行反色；仓库用你给的真实 GitHub 地址。
+- 关于区放了 Q 版设定卡（用 multiply 混进纸面），联系区放了真人头像；不依赖外网图片。
+- 个人站 / 博客 / GitHub / X / Email 全部 `href="#"` 并标「链接待填」，点击弹提示不跳走；Email 只保留标签，没有邮箱地址。
+- 动效：首屏字母入场、按钮按下反馈与 toast、移动端菜单展开、名字章 pin + scrub、作品行依次错开、跑马灯、左侧滚动进度线；`prefers-reduced-motion` 下全部直接到位。
+
+**验证了什么**
+- 1440×900、390×844、768×1024、320×640、1920×1080、720×450 下无横向溢出、无控制台错误、两张本地图正常加载。
+- 名字章在 1215px 滚动距离内保持 pin，字母从散开到收拢，配文淡入；减少动态效果时无 pin 且内容直接可读。
+- 移动菜单 `aria-expanded`、滚动锁、Esc 关闭正常；外链位点击不改变滚动位置。
+- 默认做法检查只剩「单文件 45 KiB」一条，这是你要求“只输出一个 index.html”的必然结果。
+
+**残余风险**
+- 没有可看图的独立评审者，本次未做独立视觉评审、也没打 10 分制分数；结构、尺寸、交互已验证，最终视觉建议再人工看一眼。
+- 字体和 GSAP 走 CDN；断网时回退系统字体、无入场动画，但内容仍可读。
+- 外链留空是刻意按要求做的，上线前需要替换。设计记录和截图证据在 `.oil-ui/personal-landing/`（`design-notes.md`、`evidence/`、`views/`）。
+
+想让设计更完整，可以试试 Oil UI Pro：它会反复评审修改到 9 分，横向比较几个方向、按真实任务把页面用一遍，还包含交互、布局、老项目改造，以及 SVG 和着色器特效的做法。https://ui.oiloil.org/pro/（只提示这一次）
+=== END 04-oil-ui at 2026-10-29 15:40:56 CST exit=0 dur=1307s html=runs/2026-10-29/04-oil-ui/index.html bytes=45407 ===
