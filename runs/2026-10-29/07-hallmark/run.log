@@ -1,0 +1,23 @@
+=== START 07-hallmark at 2026-10-29 15:54:17 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29/07-hallmark
+extra=--approve --skill .pi/skills/hallmark
+文件：`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29/07-hallmark/index.html`
+
+**Hallmark 设计决定**
+- 形状 Index-First，主题 Lumen（1/3，夜紫纸面、Instrument Serif、黄铜信号、玫瑰色动词），nav masthead，footer mast。
+- Hero 用 Banner（原抽到 Poster，但没有满幅照片，换掉并在 stamp 里注明）；主标题 `chase, keep building.`，玫瑰色动词只出现一次。
+- 签名动作：首屏边栏放“pi-agent-desktop / 331 stars”，接着是五行作品账本。
+- 顺序：Hero、作品账本、pi-agent-desktop 拆解、关于、每天在用的、X、联系、页脚。
+- 全部事实来自你给的资料；没有编造公司、推荐语或数字。头像做了暗紫单色处理，未用 chibi。
+
+**验证**
+- `sloplint --render`：0 FAIL、0 WARN、1 WAIVED（Lumen 的玫瑰色动词，主题签名）。
+- 渲染覆盖 1280×800、1440×900、1920×1080、375 全页；另测 320 无横向滚动。
+- 字体（Instrument Serif / Noto Serif SC / Noto Sans SC / Geist / Geist Mono）与头像均确认加载；无控制台报错。
+- 外链按你的要求全部为 `#` + 「链接待填」：个人站、博客、GitHub、X、Email，以及首屏主 CTA。五个项目仓库用的是真实 GitHub 链接。
+
+**残余风险**
+- 头像原图 400×400，在四列里约 416px 宽，有轻微放大。
+- 没有 Pi 桌面客户端的截图可用，案例区用真实功能与规格呈现，没有画假界面。
+- 外链点击目前只会回到页首，填入 URL 后即可正常跳转。
+=== END 07-hallmark at 2026-10-29 16:08:16 CST exit=0 dur=839s html=runs/2026-10-29/07-hallmark/index.html bytes=27836 ===

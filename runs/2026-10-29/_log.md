@@ -13,3 +13,4 @@
 | 04-oil-ui | oil-ui | 2026-10-29 15:19:09 CST | 2026-10-29 15:40:56 CST | 1307s | runs/2026-10-29/04-oil-ui/index.html | 45407 | 0 | see run.log |
 | 05-ai-design-skills | landing-page-design | 2026-10-29 15:41:15 CST | 2026-10-29 15:42:53 CST | 98s | runs/2026-10-29/05-ai-design-skills/index.html | 38819 | 0 | interrupted after html written, finalized without rerun |
 | 06-huashu-design | huashu-design | 2026-10-29 15:44:10 CST | 2026-10-29 15:54:11 CST | 601s | runs/2026-10-29/06-huashu-design/index.html | 178290 | 0 | see run.log |
+| 07-hallmark | hallmark | 2026-10-29 15:54:17 CST | 2026-10-29 16:08:16 CST | 839s | runs/2026-10-29/07-hallmark/index.html | 27836 | 0 | see run.log |
