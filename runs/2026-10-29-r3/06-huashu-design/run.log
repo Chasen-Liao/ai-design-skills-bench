@@ -1,0 +1,24 @@
+=== START 06-huashu-design at 2026-10-29 22:14:02 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r3/06-huashu-design
+extra=--approve --skill .pi/skills/huashu-design
+做完了，单文件交付。
+
+**文件路径**：`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r3/06-huashu-design/index.html`
+
+**设计思路**
+- 主题来自他的技术领域：他的旗舰项目是给 Pi 做的 Electron 桌面客户端，所以页面采用“开发者工具产品站”的结构。左侧常驻栏由头像、导航和入口组成，右侧是正文；首屏放一个用 HTML/CSS 真实搭出来的 pi-agent-desktop 界面示意（会话列表、流式对话、分叉提示、文件树），下面接四条能力说明，不是空泛的功能卡。
+- 配色沿用 Q 版设定卡里的青蓝耳机和粉色发夹：青色用于交互和状态，粉色只标“旗舰”。字体用 Geist、JetBrains Mono 和 Noto Sans SC，中文不靠大衬线撑气场。
+- 全站不依赖外网图片：头像和 Q 版设定卡都以 base64 内嵌，整页 210KB，断网也能看。
+
+**页面内容**
+- 首屏：Chasen 大字报 + 一句话定位 + chase 词源小注 + 双 CTA（去 X / 看作品），CTA 下方和各个外链位都标了“链接待填”，点击会弹出提示，不会跳去假地址。
+- 关于：年龄、专业、在做什么、为什么想试产品、在 X 写什么；右侧是事实清单和 Q 版设定卡。
+- 作品：pi-agent-desktop 做成大卡（331 star、技术栈、会话分叉示意图、四条特性、真实仓库链接），另外 4 个项目排成列表，star 数和 GitHub 地址都按你给的写。
+- 技能：按“每天在用 / 主力 / 做过”分组，用标签呈现，不做百分比进度条；另有“正在折腾”四条。
+- 联系：开发 / 产品两个方向卡（广州 / 深圳），个人站、博客、GitHub、X、Email 五个入口位，全部留空并标“链接待填”。
+- 页脚 + 移动端顶栏导航、滚动高亮、`prefers-reduced-motion` 降级。
+
+**验证**：在 1440 和 375 宽度无头渲染过，无横向溢出、控制台零报错；修了一处滚动显隐导致的内容不可见问题（改成纯 CSS 入场动画，正文不再依赖 JS 显形）。剩余 lint 提示都在产品界面示意图内部（9–12px 的模拟 UI 文字），属于插图说明，不是页面正文。
+
+另外提一句：`avatar.jpg` 实际是 Q 版头像，不是真人照片；我按现有素材用了它。
+=== END 06-huashu-design at 2026-10-29 22:19:29 CST exit=0 dur=327s bytes=214165 ===

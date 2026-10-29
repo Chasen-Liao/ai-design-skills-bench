@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chasen Liao · AI 开发工程师 / AI 原住民</title>
+<meta name="description" content="Chasen，20 岁，计算机科学大四，在广州。AI 开发工程师，做 Pi 桌面客户端和 Agent Skills，也在尝试 AI 产品经理。">
+<meta name="theme-color" content="#15211F">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2315211F'/%3E%3Ctext x='32' y='45' font-family='Helvetica,Arial,sans-serif' font-size='38' font-weight='700' fill='%237FD3DE' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root {
+    --ink: #16211F;
+    --ink-2: #3F4E4A;
+    --ink-3: #61706B;
+    --surface: #FBFCF8;
+    --surface-2: #F1F4EE;
+    --line: #D6DDD5;
+    --line-strong: #B8C2B8;
+    --cyan: #1F7A8C;
+    --cyan-bright: #7FD3DE;
+    --pink: #D95F8A;
+    --pink-soft: #F6DCE6;
+    --pink-ink: #A33D62;
+    --tan: #C29A76;
+    --rail: #15211F;
+    --rail-2: #1E2F2B;
+    --rail-text: #E7EDE6;
+    --rail-muted: #93A59E;
+    --font-ui: "Bricolage Grotesque", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-text: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-text);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -70px;
+    left: 12px;
+    z-index: 100;
+    background: var(--ink);
+    color: #F4F8F3;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 6px;
+  }
+  .skip-link:focus { top: 10px; }
+
+  /* ---------- window chrome ---------- */
+
+  .titlebar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 46px;
+    padding: 0 18px;
+    background: var(--rail);
+    color: var(--rail-text);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+  }
+
+  .lights { display: flex; gap: 7px; flex: 0 0 auto; }
+  .lights span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    opacity: .9;
+  }
+  .lights span:nth-child(1) { background: var(--pink); }
+  .lights span:nth-child(2) { background: var(--tan); }
+  .lights span:nth-child(3) { background: var(--cyan-bright); }
+
+  .window-title {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin: 0;
+    min-width: 0;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .01em;
+  }
+  .window-title .slash { color: rgba(231, 237, 230, .35); }
+  .window-title .file-path {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--rail-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .title-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 0 auto;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--rail-muted);
+    white-space: nowrap;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--cyan-bright);
+    box-shadow: 0 0 0 3px rgba(127, 211, 222, .14);
+  }
+
+  /* ---------- shell ---------- */
+
+  .shell {
+    display: grid;
+    grid-template-columns: 292px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 46px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    height: calc(100dvh - 46px);
+    padding: 30px 22px 24px;
+    overflow-y: auto;
+    background: var(--rail);
+    color: var(--rail-text);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .18) transparent;
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .monogram {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 46px; height: 46px;
+    border: 1px solid rgba(127, 211, 222, .38);
+    border-radius: 10px;
+    background: var(--rail-2);
+    color: var(--cyan-bright);
+    font-family: var(--font-ui);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .identity .name {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .identity .role {
+    margin: 4px 0 0;
+    font-size: 12.5px;
+    color: var(--rail-muted);
+  }
+
+  .rail-quote {
+    margin: 0;
+    padding-left: 11px;
+    border-left: 2px solid rgba(127, 211, 222, .45);
+    color: var(--rail-muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .filetree {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 -8px;
+  }
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 6px;
+    color: var(--rail-text);
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1;
+    transition: background-color .18s ease;
+  }
+  .file-mark {
+    width: 7px; height: 7px;
+    flex: 0 0 auto;
+    border: 1px solid rgba(231, 237, 230, .45);
+    border-radius: 2px;
+    transition: background-color .18s ease, border-color .18s ease;
+  }
+  .file .ext { color: var(--rail-muted); }
+  .file:hover { background: rgba(255, 255, 255, .06); }
+  .file.is-active { background: var(--rail-2); color: #fff; }
+  .file.is-active .file-mark {
+    background: var(--cyan-bright);
+    border-color: var(--cyan-bright);
+  }
+  .file.is-active .ext { color: var(--cyan-bright); }
+  .file:focus-visible { outline: 2px solid var(--cyan-bright); outline-offset: 1px; }
+
+  .rail-foot {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, .09);
+  }
+  .rail-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 8px;
+    font-size: 11px;
+    color: var(--rail-muted);
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--pink);
+  }
+  .rail-roles {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--rail-text);
+  }
+  .rail-city {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--rail-muted);
+  }
+
+  /* ---------- main ---------- */
+
+  .main {
+    min-width: 0;
+    min-height: calc(100dvh - 46px);
+    padding: 0 clamp(22px, 5vw, 72px);
+    background: var(--surface);
+  }
+
+  .hero,
+  .section,
+  .footer {
+    width: 100%;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
+    align-items: center;
+    gap: clamp(28px, 5vw, 64px);
+    min-height: calc(100dvh - 46px);
+    padding-block: clamp(44px, 6vw, 84px);
+  }
+
+  .hero-name {
+    margin: 0 0 24px;
+    font-family: var(--font-ui);
+    font-size: clamp(64px, 8.5vw, 112px);
+    font-weight: 500;
+    line-height: .9;
+    letter-spacing: -.045em;
+  }
+
+  .hero-lede {
+    max-width: 21em;
+    margin: 0;
+    font-size: clamp(19px, 2.2vw, 25px);
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .hero-sub {
+    max-width: 34em;
+    margin: 16px 0 0;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-2);
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 16px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    transition: background-color .18s ease, border-color .18s ease;
+  }
+  .btn-primary { background: var(--ink); color: #F4F8F3; }
+  .btn-primary:hover { background: #253633; }
+  .btn-ghost {
+    border-color: var(--line-strong);
+    color: var(--ink);
+    background: transparent;
+  }
+  .btn-ghost:hover { background: var(--surface-2); border-color: var(--ink-3); }
+
+  .pending {
+    padding: 4px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, .14);
+    color: #D6E5DD;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .cta-note {
+    margin: 12px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-3);
+  }
+
+  .viewer {
+    width: min(100%, 360px);
+    justify-self: end;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 30px 60px -42px rgba(22, 33, 31, .55);
+  }
+  .viewer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .viewer img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .viewer figcaption {
+    padding: 11px 13px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  /* ---------- sections ---------- */
+
+  .section {
+    padding: clamp(48px, 6vw, 72px) 0;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: 66px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .section-head h2 {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -.02em;
+  }
+  .path {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+
+  /* about */
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: start;
+  }
+
+  .prose p {
+    max-width: 33em;
+    margin: 0 0 16px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink-2);
+  }
+  .prose .lead {
+    max-width: 21em;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .facts {
+    margin: 28px 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dt { font-size: 12.5px; color: var(--ink-3); }
+  .facts dd { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink); }
+
+  .sheet {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  .sheet img { width: 100%; height: auto; }
+  .sheet figcaption {
+    padding: 10px 12px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--ink-3);
+  }
+
+  /* work */
+
+  .section-intro {
+    margin: -12px 0 26px;
+    font-size: 13.5px;
+    color: var(--ink-3);
+  }
+
+  .project {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 14px 32px;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .project--featured {
+    margin-bottom: 8px;
+    padding: 26px 24px;
+    border: 1px solid var(--line-strong);
+    border-top: 2px solid var(--cyan);
+    border-radius: 12px;
+    background: var(--surface-2);
+  }
+
+  .project:not(.project--featured):first-of-type { border-top: 0; }
+
+  .p-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .p-title {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -.01em;
+  }
+  .project--featured .p-title { font-size: 27px; }
+  .p-title a { text-decoration: none; }
+  .p-title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .flag {
+    padding: 3px 7px;
+    border-radius: 4px;
+    background: var(--pink-soft);
+    color: var(--pink-ink);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .p-desc {
+    max-width: 40em;
+    margin: 9px 0 0;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+
+  .p-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+  .p-list li:not(:last-child)::after {
+    content: "/";
+    margin-left: 10px;
+    color: var(--line-strong);
+  }
+
+  .p-side {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 3px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+  .p-stack { color: var(--ink-2); }
+  .p-stars { font-variant-numeric: tabular-nums; }
+  .p-repo {
+    align-self: flex-start;
+    margin-top: 7px;
+    color: var(--cyan);
+    font-size: 12.5px;
+    text-underline-offset: 3px;
+  }
+
+  /* now */
+
+  .skill-groups {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .skill-group { padding: 20px 22px 22px 0; }
+  .skill-group + .skill-group {
+    padding-left: 22px;
+    border-left: 1px solid var(--line);
+  }
+  .skill-group h3 {
+    margin: 0 0 13px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--ink-3);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .chips li {
+    padding: 5px 9px;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    background: var(--surface);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 40px;
+    margin-top: 26px;
+  }
+  .notes p {
+    max-width: 34em;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-2);
+  }
+
+  /* contact */
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .contact-lead {
+    max-width: 20em;
+    margin: 0 0 16px;
+    font-family: var(--font-ui);
+    font-size: clamp(21px, 2.6vw, 30px);
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: -.015em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .contact-body {
+    max-width: 32em;
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink-2);
+  }
+
+  .links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .links li { border-bottom: 1px solid var(--line); }
+  .link-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 2px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color .16s ease;
+  }
+  .link-row:hover { background: var(--surface-2); }
+  .link-name {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .link-handle {
+    font-size: 12.5px;
+    color: var(--ink-3);
+  }
+  .link-note {
+    margin-left: auto;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: var(--pink-soft);
+    color: var(--pink-ink);
+    font-size: 10.5px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  /* footer */
+
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 24px;
+    padding: 22px 0 38px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .footer a {
+    color: var(--ink-3);
+    text-underline-offset: 3px;
+  }
+  .footer .hand { font-family: var(--mono); font-size: 11.5px; }
+
+  /* ---------- motion ---------- */
+
+  @keyframes rise {
+    to { opacity: 1; transform: none; }
+  }
+
+  .js .hero-copy > * {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise .68s cubic-bezier(.22, .68, .3, 1) forwards;
+  }
+  .js .hero-copy > :nth-child(1) { animation-delay: .04s; }
+  .js .hero-copy > :nth-child(2) { animation-delay: .1s; }
+  .js .hero-copy > :nth-child(3) { animation-delay: .16s; }
+  .js .hero-copy > :nth-child(4) { animation-delay: .22s; }
+  .js .hero-copy > :nth-child(5) { animation-delay: .28s; }
+
+  .js .viewer {
+    opacity: 0;
+    transform: translateY(10px) scale(.985);
+    animation: rise .8s cubic-bezier(.22, .68, .3, 1) .2s forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js .hero-copy > *,
+    .js .viewer {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+    *, *::before, *::after {
+      transition-duration: .01ms !important;
+      animation-duration: .01ms !important;
+    }
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: 1fr; }
+
+    .sidebar {
+      position: static;
+      height: auto;
+      overflow: visible;
+      gap: 18px;
+      padding: 22px 22px 18px;
+    }
+    .rail-quote,
+    .rail-foot { display: none; }
+
+    .filetree {
+      flex-direction: row;
+      gap: 4px;
+      margin: 2px -4px 0;
+      padding-bottom: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filetree::-webkit-scrollbar { display: none; }
+    .file {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, .04);
+    }
+
+    .main { padding: 0 22px; }
+
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      gap: 34px;
+      padding-block: 42px 54px;
+    }
+    .viewer {
+      justify-self: start;
+      width: min(100%, 320px);
+    }
+
+    .about-grid,
+    .contact-grid { grid-template-columns: 1fr; }
+
+    .skill-groups { grid-template-columns: 1fr; }
+    .skill-group { padding: 18px 0; }
+    .skill-group + .skill-group {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .project { grid-template-columns: 1fr; gap: 12px; }
+    .p-side {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 16px;
+    }
+    .p-repo { margin-top: 0; }
+
+    .titlebar { padding: 0 14px; gap: 10px; }
+  }
+
+  @media (max-width: 560px) {
+    .hero-name { margin-bottom: 20px; }
+    .hero-lede { font-size: 19px; }
+    .notes { grid-template-columns: 1fr; }
+    .project--featured { padding: 20px 18px; }
+    .project--featured .p-title { font-size: 23px; }
+    .facts div { grid-template-columns: 78px minmax(0, 1fr); }
+    .section-head { margin-bottom: 24px; }
+    .window-title .slash,
+    .window-title .file-path { display: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="titlebar">
+  <div class="lights" aria-hidden="true"><span></span><span></span><span></span></div>
+  <p class="window-title">
+    <span>chasen</span>
+    <span class="slash" aria-hidden="true">/</span>
+    <span class="file-path" id="title-path">index.html</span>
+  </p>
+  <p class="title-meta">
+    <span class="live-dot" aria-hidden="true"></span>
+    <span id="clock">广州</span>
+  </p>
+</header>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="identity">
+      <span class="monogram" aria-hidden="true">C</span>
+      <div>
+        <p class="name">Chasen Liao</p>
+        <p class="role">AI 开发工程师</p>
+      </div>
+    </div>
+
+    <p class="rail-quote">名字取自 chase：不停追逐，无限进步。</p>
+
+    <nav class="filetree" aria-label="页面导航">
+      <a class="file" href="#about" data-nav>
+        <span class="file-mark" aria-hidden="true"></span>
+        <span>about<span class="ext">.md</span></span>
+      </a>
+      <a class="file" href="#work" data-nav>
+        <span class="file-mark" aria-hidden="true"></span>
+        <span>work<span class="ext">.md</span></span>
+      </a>
+      <a class="file" href="#now" data-nav>
+        <span class="file-mark" aria-hidden="true"></span>
+        <span>now<span class="ext">.md</span></span>
+      </a>
+      <a class="file" href="#contact" data-nav>
+        <span class="file-mark" aria-hidden="true"></span>
+        <span>contact<span class="ext">.md</span></span>
+      </a>
+    </nav>
+
+    <div class="rail-foot">
+      <p class="rail-label"><span class="status-dot" aria-hidden="true"></span>开放机会</p>
+      <p class="rail-roles">AI 开发工程师<br>AI 产品经理</p>
+      <p class="rail-city">广州 / 深圳</p>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <section class="hero" id="top" aria-labelledby="hero-name">
+      <div class="hero-copy">
+        <h1 class="hero-name" id="hero-name">Chasen</h1>
+        <p class="hero-lede">AI 开发工程师 × AI 原住民。做 Pi 桌面客户端和 Agent Skills，也想试试 AI 产品经理。</p>
+        <p class="hero-sub">20 岁，计算机科学大四，在广州。一边实习，一边做 Agent 工具。</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#">去 X 找我<span class="pending">链接待填</span></a>
+          <a class="btn btn-ghost" href="#work">看作品</a>
+        </div>
+        <p class="cta-note">X 和 GitHub 的链接还在整理，位置先留在这里。</p>
+      </div>
+
+      <figure class="viewer">
+        <div class="viewer-bar">
+          <span>profile.jpg</span>
+          <span>1:1</span>
+        </div>
+        <img src="avatar.jpg" width="343" height="343" alt="Chasen 的 Q 版头像：浅棕短发、青蓝色耳机、粉色发夹" fetchpriority="high">
+        <figcaption>Q 版的我。耳机上那个 C，是 Chasen 的 C。</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="section-head">
+        <h2 id="about-title">关于</h2>
+        <span class="path">~/about.md</span>
+      </div>
+
+      <div class="about-grid">
+        <div class="prose">
+          <p class="lead">我是 Chasen，20 岁，计算机科学大四，在广州。</p>
+          <p>名字取自 chase，不停追逐，无限进步。听起来有点热血，但确实是我给自己定的调子。</p>
+          <p>本职是 AI 开发工程师，一边实习，一边做 Agent 工具。每天在 Pi、Claude Code、Codex 之间切来切去，主力是 Python 和 TypeScript / React，做过 Agent、RAG、Electron、FastAPI 和向量检索。</p>
+          <p>最近在认真想转产品这件事。写代码让我知道东西能不能做出来，做产品还得回答为什么做、给谁用。这两个问题，我现在都还在学。</p>
+
+          <dl class="facts">
+            <div>
+              <dt>现在</dt>
+              <dd>AI 开发工程师，一边实习一边做 Agent 工具</dd>
+            </div>
+            <div>
+              <dt>学业</dt>
+              <dd>计算机科学，大四</dd>
+            </div>
+            <div>
+              <dt>城市</dt>
+              <dd>广州，也开放深圳的机会</dd>
+            </div>
+            <div>
+              <dt>名字</dt>
+              <dd>取自 chase，不停追逐</dd>
+            </div>
+          </dl>
+        </div>
+
+        <figure class="sheet">
+          <img src="chibi.jpg" width="1152" height="864" loading="lazy" alt="Chasen 的 Q 版角色设定图：正面、侧面、背面、六种表情，以及耳机和发夹的细节">
+          <figcaption>角色设定：浅棕短发、青蓝耳机、粉色发夹。头像和这张设定图都是同一个我。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="work" aria-labelledby="work-title">
+      <div class="section-head">
+        <h2 id="work-title">精选作品</h2>
+        <span class="path">~/work/</span>
+      </div>
+      <p class="section-intro">按我自己觉得的重要程度排。仓库都在 GitHub，star 数是大概的数。</p>
+
+      <article class="project project--featured">
+        <div>
+          <div class="p-head">
+            <h3 class="p-title"><a href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener noreferrer">pi-agent-desktop</a></h3>
+            <span class="flag">旗舰</span>
+          </div>
+          <p class="p-desc">给 Pi 编程智能体做的 Electron 桌面客户端，把会话、文件和多模型切换放进一个原生窗口里。</p>
+          <ul class="p-list">
+            <li>原生窗口</li>
+            <li>会话分叉</li>
+            <li>SSE 流式对话</li>
+            <li>模型中途切换</li>
+            <li>内置文件浏览器</li>
+          </ul>
+        </div>
+        <div class="p-side">
+          <span class="p-stack">TypeScript / Electron / React</span>
+          <span class="p-stars">约 331 star</span>
+          <a class="p-repo" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </article>
+
+      <article class="project">
+        <div>
+          <div class="p-head">
+            <h3 class="p-title"><a href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener noreferrer">resume-skills</a></h3>
+          </div>
+          <p class="p-desc">一句话让 Agent 生成一份简历，也能按 JD 做匹配。</p>
+        </div>
+        <div class="p-side">
+          <span class="p-stack">Agent Skills</span>
+          <span class="p-stars">约 38 star</span>
+          <a class="p-repo" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </article>
+
+      <article class="project">
+        <div>
+          <div class="p-head">
+            <h3 class="p-title"><a href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener noreferrer">Chasen-Skills</a></h3>
+          </div>
+          <p class="p-desc">自用的 Agent Skills 合集，用 npx skills 安装。里面有并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建这些我自己每天在用的技能。</p>
+        </div>
+        <div class="p-side">
+          <span class="p-stack">Agent Skills</span>
+          <span class="p-stars">约 33 star</span>
+          <a class="p-repo" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </article>
+
+      <article class="project">
+        <div>
+          <div class="p-head">
+            <h3 class="p-title"><a href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener noreferrer">Everything-claude-code-Doc</a></h3>
+          </div>
+          <p class="p-desc">Everything Claude Code 的使用指南，一直在更新。</p>
+        </div>
+        <div class="p-side">
+          <span class="p-stack">文档</span>
+          <span class="p-stars">约 15 star</span>
+          <a class="p-repo" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </article>
+
+      <article class="project">
+        <div>
+          <div class="p-head">
+            <h3 class="p-title"><a href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener noreferrer">SuperMew</a></h3>
+          </div>
+          <p class="p-desc">Agentic RAG 的实践，主要在看 Context Engineering 和三层记忆架构怎么落地。</p>
+        </div>
+        <div class="p-side">
+          <span class="p-stack">Python / RAG</span>
+          <a class="p-repo" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="now" aria-labelledby="now-title">
+      <div class="section-head">
+        <h2 id="now-title">在用的东西</h2>
+        <span class="path">~/now.md</span>
+      </div>
+
+      <div class="skill-groups">
+        <div class="skill-group">
+          <h3>每天在用</h3>
+          <ul class="chips">
+            <li>Pi</li>
+            <li>Claude Code</li>
+            <li>Codex</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3>主力</h3>
+          <ul class="chips">
+            <li>Python</li>
+            <li>TypeScript</li>
+            <li>React</li>
+            <li>Agent</li>
+            <li>RAG</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3>做过</h3>
+          <ul class="chips">
+            <li>Electron</li>
+            <li>FastAPI</li>
+            <li>向量检索</li>
+            <li>HTML / CSS</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="notes">
+        <p>在 X 上（@chasen_liao，约 6k 粉丝），我写 Pi 和 Agent 工具的实测、新模型上手、大四找工作，也记录从开发往产品走的过程。</p>
+        <p>手上在做的事：Pi 桌面客户端继续打磨，Chasen-Skills 里补新技能，还有找工作。</p>
+      </div>
+    </section>
+
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="section-head">
+        <h2 id="contact-title">开放机会</h2>
+        <span class="path">~/contact.md</span>
+      </div>
+
+      <div class="contact-grid">
+        <div>
+          <p class="contact-lead">我在找 AI 开发工程师或 AI 产品经理的工作，广州、深圳都可以。</p>
+          <p class="contact-body">如果你在做 Agent 工具、桌面客户端或者 AI 产品，或者想聊从开发转产品这件事，可以来找我。下面的入口链接还在整理，先把位置留在这里。</p>
+        </div>
+
+        <ul class="links">
+          <li>
+            <a class="link-row" href="#">
+              <span class="link-name">个人站</span>
+              <span class="link-note">链接待填</span>
+            </a>
+          </li>
+          <li>
+            <a class="link-row" href="#">
+              <span class="link-name">博客</span>
+              <span class="link-note">链接待填</span>
+            </a>
+          </li>
+          <li>
+            <a class="link-row" href="#">
+              <span class="link-name">GitHub</span>
+              <span class="link-note">链接待填</span>
+            </a>
+          </li>
+          <li>
+            <a class="link-row" href="#">
+              <span class="link-name">X</span>
+              <span class="link-handle">@chasen_liao</span>
+              <span class="link-note">链接待填</span>
+            </a>
+          </li>
+          <li>
+            <a class="link-row" href="#">
+              <span class="link-name">Email</span>
+              <span class="link-note">链接待填</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>© 2026 Chasen Liao</span>
+      <span class="hand">手写 HTML / CSS / JS，没有构建工具</span>
+      <a href="#top">回到顶部</a>
+    </footer>
+  </main>
+</div>
+
+<script>
+  (function () {
+    var clock = document.getElementById('clock');
+    var timeFormat = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+
+    function tick() {
+      if (!clock) return;
+      clock.textContent = '广州 ' + timeFormat.format(new Date());
+    }
+    tick();
+    setInterval(tick, 30000);
+
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+    var sections = navLinks.map(function (link) {
+      return document.querySelector(link.getAttribute('href'));
+    }).filter(Boolean);
+    var pathEl = document.getElementById('title-path');
+    var fileNames = { about: 'about.md', work: 'work/', now: 'now.md', contact: 'contact.md' };
+    var ticking = false;
+
+    function setActive() {
+      var y = window.scrollY + 150;
+      var current = null;
+
+      sections.forEach(function (section) {
+        if (section.getBoundingClientRect().top + window.scrollY <= y) {
+          current = section;
+        }
+      });
+
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
+        current = sections[sections.length - 1];
+      }
+
+      navLinks.forEach(function (link) {
+        var on = !!current && link.getAttribute('href') === '#' + current.id;
+        link.classList.toggle('is-active', on);
+        if (on) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+
+      if (pathEl) {
+        pathEl.textContent = current ? (fileNames[current.id] || 'index.html') : 'index.html';
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(setActive);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', setActive, { passive: true });
+    setActive();
+  })();
+</script>
+</body>
+</html>

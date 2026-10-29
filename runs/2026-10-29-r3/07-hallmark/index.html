@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chasen Liao · AI 开发工程师</title>
+  <meta name="description" content="Chasen Liao，20 岁，广州。AI 开发工程师，做 Pi 桌面客户端和 Agent Skills，开放 AI 开发与 AI 产品机会。">
+  <meta name="theme-color" content="#f1ede2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+  <style>
+/* Hallmark · v2.0.0 · theme: custom · genre: editorial · job: hire, or start a conversation about AI roles · shape: Index-First, a type-led record of work with one instrument panel in the hero · nav: wordmark left, four section links right, no button · footer: a closing mast, name and motto, no link columns · hero: custom split, copy left, feature diagram right, centred in the first screen · signature: pi-agent-desktop's five capabilities set as a session tree · material: real: the profile, five repositories and star counts, avatar.jpg · absent: logos, quotes, invented metrics */
+/* Hallmark · pre-emit critique: P5 H4 E5 S5 R4 V4 · weakest: R, the hero diagram could carry badges; cut them, kept one panel with one job */
+
+:root {
+  --color-paper: #f1ede2;
+  --color-paper-2: #e8e3d6;
+  --color-ink: #191a15;
+  --color-ink-soft: #4f5348;
+  --color-muted: #62665a;
+  --color-line: #cbc6b8;
+  --color-line-strong: #8e9082;
+  --color-accent: #2340d8;
+  --color-accent-strong: #1b31b3;
+  --color-accent-ink: #f7f4ea;
+  --color-focus: #2340d8;
+  --color-panel: #12161d;
+  --color-panel-2: #1a202a;
+  --color-panel-ink: #f1ede2;
+  --color-panel-muted: #adb6c2;
+  --color-panel-line: #303a46;
+  --color-panel-focus: #9cc2ff;
+
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 120px;
+  --space-11: 160px;
+
+  --section-gap-s: 88px;
+  --section-gap-m: 104px;
+  --section-gap: 120px;
+  --section-gap-l: 160px;
+
+  --page-max: 1280px;
+  --pad-x: clamp(20px, 5vw, 72px);
+  --nav-height: 72px;
+  --text-display: clamp(4rem, 13vw, 11rem);
+  --text-section: clamp(2.5rem, 4vw, 3.5rem);
+  --text-title: clamp(1.5rem, 2.4vw, 2.125rem);
+  --text-lede: clamp(1.0625rem, 1.35vw, 1.25rem);
+  --text-small: 0.8125rem;
+  --radius: 2px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--color-line-strong) var(--color-paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.72;
+  caret-color: var(--color-accent);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  min-width: 0;
+  overflow-wrap: break-word;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.contact a:focus-visible,
+.footer a:focus-visible {
+  outline-color: var(--color-panel-focus);
+}
+
+.skip {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 100;
+  transform: translateY(-240%);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-panel);
+  color: var(--color-panel-ink);
+  font-size: var(--text-small);
+}
+
+.skip:focus {
+  transform: translateY(0);
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.nav {
+  min-height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.brand-last {
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.nav-links a {
+  display: inline-block;
+  padding-block: var(--space-2);
+  color: var(--color-ink-soft);
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: transparent;
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.nav-links a:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+.nav-links a:active {
+  color: var(--color-accent-strong);
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  min-height: min(calc(100svh - 120px), 820px);
+  padding-top: var(--space-7);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.hero-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(40px, 5vw, 72px);
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.hero-name {
+  display: block;
+  font-size: var(--text-display);
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+}
+
+.hero-line {
+  display: block;
+  margin-top: var(--space-4);
+  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -0.02em;
+}
+
+.hero-lede {
+  max-width: 34em;
+  margin-top: var(--space-5);
+  color: var(--color-ink-soft);
+  font-size: var(--text-lede);
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4) var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.btn {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-strong);
+  border-color: var(--color-accent-strong);
+}
+
+.btn-primary:active {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+.btn-secondary:hover {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.btn-secondary:active {
+  background: var(--color-ink-soft);
+  border-color: var(--color-ink-soft);
+  color: var(--color-paper);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pending-note {
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.4;
+}
+
+.hero-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}
+
+.hero-foot span:last-child {
+  text-align: right;
+}
+
+.diagram {
+  align-self: center;
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-panel-line);
+  border-radius: var(--radius);
+  background: var(--color-panel);
+  color: var(--color-panel-ink);
+}
+
+.diagram-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-panel-line);
+}
+
+.diagram-slug {
+  color: var(--color-panel-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.diagram-stack {
+  color: var(--color-panel-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.branches {
+  position: relative;
+  padding-top: var(--space-2);
+}
+
+.branches::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--color-panel-line);
+}
+
+.branch {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(96px, 0.8fr) minmax(0, 1.4fr);
+  gap: var(--space-4);
+  padding: var(--space-4) 0 var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-panel-line);
+}
+
+.branch::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 12px;
+  height: 1px;
+  background: var(--color-panel-line);
+}
+
+.branch:first-child {
+  border-top: 0;
+}
+
+.branch-name {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.branch-desc {
+  color: var(--color-panel-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.diagram-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-top: var(--space-4);
+  color: var(--color-panel-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+.diagram-foot .stars {
+  color: var(--color-panel-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.section {
+  padding-block: var(--section-gap);
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+  align-items: end;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.section-head h2 {
+  font-size: var(--text-section);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.section-note {
+  max-width: 38ch;
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.about {
+  padding-block: var(--section-gap) var(--section-gap-s);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  align-items: start;
+  gap: var(--space-8);
+}
+
+.portrait {
+  min-width: 0;
+}
+
+.portrait img {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius);
+  object-fit: cover;
+  background: var(--color-paper-2);
+}
+
+.portrait figcaption {
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}
+
+.about-copy {
+  max-width: 62ch;
+}
+
+.about-copy .lede {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.about-copy p + p {
+  margin-top: var(--space-5);
+}
+
+.about-copy p:not(.lede) {
+  color: var(--color-ink-soft);
+  font-size: 16px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-line);
+  font-size: 15px;
+}
+
+.facts dt {
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.8;
+}
+
+.facts dd {
+  color: var(--color-ink);
+  line-height: 1.8;
+}
+
+.work {
+  padding-block: var(--section-gap) var(--section-gap-m);
+}
+
+.work-list {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(144px, 0.28fr);
+  gap: var(--space-8);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--color-line);
+}
+
+.project h3 {
+  font-size: var(--text-title);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+}
+
+.project h3 a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: var(--color-muted);
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.project h3 a:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+.project h3 a:active {
+  color: var(--color-accent-strong);
+}
+
+.project-desc {
+  max-width: 62ch;
+  margin-top: var(--space-3);
+  color: var(--color-ink-soft);
+  font-size: 16px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) 0;
+  margin-top: var(--space-4);
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+.tags li {
+  padding-inline: var(--space-2);
+  border-left: 1px solid var(--color-line);
+}
+
+.tags li:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.project-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-meta .stars {
+  color: var(--color-ink);
+  font-size: 15px;
+}
+
+.repo-link {
+  color: var(--color-ink);
+  font-size: var(--text-small);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: var(--color-line-strong);
+  white-space: nowrap;
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.repo-link:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+.repo-link:active {
+  color: var(--color-accent-strong);
+}
+
+.skills {
+  padding-block: var(--section-gap-s) var(--section-gap-m);
+  border-block: 1px solid var(--color-line);
+  background: var(--color-paper-2);
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 1.15fr);
+  gap: var(--space-8);
+}
+
+.skill-col {
+  padding-top: var(--space-5);
+  border-top: 2px solid var(--color-ink);
+}
+
+.skill-col h3 {
+  margin-bottom: var(--space-4);
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.skill-col li {
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--color-line);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.skill-col li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.now {
+  padding-block: var(--section-gap) var(--section-gap-s);
+}
+
+.now-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr);
+  align-items: start;
+  gap: var(--space-8);
+}
+
+.now h2 {
+  max-width: 14ch;
+  font-size: var(--text-section);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.now-copy {
+  padding-top: var(--space-3);
+  max-width: 46ch;
+}
+
+.now-copy p {
+  color: var(--color-ink-soft);
+  font-size: 17px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+
+.now-copy p + p {
+  margin-top: var(--space-4);
+}
+
+.contact {
+  padding-block: var(--section-gap-l) var(--section-gap-s);
+  background: var(--color-panel);
+  color: var(--color-panel-ink);
+}
+
+.contact h2 {
+  max-width: 16ch;
+  color: var(--color-panel-ink);
+  font-size: clamp(2.75rem, 4.8vw, 4.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.contact-lede {
+  max-width: 52ch;
+  margin-top: var(--space-5);
+  color: var(--color-panel-muted);
+  font-size: 17px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.roles {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-panel-line);
+}
+
+.roles-label {
+  margin-bottom: var(--space-4);
+  color: var(--color-panel-muted);
+  font-size: var(--text-small);
+}
+
+.roles li {
+  color: var(--color-panel-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.place {
+  margin-top: var(--space-5);
+  color: var(--color-panel-muted);
+  font-size: 14px;
+}
+
+.contact-links {
+  border-top: 1px solid var(--color-panel-line);
+}
+
+.contact-links li {
+  border-bottom: 1px solid var(--color-panel-line);
+}
+
+.contact-link {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  color: var(--color-panel-ink);
+  transition: color 180ms ease;
+}
+
+.contact-link:hover {
+  color: var(--color-panel-focus);
+}
+
+.contact-link:active {
+  color: var(--color-panel-ink);
+}
+
+.contact-link .name {
+  min-width: 88px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.contact-link .handle {
+  color: var(--color-panel-muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.contact-link .pending {
+  margin-left: auto;
+  color: var(--color-panel-muted);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+
+.footer {
+  padding-block: var(--space-6) var(--space-7);
+  background: var(--color-panel);
+  color: var(--color-panel-ink);
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-panel-line);
+}
+
+.footer-name {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.footer-motto {
+  margin-top: var(--space-2);
+  color: var(--color-panel-muted);
+  font-size: 14px;
+}
+
+.footer-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+  color: var(--color-panel-muted);
+  font-size: var(--text-small);
+  line-height: 1.7;
+  text-align: right;
+}
+
+.footer-side a {
+  color: var(--color-panel-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+.footer-side a:hover {
+  color: var(--color-panel-focus);
+}
+
+@media (max-width: 1040px) {
+  .hero {
+    min-height: auto;
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-7);
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+
+  .hero-line {
+    font-size: clamp(2rem, 5.8vw, 3.25rem);
+  }
+
+  .diagram {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .about-grid,
+  .now-grid,
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .now-copy {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 880px) {
+  .section-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .section-note {
+    max-width: 52ch;
+  }
+
+  .skill-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --nav-height: 64px;
+    --section-gap-s: 64px;
+    --section-gap-m: 72px;
+    --section-gap: 80px;
+    --section-gap-l: 96px;
+  }
+
+  .project {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+  }
+
+  .project-meta {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: var(--space-4);
+    text-align: left;
+  }
+
+  .project-meta .stars {
+    order: 2;
+  }
+
+  .repo-link {
+    order: 1;
+  }
+
+  .footer-inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .footer-side {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .brand {
+    font-size: 21px;
+  }
+
+  .brand-last {
+    display: none;
+  }
+
+  .nav-links {
+    gap: var(--space-4);
+  }
+
+  .nav-links a {
+    font-size: 13px;
+  }
+
+  .hero {
+    padding-top: var(--space-7);
+  }
+
+  .hero-line {
+    margin-top: var(--space-3);
+  }
+
+  .hero-actions {
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .btn {
+    min-height: 48px;
+    padding-inline: var(--space-4);
+    font-size: 14px;
+  }
+
+  .hero-foot {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .hero-foot span:last-child {
+    text-align: left;
+  }
+
+  .diagram {
+    padding: var(--space-4);
+  }
+
+  .branch {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+    padding-block: var(--space-3);
+    padding-left: var(--space-4);
+  }
+
+  .branch::before {
+    top: 24px;
+    width: 8px;
+  }
+
+  .contact-link {
+    gap: var(--space-3);
+  }
+
+  .contact-link .name {
+    min-width: 72px;
+  }
+
+  .contact-link .handle {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-links {
+    gap: var(--space-3);
+  }
+
+  .nav-links a {
+    font-size: 12px;
+  }
+
+  .contact-link .name {
+    min-width: 64px;
+  }
+
+  .contact-link .handle {
+    font-size: 12px;
+  }
+
+  .contact-link .pending {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .nav-links a,
+  .btn,
+  .project h3 a,
+  .repo-link,
+  .contact-link {
+    transition: none;
+  }
+}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">跳到主要内容</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Chasen Liao，回到顶部">
+        <span>Chasen</span>
+        <span class="brand-last">Liao</span>
+      </a>
+      <nav class="nav-links" aria-label="主要导航">
+        <a href="#work">作品</a>
+        <a href="#about">关于</a>
+        <a href="#now">现在</a>
+        <a href="#contact">联系</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title">
+            <span class="hero-name">Chasen</span>
+            <span class="hero-line">一直追，<br>追到好用为止。</span>
+          </h1>
+          <p class="hero-lede">AI 开发工程师，AI 原住民。做 Pi 桌面客户端和 Agent Skills，也在认真考虑 AI 产品经理这条路。</p>
+          <div class="hero-actions">
+            <div class="action">
+              <a class="btn btn-primary" href="#" data-pending title="链接待填">去 X 看看</a>
+              <span class="pending-note">链接待填</span>
+            </div>
+            <a class="btn btn-secondary" href="#work">看作品</a>
+          </div>
+        </div>
+
+        <figure class="diagram" aria-label="pi-agent-desktop 的功能结构图">
+          <div class="diagram-head">
+            <span class="diagram-slug">pi-agent-desktop</span>
+            <span class="diagram-stack">Electron / React / TypeScript</span>
+          </div>
+          <ul class="branches">
+            <li class="branch">
+              <span class="branch-name">原生窗口</span>
+              <span class="branch-desc">Agent 在自己的窗口里跑。</span>
+            </li>
+            <li class="branch">
+              <span class="branch-name">会话分叉</span>
+              <span class="branch-desc">一个任务开两条线，比较两种改法。</span>
+            </li>
+            <li class="branch">
+              <span class="branch-name">SSE 流式对话</span>
+              <span class="branch-desc">回答边生成边出现。</span>
+            </li>
+            <li class="branch">
+              <span class="branch-name">模型中途切换</span>
+              <span class="branch-desc">聊到一半换模型，接着往下做。</span>
+            </li>
+            <li class="branch">
+              <span class="branch-name">内置文件浏览器</span>
+              <span class="branch-desc">改哪个文件，直接点开。</span>
+            </li>
+          </ul>
+          <div class="diagram-foot">
+            <span class="stars">GitHub 约 331 stars</span>
+            <span>功能结构，不是截图</span>
+          </div>
+        </figure>
+      </div>
+
+      <div class="wrap hero-foot">
+        <span>名字取自 chase：不停追逐，无限进步。</span>
+        <span>广州，20 岁，计算机科学大四</span>
+      </div>
+    </section>
+
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="about-title">关于我</h2>
+          <p class="section-note">一边实习，一边把 Agent 工具做进每天的工作流。</p>
+        </div>
+        <div class="about-grid">
+          <figure class="portrait">
+            <img src="avatar.jpg" width="400" height="400" loading="lazy" alt="Chasen 的 Q 版头像，浅棕色短发，戴着青蓝色耳机">
+            <figcaption>Q 版自画像</figcaption>
+          </figure>
+          <div class="about-copy">
+            <p class="lede">我 20 岁，在广州读计算机科学大四。现在一边实习，一边做 AI Agent 工具。</p>
+            <p>名字取自 chase：不停追逐，无限进步。我的项目大多很具体：pi-agent-desktop 把会话、文件和模型切换放进一个桌面窗口；resume-skills 让一句话生成简历，再按 JD 匹配。做完丢到 X 上，写哪里好用、哪里还别扭。</p>
+            <p>最近在认真考虑往 AI 产品经理方向走。不是不写代码了，而是想多往前一步，弄清楚一个工具到底解决谁的什么问题。</p>
+            <dl class="facts">
+              <dt>现在</dt>
+              <dd>一边实习，一边做 Agent 工具</dd>
+              <dt>在读</dt>
+              <dd>计算机科学，大四</dd>
+              <dt>城市</dt>
+              <dd>广州；求职广州或深圳</dd>
+              <dt>在 X</dt>
+              <dd>@chasen_liao，约 6k 粉丝</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section work" id="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="work-title">精选作品</h2>
+          <p class="section-note">按我自己觉得的重要程度排，没有按 star 排。</p>
+        </div>
+        <ol class="work-list">
+          <li class="project">
+            <div>
+              <h3><a href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener noreferrer">pi-agent-desktop</a></h3>
+              <p class="project-desc">给 Pi 编程智能体做的 Electron 桌面客户端，把会话、文件和模型切换放进一个原生窗口。</p>
+              <ul class="tags" aria-label="技术栈">
+                <li>Electron</li>
+                <li>TypeScript</li>
+                <li>React</li>
+              </ul>
+            </div>
+            <div class="project-meta">
+              <span class="stars">约 331 stars</span>
+              <a class="repo-link" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener noreferrer">打开仓库</a>
+            </div>
+          </li>
+          <li class="project">
+            <div>
+              <h3><a href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener noreferrer">resume-skills</a></h3>
+              <p class="project-desc">一句话让 Agent 生成精美简历，还能按 JD 匹配。</p>
+              <ul class="tags" aria-label="类型">
+                <li>Agent Skills</li>
+              </ul>
+            </div>
+            <div class="project-meta">
+              <span class="stars">约 38 stars</span>
+              <a class="repo-link" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener noreferrer">打开仓库</a>
+            </div>
+          </li>
+          <li class="project">
+            <div>
+              <h3><a href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener noreferrer">Chasen-Skills</a></h3>
+              <p class="project-desc">自用 Agent Skills 合集，npx skills 安装。并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建，都在里面。</p>
+              <ul class="tags" aria-label="类型">
+                <li>Agent Skills</li>
+              </ul>
+            </div>
+            <div class="project-meta">
+              <span class="stars">约 33 stars</span>
+              <a class="repo-link" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener noreferrer">打开仓库</a>
+            </div>
+          </li>
+          <li class="project">
+            <div>
+              <h3><a href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener noreferrer">Everything-claude-code-Doc</a></h3>
+              <p class="project-desc">Everything Claude Code 的使用指南，持续更新。</p>
+              <ul class="tags" aria-label="类型">
+                <li>文档</li>
+              </ul>
+            </div>
+            <div class="project-meta">
+              <span class="stars">约 15 stars</span>
+              <a class="repo-link" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener noreferrer">打开仓库</a>
+            </div>
+          </li>
+          <li class="project">
+            <div>
+              <h3><a href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener noreferrer">SuperMew</a></h3>
+              <p class="project-desc">Agentic RAG，关注 Context Engineering 和三层记忆架构。</p>
+              <ul class="tags" aria-label="类型">
+                <li>Agentic RAG</li>
+              </ul>
+            </div>
+            <div class="project-meta">
+              <a class="repo-link" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener noreferrer">打开仓库</a>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section skills" id="skills" aria-labelledby="skills-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="skills-title">每天打开的东西</h2>
+          <p class="section-note">不打百分比，按一天里真正用到的次数排。</p>
+        </div>
+        <div class="skill-grid">
+          <div class="skill-col">
+            <h3>每天在用</h3>
+            <ul>
+              <li>Pi</li>
+              <li>Claude Code</li>
+              <li>Codex</li>
+            </ul>
+          </div>
+          <div class="skill-col">
+            <h3>主力</h3>
+            <ul>
+              <li>Python</li>
+              <li>TypeScript / React</li>
+              <li>Agent / RAG</li>
+            </ul>
+          </div>
+          <div class="skill-col">
+            <h3>做过</h3>
+            <ul>
+              <li>Electron</li>
+              <li>FastAPI</li>
+              <li>向量检索</li>
+              <li>HTML / CSS</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="now" id="now" aria-labelledby="now-title">
+      <div class="wrap now-grid">
+        <h2 id="now-title">现在的生活，基本是三件事。</h2>
+        <div class="now-copy">
+          <p>实习、写 pi-agent-desktop、在 X 记录找工作的过程。</p>
+          <p>产品经理那条路，正在用做项目的方式试：先弄清楚它解决谁的什么问题，再决定写什么。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <h2 id="contact-title">有岗位，或者想聊聊 Agent，都可以。</h2>
+        <p class="contact-lede">开放 AI 开发工程师和 AI 产品经理的机会，广州或深圳。也欢迎来 X 聊 Pi、Agent Skills 和新模型。</p>
+        <div class="contact-grid">
+          <div class="roles">
+            <p class="roles-label">开放机会</p>
+            <ul>
+              <li>AI 开发工程师</li>
+              <li>AI 产品经理</li>
+            </ul>
+            <p class="place">广州 / 深圳</p>
+          </div>
+          <ul class="contact-links" aria-label="联系入口">
+            <li><a class="contact-link" href="#" data-pending title="链接待填"><span class="name">个人站</span><span class="pending">链接待填</span></a></li>
+            <li><a class="contact-link" href="#" data-pending title="链接待填"><span class="name">博客</span><span class="pending">链接待填</span></a></li>
+            <li><a class="contact-link" href="#" data-pending title="链接待填"><span class="name">GitHub</span><span class="pending">链接待填</span></a></li>
+            <li><a class="contact-link" href="#" data-pending title="链接待填"><span class="name">X</span><span class="handle">@chasen_liao</span><span class="pending">链接待填</span></a></li>
+            <li><a class="contact-link" href="#" data-pending title="链接待填"><span class="name">Email</span><span class="pending">链接待填</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>
+        <p class="footer-name">Chasen Liao</p>
+        <p class="footer-motto">名字是 chase，所以先跑起来。</p>
+      </div>
+      <div class="footer-side">
+        <p>© 2026 Chasen Liao</p>
+        <p>广州</p>
+        <a href="#top">回到顶部</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('[data-pending]').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "id": "07-hallmark",
+  "round": 3,
+  "skill": "hallmark",
+  "start": "2026-10-29 22:19:51 CST",
+  "end": "2026-10-29 22:26:36 CST",
+  "duration_s": 405,
+  "over_15min": false,
+  "over_30min": false,
+  "exit": 0,
+  "index_html": "runs/2026-10-29-r3/07-hallmark/index.html",
+  "bytes": 33581,
+  "screenshots": "ok",
+  "mode": "one-shot",
+  "thinking": "high"
+}

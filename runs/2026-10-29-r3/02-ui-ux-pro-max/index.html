@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chasen — AI 开发工程师 / AI 原住民</title>
+<meta name="description" content="Chasen（Chasen Liao），20 岁，计算机科学大四，广州。AI 开发工程师，做 Pi 桌面客户端与 Agent Skills；开放 AI 开发工程师、AI 产品经理机会。">
+<meta name="theme-color" content="#F6F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  /* ---------- tokens ---------- */
+  :root{
+    --paper:#F6F3EC;
+    --paper-2:#FCFAF6;
+    --ink:#16181D;
+    --ink-soft:#34383F;
+    --muted:#5B6068;
+    --line:#DED8CD;
+    --line-strong:#C7C0B3;
+    --accent:#0B6E77;
+    --accent-deep:#08545C;
+    --accent-soft:#DDEEEF;
+    --pink:#E9A0B4;
+    --sans:"Archivo","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --display:"Space Grotesk","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --container:1180px;
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.72;
+    color:var(--ink-soft);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    pointer-events:none;
+    opacity:.18;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  }
+  ::selection{background:var(--accent-soft);color:var(--ink)}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  h1,h2,h3,h4,p,ul,dl,dd,figure,blockquote{margin:0}
+  ul{padding:0;list-style:none}
+  button{font:inherit}
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+  .skip-link{
+    position:fixed;top:10px;left:10px;z-index:10000;
+    padding:12px 18px;background:var(--ink);color:var(--paper);
+    font-family:var(--mono);font-size:12px;
+    transform:translateY(-160%);
+    transition:transform .2s var(--ease);
+  }
+  .skip-link:focus{transform:translateY(0)}
+
+  .wrap{width:min(var(--container),calc(100% - 48px));margin-inline:auto}
+
+  /* ---------- header ---------- */
+  .site-head{
+    position:sticky;top:0;z-index:100;
+    background:rgba(246,243,236,.86);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .head-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;height:68px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;min-height:44px}
+  .brand-mark{
+    width:28px;height:28px;flex:none;
+    display:grid;place-items:center;
+    border:1px solid var(--ink);
+    font-family:var(--mono);font-weight:500;font-size:13px;
+    transition:background .2s var(--ease),color .2s var(--ease);
+  }
+  .brand:hover .brand-mark{background:var(--ink);color:var(--paper)}
+  .brand-name{
+    font-family:var(--display);font-weight:600;font-size:15px;color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .brand-name span{color:var(--muted);font-weight:400}
+  .nav{display:flex;align-items:center;gap:30px}
+  .nav a{
+    position:relative;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);
+    padding:12px 0;min-height:44px;display:inline-flex;align-items:center;
+    transition:color .2s var(--ease);
+  }
+  .nav a::after{
+    content:"";position:absolute;left:0;right:100%;bottom:8px;
+    height:1px;background:var(--accent);
+    transition:right .25s var(--ease);
+  }
+  .nav a:hover{color:var(--ink)}
+  .nav a:hover::after{right:0}
+  .nav-num{color:var(--accent);margin-right:6px;font-size:10px}
+  .head-link{
+    display:none;align-items:center;min-height:44px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink);
+  }
+  .head-status{
+    display:inline-flex;align-items:center;gap:9px;
+    min-height:38px;padding:0 14px;
+    border:1px solid var(--line-strong);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+    color:var(--ink);white-space:nowrap;
+  }
+  .dot{
+    width:7px;height:7px;flex:none;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 3px rgba(11,110,119,.13);
+    animation:breathe 3.2s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{opacity:1}50%{opacity:.45}}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:clamp(42px,6.5vw,82px) 0 0}
+  .hero::before{
+    content:"";position:absolute;inset:0 0 auto;height:100%;
+    pointer-events:none;
+    background-image:
+      linear-gradient(to right,rgba(22,24,29,.045) 1px,transparent 1px),
+      linear-gradient(to bottom,rgba(22,24,29,.045) 1px,transparent 1px);
+    background-size:80px 80px;
+    -webkit-mask-image:linear-gradient(to bottom,#000 0%,transparent 78%);
+    mask-image:linear-gradient(to bottom,#000 0%,transparent 78%);
+  }
+  .hero .wrap{position:relative}
+  .hero-grid{
+    display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr);
+    gap:clamp(32px,5vw,72px);align-items:center;
+  }
+  .hero-eyebrow{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:clamp(18px,3vw,30px);
+  }
+  .hero-eyebrow .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border:1px solid var(--line-strong);
+    color:var(--ink);background:rgba(252,250,246,.7);
+  }
+  .hero-eyebrow .sep{width:18px;height:1px;background:var(--line-strong)}
+  .hero h1{
+    font-family:var(--display);
+    font-size:clamp(4.3rem,13.2vw,10.6rem);
+    line-height:.84;
+    letter-spacing:-.055em;
+    font-weight:600;
+    color:var(--ink);
+    margin-left:-.05em;
+  }
+  .hero h1 .period{color:var(--accent);font-weight:400}
+  .hero h1 .sup{
+    display:inline-block;vertical-align:top;
+    font-family:var(--mono);font-size:clamp(11px,1.2vw,14px);
+    letter-spacing:0;color:var(--muted);
+    margin-top:.9em;margin-left:.6em;
+  }
+  .hero-lead{
+    margin-top:clamp(24px,3.5vw,38px);
+    max-width:34em;
+    font-size:clamp(1.02rem,1.3vw,1.16rem);
+    line-height:1.75;color:var(--ink-soft);
+  }
+  .hero-lead strong{color:var(--ink);font-weight:600}
+  .hero-lead .accent{
+    color:var(--accent-deep);
+    box-shadow:inset 0 -.42em 0 var(--accent-soft);
+  }
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(26px,3.5vw,36px)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:11px;
+    min-height:50px;padding:0 22px;
+    border:1px solid var(--ink);
+    font-family:var(--sans);font-size:14.5px;font-weight:500;
+    transition:background .22s var(--ease),color .22s var(--ease),border-color .22s var(--ease),transform .22s var(--ease);
+  }
+  .btn svg{width:16px;height:16px;flex:none;transition:transform .22s var(--ease)}
+  .btn--primary{background:var(--ink);color:var(--paper)}
+  .btn--primary:hover{background:var(--accent);border-color:var(--accent);color:#fff;transform:translateY(-2px)}
+  .btn--primary:hover svg{transform:translate(2px,-2px)}
+  .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+  .btn--ghost:hover{background:var(--paper-2);border-color:var(--ink);transform:translateY(-2px)}
+  .btn--ghost:hover svg{transform:translateY(2px)}
+  .btn-note{
+    display:block;margin-top:10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--muted);
+  }
+  .hero-links{
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;
+    margin-top:26px;padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;color:var(--muted);
+  }
+  .hero-links .k{color:var(--ink);letter-spacing:.02em}
+  .hero-links .wait{font-size:9.5px;letter-spacing:.08em;color:var(--accent-deep);background:var(--accent-soft);padding:2px 5px}
+  .hero-links .link:hover .k{text-decoration:underline;text-underline-offset:3px}
+
+  /* portrait */
+  .portrait{position:relative;justify-self:end;width:min(100%,400px)}
+  .portrait-frame{
+    position:relative;padding:10px;background:var(--paper-2);
+    border:1px solid var(--line-strong);
+    box-shadow:14px 14px 0 -1px rgba(22,24,29,.055);
+  }
+  .portrait-frame img{
+    width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+    filter:saturate(.97);
+  }
+  .portrait-frame::before{
+    content:"";position:absolute;inset:-1px;pointer-events:none;
+    border-top:2px solid var(--ink);border-left:2px solid var(--ink);
+    width:26px;height:26px;
+  }
+  .cross{position:absolute;font-family:var(--mono);font-size:13px;color:var(--line-strong);line-height:1}
+  .cross--tr{top:-9px;right:6px}
+  .cross--bl{bottom:6px;left:-9px}
+  .portrait-stamp{
+    position:absolute;top:-18px;right:-14px;
+    width:66px;height:66px;border-radius:50%;
+    display:grid;place-items:center;
+    background:var(--accent);color:#fff;
+    font-family:var(--mono);font-size:10px;line-height:1.25;text-align:center;
+    letter-spacing:.04em;
+    box-shadow:0 8px 20px -8px rgba(8,84,92,.6);
+  }
+  .portrait-stamp b{display:block;font-size:16px;font-weight:500;letter-spacing:.02em}
+  .portrait-caption{
+    display:flex;justify-content:space-between;gap:12px;
+    padding:10px 12px 12px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--muted);
+    border-top:1px solid var(--line);
+    margin-top:10px;
+  }
+  .portrait-meta{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;
+    margin-top:14px;border:1px solid var(--line);
+    background:rgba(252,250,246,.55);
+  }
+  .portrait-meta div{padding:12px 14px}
+  .portrait-meta div+div{border-left:1px solid var(--line)}
+  .portrait-meta dt{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:3px;
+  }
+  .portrait-meta dd{font-size:12.5px;color:var(--ink);line-height:1.45}
+
+  /* tool strip */
+  .tool-strip{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px 26px;
+    margin-top:clamp(38px,5vw,64px);
+    padding:15px 0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  }
+  .tool-strip .strip-label{color:var(--accent-deep)}
+  .tool-strip ul{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;color:var(--ink)}
+  .tool-strip li{display:flex;align-items:center;gap:22px}
+  .tool-strip li+li::before{content:"";width:4px;height:4px;background:var(--line-strong);border-radius:50%;margin-left:-14px}
+  .tool-strip .strip-end{margin-left:auto;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+  .tool-strip .strip-end svg{width:12px;height:12px}
+
+  /* ---------- sections ---------- */
+  .section{padding:clamp(74px,9.5vw,126px) 0}
+  .sec-head{
+    display:flex;align-items:center;gap:18px;
+    padding-bottom:16px;margin-bottom:clamp(34px,5vw,58px);
+    border-bottom:1px solid var(--line);
+  }
+  .sec-num{
+    font-family:var(--mono);font-size:11px;color:var(--accent);
+    letter-spacing:.08em;flex:none;
+  }
+  .sec-head h2{
+    font-family:var(--display);font-size:clamp(1.05rem,1.6vw,1.22rem);
+    font-weight:500;letter-spacing:.01em;color:var(--ink);
+  }
+  .sec-head .sec-en{
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .sec-rule{flex:1;height:1px;background:var(--line);min-width:20px}
+  .sec-note{
+    font-family:var(--mono);font-size:10px;color:var(--muted);
+    letter-spacing:.04em;flex:none;
+  }
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:clamp(32px,6vw,84px)}
+  .about-big{
+    font-family:var(--display);
+    font-size:clamp(2rem,3.6vw,3.1rem);
+    line-height:1.18;letter-spacing:-.035em;font-weight:500;color:var(--ink);
+    margin-bottom:34px;
+  }
+  .about-big em{font-style:normal;color:var(--accent)}
+  .facts{border-top:1px solid var(--line)}
+  .facts>div{
+    display:grid;grid-template-columns:82px 1fr;gap:14px;
+    padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .facts dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .facts dd{font-size:13.5px;line-height:1.5;color:var(--ink)}
+  .about-body{max-width:40em}
+  .about-body p{margin-bottom:18px;font-size:1rem;line-height:1.85}
+  .about-body p:first-child{font-size:clamp(1.14rem,1.6vw,1.34rem);line-height:1.6;color:var(--ink);font-weight:500;letter-spacing:-.008em}
+  .name-note{
+    position:relative;
+    margin-top:30px;padding:22px 24px 22px 30px;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    font-size:.98rem;line-height:1.7;color:var(--ink);
+  }
+  .name-note .quote-mark{
+    position:absolute;left:10px;top:2px;
+    font-family:var(--display);font-size:34px;color:var(--accent-soft);
+    line-height:1;
+  }
+  .name-note b{font-weight:600}
+  .name-note .sub{display:block;margin-top:6px;font-size:13px;color:var(--muted)}
+
+  /* work */
+  .project--flagship{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);
+    gap:clamp(28px,4.5vw,58px);align-items:center;
+    padding:clamp(24px,3.2vw,40px);
+    background:var(--paper-2);
+    border:1px solid var(--line-strong);
+    position:relative;
+  }
+  .project--flagship::after{
+    content:"";position:absolute;top:0;left:0;width:100%;height:2px;
+    background:linear-gradient(to right,var(--accent) 0 84px,var(--line) 84px);
+  }
+  .project-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .project-num{
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--accent);
+  }
+  .badge{
+    font-family:var(--mono);font-size:9px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent-deep);
+    background:var(--accent-soft);padding:4px 7px;
+  }
+  .project-info h3, .project-card h3{
+    font-family:var(--display);font-weight:600;color:var(--ink);
+    letter-spacing:-.025em;line-height:1.15;
+  }
+  .project-info h3{font-size:clamp(1.6rem,2.7vw,2.15rem);margin-bottom:12px}
+  .project-info h3 a, .project-card h3 a{
+    background-image:linear-gradient(var(--accent),var(--accent));
+    background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;
+    transition:background-size .3s var(--ease);
+  }
+  .project-info h3 a:hover, .project-card h3 a:hover{background-size:100% 1px}
+  .project-desc{font-size:.98rem;line-height:1.8;color:var(--ink-soft);max-width:38em}
+  .feature-list{
+    display:flex;flex-wrap:wrap;gap:8px 18px;
+    margin:22px 0 24px;
+  }
+  .feature-list li{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted);
+  }
+  .feature-list li::before{content:"";width:5px;height:5px;background:var(--accent);flex:none}
+  .project-meta{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;
+    padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:10.5px;color:var(--muted);
+    letter-spacing:.02em;
+  }
+  .stars{color:var(--ink);display:inline-flex;align-items:center;gap:5px}
+  .stars .glyph{color:var(--accent);font-size:12px;line-height:1}
+  .project-link{
+    margin-left:auto;display:inline-flex;align-items:center;gap:7px;
+    min-height:40px;color:var(--ink);font-weight:500;
+    border-bottom:1px solid var(--line-strong);
+    transition:color .2s var(--ease),border-color .2s var(--ease);
+  }
+  .project-link svg{width:14px;height:14px;transition:transform .2s var(--ease)}
+  .project-link:hover{color:var(--accent-deep);border-color:var(--accent)}
+  .project-link:hover svg{transform:translate(2px,-2px)}
+
+  .project-visual{position:relative}
+  .project-visual::before{
+    content:"";position:absolute;inset:14px -10px -10px 14px;
+    border:1px solid var(--line);z-index:0;
+  }
+  .mock{
+    position:relative;z-index:1;background:#fff;
+    border:1px solid var(--line-strong);
+    box-shadow:0 26px 60px -34px rgba(22,24,29,.4);
+    overflow:hidden;
+    transition:transform .35s var(--ease);
+  }
+  .mock-bar{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 12px;background:#F1EDE5;border-bottom:1px solid var(--line);
+  }
+  .mock-dots{display:flex;gap:5px}
+  .mock-dots i{width:7px;height:7px;border-radius:50%;background:var(--line-strong)}
+  .mock-dots i:first-child{background:var(--pink)}
+  .mock-dots i:last-child{background:var(--accent)}
+  .mock-title{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--muted)}
+  .mock-pill{
+    margin-left:auto;font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+    color:var(--accent-deep);background:var(--accent-soft);padding:2px 5px;
+  }
+  .mock-body{display:grid;grid-template-columns:132px 1fr;min-height:286px}
+  .mock-side{border-right:1px solid var(--line);padding:12px 10px;background:#FCFBF8}
+  .mock-side-label{
+    font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--line-strong);
+    padding:0 4px;margin-bottom:6px;
+  }
+  .mock-side-label--files{margin-top:14px}
+  .mock-session{
+    font-family:var(--mono);font-size:9px;line-height:1.4;color:var(--muted);
+    padding:5px 6px;margin-bottom:2px;display:flex;gap:5px;
+  }
+  .mock-session.is-active{background:var(--accent-soft);color:var(--accent-deep)}
+  .mock-branch{color:var(--line-strong);flex:none}
+  .mock-file{
+    font-family:var(--mono);font-size:8.5px;color:var(--muted);
+    padding:4px 6px;border-left:1px solid var(--line);
+    margin-left:5px;
+  }
+  .mock-file.is-active{color:var(--ink);border-color:var(--accent)}
+  .mock-main{padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .mock-msg{font-size:10px;line-height:1.6;padding:8px 10px;max-width:94%}
+  .mock-msg--user{
+    align-self:flex-end;background:var(--ink);color:#F6F3EC;
+    border-bottom-right-radius:2px;
+  }
+  .mock-msg--ai{display:flex;gap:7px;background:#F7F5F0;color:var(--ink-soft);border:1px solid var(--line)}
+  .mock-avatar{
+    width:16px;height:16px;flex:none;border-radius:50%;
+    background:var(--accent);color:#fff;
+    font-family:var(--mono);font-size:8px;
+    display:grid;place-items:center;
+  }
+  .mock-stream{
+    display:inline-block;width:26px;height:6px;margin-left:4px;
+    background:linear-gradient(to right,var(--accent) 0 40%,var(--accent-soft) 40% 100%);
+    vertical-align:middle;animation:stream 1.4s ease-in-out infinite;
+  }
+  @keyframes stream{0%,100%{opacity:.5;transform:scaleX(.8);transform-origin:left}50%{opacity:1;transform:scaleX(1)}}
+  .mock-status{
+    margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--muted);
+  }
+  .mock-model{color:var(--accent-deep);background:var(--accent-soft);padding:2px 5px}
+  .mock-streaming{color:var(--line-strong)}
+  .mock-input{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    border:1px solid var(--line);background:#fff;
+    padding:6px 8px;font-size:9px;color:var(--line-strong);
+  }
+  .mock-input kbd{
+    font-family:var(--mono);font-size:7.5px;color:var(--muted);
+    background:#F1EDE5;padding:2px 4px;
+  }
+  .project--flagship:hover .mock{transform:translateY(-4px) rotate(-.35deg)}
+
+  .work-grid{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:0 40px;margin-top:clamp(14px,2vw,22px);
+  }
+  .project-card{
+    position:relative;
+    display:flex;flex-direction:column;
+    padding:26px 0 28px;
+    border-top:1px solid var(--line);
+    transition:border-color .25s var(--ease);
+  }
+  .project-card:hover{border-color:var(--line-strong)}
+  .project-card .project-top{margin-bottom:11px}
+  .project-card h3{font-size:clamp(1.2rem,1.8vw,1.42rem);margin-bottom:9px;padding-right:34px}
+  .project-card .project-desc{font-size:.92rem;line-height:1.75;max-width:34em}
+  .project-card .card-foot{
+    margin-top:auto;padding-top:18px;
+    display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10px;color:var(--muted);
+  }
+  .project-card .card-foot .stars{font-size:10px}
+  .project-card .link-arrow{
+    margin-left:auto;width:38px;height:38px;flex:none;
+    border:1px solid var(--line);display:grid;place-items:center;
+    color:var(--ink);
+    transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease);
+  }
+  .link-arrow svg{width:14px;height:14px}
+  .project-card:hover .link-arrow{background:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(2px,-2px)}
+
+  /* stack */
+  .stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px}
+  .stack-col{border-top:1px solid var(--line-strong);padding-top:16px}
+  .stack-col h3{
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:8px;
+  }
+  .stack-col h3::before{content:"";width:4px;height:4px;background:var(--accent)}
+  .stack-col li{padding:11px 0;border-bottom:1px solid var(--line)}
+  .stack-col li:last-child{border-bottom:0}
+  .stack-name{
+    display:block;font-family:var(--display);font-size:1.16rem;font-weight:500;
+    color:var(--ink);letter-spacing:-.015em;line-height:1.35;
+  }
+  .stack-note{display:block;margin-top:2px;font-size:12px;line-height:1.6;color:var(--muted)}
+
+  .now{
+    margin-top:clamp(44px,6vw,72px);
+    background:var(--ink);color:#E9E6DE;
+    display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr);
+    gap:clamp(28px,4vw,56px);
+    padding:clamp(26px,3.6vw,44px);
+    position:relative;overflow:hidden;
+  }
+  .now::before{
+    content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
+    border:1px solid rgba(246,243,236,.13);border-radius:50%;
+  }
+  .now::after{
+    content:"";position:absolute;right:-4px;top:-4px;width:108px;height:108px;
+    border:1px solid rgba(246,243,236,.08);border-radius:50%;
+  }
+  .now-label{
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:#8FD3D8;margin-bottom:14px;
+  }
+  .now h3{
+    font-family:var(--display);font-size:clamp(1.5rem,2.6vw,2rem);
+    line-height:1.25;font-weight:500;letter-spacing:-.02em;color:#FAF8F2;
+  }
+  .now h3 span{display:block;font-family:var(--sans);font-size:13px;line-height:1.7;letter-spacing:0;color:#A9A69D;margin-top:12px;font-weight:400}
+  .now-list{position:relative;z-index:1}
+  .now-list li{
+    display:grid;grid-template-columns:28px 1fr;gap:10px;
+    padding:13px 0;border-bottom:1px solid rgba(246,243,236,.14);
+    font-size:14px;line-height:1.65;
+  }
+  .now-list li:last-child{border-bottom:0;padding-bottom:0}
+  .now-list .n{font-family:var(--mono);font-size:9.5px;color:#8FD3D8;padding-top:3px}
+  .now-list b{color:#FAF8F2;font-weight:500}
+  .now-list span{color:#B9B6AC}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(34px,6vw,80px)}
+  .contact-title{
+    font-family:var(--display);
+    font-size:clamp(1.9rem,3.4vw,2.9rem);
+    line-height:1.2;letter-spacing:-.03em;font-weight:500;color:var(--ink);
+    margin-bottom:18px;
+  }
+  .contact-title em{font-style:normal;color:var(--accent)}
+  .contact-copy{font-size:1rem;line-height:1.8;max-width:32em;margin-bottom:28px}
+  .roles{display:grid;gap:12px;max-width:520px}
+  .role{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:16px 18px;border:1px solid var(--line);
+    background:var(--paper-2);
+    transition:border-color .2s var(--ease),background .2s var(--ease);
+  }
+  .role:hover{border-color:var(--line-strong);background:#fff}
+  .role-icon{
+    width:30px;height:30px;flex:none;display:grid;place-items:center;
+    border:1px solid var(--accent);color:var(--accent-deep);
+  }
+  .role-icon svg{width:15px;height:15px}
+  .role h3{font-family:var(--display);font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.005em}
+  .role p{font-size:12.5px;line-height:1.6;color:var(--muted);margin-top:2px}
+  .role-tag{
+    margin-left:auto;flex:none;align-self:center;
+    font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--accent-deep);
+    border:1px solid var(--accent-soft);background:var(--accent-soft);padding:3px 6px;
+    white-space:nowrap;
+  }
+  .contact-foot{
+    display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;
+    margin-top:22px;font-family:var(--mono);font-size:10.5px;color:var(--muted);
+  }
+  .contact-foot .avail{display:inline-flex;align-items:center;gap:7px;color:var(--ink)}
+  .contact-foot .avail .dot{width:6px;height:6px}
+
+  .links-panel{border-top:1px solid var(--line-strong)}
+  .link-slot{
+    display:flex;align-items:center;gap:14px;
+    min-height:66px;padding:12px 4px;
+    border-bottom:1px solid var(--line);
+    transition:padding .25s var(--ease),background .25s var(--ease),border-color .25s var(--ease);
+  }
+  .link-slot:hover{padding-left:12px;padding-right:8px;background:var(--paper-2);border-color:var(--line-strong)}
+  .link-icon{
+    width:30px;height:30px;flex:none;display:grid;place-items:center;
+    color:var(--ink);
+  }
+  .link-icon svg{width:16px;height:16px}
+  .link-label{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .link-label b{font-family:var(--display);font-size:15px;font-weight:500;color:var(--ink);letter-spacing:-.005em}
+  .link-label small{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--muted)}
+  .link-note{
+    margin-left:auto;flex:none;
+    font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+    color:var(--accent-deep);background:var(--accent-soft);padding:3px 6px;
+    transition:opacity .2s var(--ease);
+  }
+  .link-arrow-sm{flex:none;color:var(--line-strong);width:14px;height:14px}
+  .link-slot:hover .link-arrow-sm{color:var(--ink)}
+  .links-caption{
+    margin-top:12px;font-family:var(--mono);font-size:9.5px;line-height:1.7;
+    color:var(--muted);letter-spacing:.02em;
+  }
+
+  /* footer */
+  .site-foot{border-top:1px solid var(--line);padding:26px 0 34px}
+  .foot-inner{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px}
+  .foot-brand{font-family:var(--display);font-weight:500;color:var(--ink);font-size:14px}
+  .foot-brand span{font-family:var(--mono);font-size:9.5px;color:var(--muted);font-weight:400;margin-left:8px;letter-spacing:.04em}
+  .foot-note{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.03em}
+  .to-top{
+    margin-left:auto;display:inline-flex;align-items:center;gap:7px;
+    min-height:44px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink);
+  }
+  .to-top svg{width:13px;height:13px;transition:transform .2s var(--ease)}
+  .to-top:hover svg{transform:translateY(-3px)}
+
+  /* toast */
+  .toast{
+    position:fixed;left:50%;bottom:24px;z-index:500;
+    transform:translate(-50%,14px);
+    padding:11px 18px;
+    background:var(--ink);color:var(--paper);
+    font-family:var(--mono);font-size:11px;letter-spacing:.03em;
+    opacity:0;pointer-events:none;
+    transition:opacity .22s var(--ease),transform .22s var(--ease);
+    max-width:calc(100% - 40px);text-align:center;
+  }
+  .toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+  /* reveal */
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0ms)}
+  .js .reveal.is-in{opacity:1;transform:none}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1080px){
+    .hero-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:36px}
+    .nav{gap:22px}
+    .project--flagship{grid-template-columns:1fr;gap:30px}
+    .project-visual{max-width:560px}
+    .mock-body{min-height:250px}
+    .project--flagship:hover .mock{transform:none}
+  }
+  @media (max-width:900px){
+    .head-status{display:none}
+    .hero-grid{grid-template-columns:1fr;gap:44px}
+    .portrait{justify-self:start;width:min(100%,380px)}
+    .portrait-frame{box-shadow:10px 10px 0 -1px rgba(22,24,29,.05)}
+    .about-grid{grid-template-columns:1fr;gap:38px}
+    .about-big br{display:none}
+    .about-big em{display:inline}
+    .facts{max-width:460px}
+    .stack-grid{grid-template-columns:1fr;gap:28px}
+    .stack-col{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;align-items:start}
+    .stack-col h3{grid-column:1/-1;margin-bottom:4px}
+    .stack-col li{display:grid;grid-template-columns:1fr;padding:10px 0}
+    .stack-col li:nth-last-child(-n+1){border-bottom:0}
+    .now{grid-template-columns:1fr;gap:24px}
+    .contact-grid{grid-template-columns:1fr;gap:40px}
+    .contact-copy{max-width:38em}
+    .links-panel{max-width:560px}
+  }
+  @media (max-width:720px){
+    .wrap{width:calc(100% - 40px)}
+    .head-inner{height:60px}
+    .nav{display:none}
+    .head-link{display:inline-flex}
+    .brand-name span{display:none}
+    .brand-name{font-size:14px}
+    .hero{padding-top:38px}
+    .hero h1{font-size:clamp(4rem,19vw,6rem)}
+    .hero-eyebrow{font-size:10px;letter-spacing:.09em;gap:8px 10px}
+    .hero-eyebrow .sep{width:12px}
+    .hero-lead{font-size:1rem}
+    .cta-row{flex-direction:column;align-items:stretch}
+    .btn{width:100%}
+    .btn-note{text-align:center}
+    .hero-links{gap:6px 12px;font-size:10px}
+    .tool-strip{font-size:9.5px;gap:8px 18px}
+    .tool-strip .strip-end{display:none}
+    .sec-head{flex-wrap:wrap;gap:8px 14px}
+    .sec-note{display:none}
+    .sec-rule{display:none}
+    .sec-head h2{margin-right:auto}
+    .about-body p{font-size:.96rem}
+    .work-grid{grid-template-columns:1fr;gap:0}
+    .project-card{padding:22px 0 24px}
+    .project-meta{gap:8px 14px}
+    .project-link{margin-left:0;width:100%;justify-content:space-between;margin-top:2px}
+    .mock-body{grid-template-columns:104px 1fr;min-height:230px}
+    .mock-side{padding:10px 7px}
+    .mock-main{padding:10px;gap:7px}
+    .mock-msg{font-size:9px;padding:6px 8px}
+    .mock-session{font-size:8px}
+    .mock-file{font-size:8px}
+    .now{padding:24px 20px}
+    .now::before,.now::after{display:none}
+    .now-list li{font-size:13px;grid-template-columns:22px 1fr}
+    .role{flex-wrap:wrap;gap:10px}
+    .role p{flex:1 1 100%;padding-left:44px}
+    .role-tag{order:2;margin-left:44px}
+    .link-slot{min-height:62px}
+    .foot-inner{gap:10px 18px}
+    .to-top{margin-left:0}
+    .contact-title br{display:none}
+  }
+  @media (max-width:460px){
+    .hero h1{font-size:clamp(3.7rem,20vw,5rem)}
+    .hero h1 .sup{margin-left:.45em}
+    .portrait-stamp{width:58px;height:58px;top:-14px;right:-8px;font-size:9px}
+    .portrait-stamp b{font-size:14px}
+    .mock-body{grid-template-columns:1fr}
+    .mock-side{display:none}
+    .mock-main{min-height:210px}
+    .project--flagship{padding:20px 16px}
+    .project-visual::before{display:none}
+    .facts>div{grid-template-columns:70px 1fr}
+    .about-big{font-size:1.9rem}
+    .stack-col{display:block}
+    .name-note{padding:20px 20px 20px 26px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+    .js .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="#top" aria-label="Chasen 首页">
+      <span class="brand-mark" aria-hidden="true">C</span>
+      <span class="brand-name">Chasen <span>/ Chasen Liao</span></span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#about"><span class="nav-num">01</span>关于</a>
+      <a href="#work"><span class="nav-num">02</span>作品</a>
+      <a href="#stack"><span class="nav-num">03</span>技能</a>
+      <a href="#contact"><span class="nav-num">04</span>联系</a>
+    </nav>
+    <span class="head-status"><span class="dot" aria-hidden="true"></span>开放 AI 开发 / AI 产品</span>
+    <a class="head-link" href="#contact">联系 ↗</a>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-eyebrow">
+            <span class="tag"><span class="dot" aria-hidden="true"></span>AI 开发工程师 · AI 原住民</span>
+            <span class="sep" aria-hidden="true"></span>
+            <span>广州 / 深圳</span>
+          </div>
+
+          <h1 id="hero-title">Chasen<span class="period">.</span><span class="sup" aria-hidden="true">20 / GZ</span></h1>
+
+          <p class="hero-lead">
+            20 岁，计算机科学大四，在广州。本职是 AI 开发工程师，做 <strong>Pi 桌面客户端</strong>和
+            <strong>Agent Skills</strong>；一边实习，一边把每天用的 AI 工具拆开、改好、再用回工作里。
+            现在也在认真考虑，往 <span class="accent">AI 产品经理</span>的方向走一步。
+          </p>
+
+          <div class="cta-row">
+            <a class="btn btn--primary" href="#" data-pending>
+              去 X 找我
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+            <a class="btn btn--ghost" href="#work">
+              看作品
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+            </a>
+          </div>
+          <span class="btn-note">X / GitHub / Email 链接待填 · 作品可以直接往下看</span>
+
+          <div class="hero-links">
+            <a class="link" href="#" data-pending><span class="k">X</span> @chasen_liao <span class="wait">链接待填</span></a>
+            <a class="link" href="#" data-pending><span class="k">GitHub</span> Chasen-Liao <span class="wait">链接待填</span></a>
+            <a class="link" href="#" data-pending><span class="k">Email</span> <span class="wait">链接待填</span></a>
+          </div>
+        </div>
+
+        <figure class="portrait">
+          <div class="portrait-frame">
+            <img src="avatar.jpg" width="400" height="400" alt="Chasen 的 Q 版角色形象：浅棕短发、青蓝耳机、粉色发夹" fetchpriority="high">
+            <span class="cross cross--tr" aria-hidden="true">+</span>
+            <span class="cross cross--bl" aria-hidden="true">+</span>
+          </div>
+          <span class="portrait-stamp" aria-hidden="true">CHASEN<b>20</b>GUANGZHOU</span>
+          <figcaption class="portrait-caption">
+            <span>角色设定 / CHIBI</span>
+            <span>耳机与 C 字徽章</span>
+          </figcaption>
+          <dl class="portrait-meta">
+            <div>
+              <dt>Now</dt>
+              <dd>实习中 · 做 Agent 工具</dd>
+            </div>
+            <div>
+              <dt>Open to</dt>
+              <dd>AI 开发 / AI 产品</dd>
+            </div>
+          </dl>
+        </figure>
+      </div>
+
+      <div class="tool-strip" aria-label="每天在用的工具">
+        <span class="strip-label">每天在用</span>
+        <ul>
+          <li>Pi</li>
+          <li>Claude Code</li>
+          <li>Codex</li>
+        </ul>
+        <span class="strip-end" aria-hidden="true">
+          SCROLL
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-num">01</span>
+        <h2 id="about-title">关于我</h2>
+        <span class="sec-en">About</span>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-note">写代码，也想知道为什么写</span>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-aside reveal">
+          <p class="about-big">写代码，<br>也想知道<br><em>为什么写。</em></p>
+          <dl class="facts">
+            <div><dt>坐标</dt><dd>广州，开放深圳</dd></div>
+            <div><dt>现在</dt><dd>计算机科学大四 · 实习中</dd></div>
+            <div><dt>在做</dt><dd>Pi 桌面客户端 &amp; Agent Skills</dd></div>
+            <div><dt>在找</dt><dd>AI 开发工程师 / AI 产品经理</dd></div>
+          </dl>
+        </div>
+
+        <div class="about-body reveal" style="--d:80ms">
+          <p>我是 Chasen，本名 Chasen Liao，20 岁，在广州读计算机科学，大四。</p>
+          <p>
+            我的日常大概是：白天实习，写 AI 相关的工程；晚上打开 Pi 或 Claude Code，把白天想到的东西做成能跑的小工具。
+            <a class="inline-link" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">pi-agent-desktop</a>
+            是其中做得最久的一个——给 Pi 编程智能体做一个真正的桌面客户端，有原生窗口、会话分叉、SSE 流式对话、模型中途切换，还有内置文件浏览器。
+          </p>
+          <p>
+            做工具的过程也改变了我看产品的方式。我开始在意一个人第一次打开它时懂不懂、哪一步是多余的、哪个功能其实没人用。
+            所以我正在认真考虑往 AI 产品经理方向尝试——不是想逃离代码，而是想离「为什么做」更近一点。
+          </p>
+          <blockquote class="name-note">
+            <span class="quote-mark" aria-hidden="true">“</span>
+            <b>Chasen，取自 chase。</b>不停追逐，无限进步。
+            <span class="sub">听起来有点中二，但我确实挺喜欢。</span>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section class="section" id="work" aria-labelledby="work-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-num">02</span>
+        <h2 id="work-title">精选作品</h2>
+        <span class="sec-en">Selected work</span>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-note">5 个公开项目 · 从桌面端到 Skills</span>
+      </div>
+
+      <article class="project--flagship reveal">
+        <div class="project-info">
+          <div class="project-top">
+            <span class="project-num">01</span>
+            <span class="badge">Flagship / 旗舰</span>
+          </div>
+          <h3><a href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">pi-agent-desktop</a></h3>
+          <p class="project-desc">
+            给 Pi 编程智能体做的桌面客户端。把终端里的工作流搬进一个真正顺手的桌面应用：原生窗口、会话分叉、SSE 流式对话、模型中途切换，以及内置文件浏览器。
+          </p>
+          <ul class="feature-list" aria-label="主要功能">
+            <li>原生窗口</li>
+            <li>会话分叉</li>
+            <li>SSE 流式对话</li>
+            <li>模型中途切换</li>
+            <li>内置文件浏览器</li>
+          </ul>
+          <div class="project-meta">
+            <span class="stars" aria-label="约 331 stars"><span class="glyph" aria-hidden="true">★</span>331</span>
+            <span>TypeScript / Electron / React</span>
+            <a class="project-link" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">
+              GitHub
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="project-visual">
+          <div class="mock" aria-hidden="true">
+            <div class="mock-bar">
+              <span class="mock-dots"><i></i><i></i><i></i></span>
+              <span class="mock-title">pi-agent-desktop</span>
+              <span class="mock-pill">SSE</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-side">
+                <div class="mock-side-label">SESSIONS</div>
+                <div class="mock-session is-active"><span class="mock-branch">├</span>会话分叉</div>
+                <div class="mock-session"><span class="mock-branch">└</span>模型切换实验</div>
+                <div class="mock-session"><span class="mock-branch">·</span>文件浏览</div>
+                <div class="mock-side-label mock-side-label--files">FILES</div>
+                <div class="mock-file is-active">src / main.ts</div>
+                <div class="mock-file">src / session.ts</div>
+              </div>
+              <div class="mock-main">
+                <div class="mock-msg mock-msg--user">给会话加一个分叉，保留当前上下文。</div>
+                <div class="mock-msg mock-msg--ai">
+                  <span class="mock-avatar">C</span>
+                  <div>已创建分支，原会话不受影响。<span class="mock-stream"></span></div>
+                </div>
+                <div class="mock-status">
+                  <span class="mock-model">MODEL · 已切换</span>
+                  <span class="mock-streaming">streaming…</span>
+                </div>
+                <div class="mock-input"><span>问点什么…</span><kbd>⌘ ↵</kbd></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="work-grid">
+        <article class="project-card reveal">
+          <div class="project-top"><span class="project-num">02</span></div>
+          <h3><a href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener">resume-skills</a></h3>
+          <p class="project-desc">一句话让 Agent 生成一份像样的简历，还能对着 JD 做匹配。把我自己改简历的流程，拆成了可以复用的 Skill。</p>
+          <div class="card-foot">
+            <span class="stars" aria-label="约 38 stars"><span class="glyph" aria-hidden="true">★</span>38</span>
+            <span>Agent Skills</span>
+            <a class="link-arrow" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener" aria-label="在 GitHub 查看 resume-skills">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" style="--d:70ms">
+          <div class="project-top"><span class="project-num">03</span></div>
+          <h3><a href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener">Chasen-Skills</a></h3>
+          <p class="project-desc">自用的 Agent Skills 合集，npx skills 一键安装。并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建，都是我真在用的。</p>
+          <div class="card-foot">
+            <span class="stars" aria-label="约 33 stars"><span class="glyph" aria-hidden="true">★</span>33</span>
+            <span>npx skills</span>
+            <a class="link-arrow" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener" aria-label="在 GitHub 查看 Chasen-Skills">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-top"><span class="project-num">04</span></div>
+          <h3><a href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener">Everything-claude-code-Doc</a></h3>
+          <p class="project-desc">Everything Claude Code 的使用指南，边用边写，持续更新。工具在变，文档也跟着改。</p>
+          <div class="card-foot">
+            <span class="stars" aria-label="约 15 stars"><span class="glyph" aria-hidden="true">★</span>15</span>
+            <span>文档 / 指南</span>
+            <a class="link-arrow" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener" aria-label="在 GitHub 查看 Everything-claude-code-Doc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" style="--d:70ms">
+          <div class="project-top"><span class="project-num">05</span></div>
+          <h3><a href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener">SuperMew</a></h3>
+          <p class="project-desc">Agentic RAG 的尝试，关注 Context Engineering，以及三层记忆架构怎么让 Agent 记得更久、更准。</p>
+          <div class="card-foot">
+            <span>实验项目 / LAB</span>
+            <span>Agentic RAG</span>
+            <a class="link-arrow" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener" aria-label="在 GitHub 查看 SuperMew">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STACK ============ -->
+  <section class="section" id="stack" aria-labelledby="stack-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-num">03</span>
+        <h2 id="stack-title">技能与正在折腾的东西</h2>
+        <span class="sec-en">Stack &amp; now</span>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-note">按日常使用强度排，不做百分比</span>
+      </div>
+
+      <div class="stack-grid">
+        <div class="stack-col reveal">
+          <h3>每天在用</h3>
+          <ul>
+            <li><span class="stack-name">Pi</span><span class="stack-note">桌面客户端就是为它做的</span></li>
+            <li><span class="stack-name">Claude Code</span><span class="stack-note">写代码、拆需求、改文档</span></li>
+            <li><span class="stack-name">Codex</span><span class="stack-note">换一个视角看同一个问题</span></li>
+          </ul>
+        </div>
+        <div class="stack-col reveal" style="--d:70ms">
+          <h3>主力</h3>
+          <ul>
+            <li><span class="stack-name">Python</span><span class="stack-note">脚本、后端、数据处理</span></li>
+            <li><span class="stack-name">TypeScript / React</span><span class="stack-note">桌面端与前端界面</span></li>
+            <li><span class="stack-name">Agent / RAG</span><span class="stack-note">工具调用、上下文与检索</span></li>
+          </ul>
+        </div>
+        <div class="stack-col reveal" style="--d:140ms">
+          <h3>做过</h3>
+          <ul>
+            <li><span class="stack-name">Electron</span><span class="stack-note">原生窗口与桌面集成</span></li>
+            <li><span class="stack-name">FastAPI</span><span class="stack-note">给工具配一个轻量后端</span></li>
+            <li><span class="stack-name">向量检索 · HTML/CSS</span><span class="stack-note">从检索到把界面做出来</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="now reveal">
+        <div class="now-intro">
+          <p class="now-label">Now / 最近在折腾</p>
+          <h3>先做出来，<br>再想清楚。
+            <span>手上这几件事，基本占满了实习之外的时间。</span>
+          </h3>
+        </div>
+        <ul class="now-list">
+          <li><span class="n">01</span><span><b>pi-agent-desktop</b>：把会话分叉、模型切换和文件浏览的细节继续磨顺。</span></li>
+          <li><span class="n">02</span><span><b>Chasen-Skills</b>：只留下自己每天真的会用的 Skill，再补新的进去。</span></li>
+          <li><span class="n">03</span><span><b>产品方向</b>：把「为什么做」写进下一版需求，试着用产品经理的方式想问题。</span></li>
+          <li><span class="n">04</span><span><b>找工作</b>：广州或深圳，AI 开发工程师、AI 产品经理，都愿意聊。</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section" id="contact" aria-labelledby="contact-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-num">04</span>
+        <h2 id="contact-title">联系 / 开放机会</h2>
+        <span class="sec-en">Contact</span>
+        <span class="sec-rule" aria-hidden="true"></span>
+        <span class="sec-note">广州 / 深圳</span>
+      </div>
+
+      <div class="contact-grid">
+        <div class="reveal">
+          <h3 class="contact-title">有合适的机会，<br>或者只是想聊聊 <em>AI</em>？</h3>
+          <p class="contact-copy">
+            我在找 AI 开发工程师或 AI 产品经理的机会，城市优先广州、深圳。
+            如果你在组团队、做 Agent 产品，或者想找一个既写代码又愿意琢磨产品的人，欢迎直接找我。
+          </p>
+
+          <div class="roles">
+            <div class="role">
+              <span class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>
+              </span>
+              <div>
+                <h3>AI 开发工程师</h3>
+                <p>Agent 工具、桌面端、RAG。能把想法做成能跑的东西。</p>
+              </div>
+              <span class="role-tag">OPEN</span>
+            </div>
+            <div class="role">
+              <span class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg>
+              </span>
+              <div>
+                <h3>AI 产品经理</h3>
+                <p>从开发视角出发，愿意从需求、文档和用户反馈学起。</p>
+              </div>
+              <span class="role-tag">TRYING</span>
+            </div>
+          </div>
+
+          <div class="contact-foot">
+            <span class="avail"><span class="dot" aria-hidden="true"></span>当前开放机会</span>
+            <span>城市：广州 / 深圳</span>
+            <span>语言：中文 / English</span>
+          </div>
+        </div>
+
+        <div class="reveal" style="--d:80ms">
+          <div class="links-panel" aria-label="外链入口（链接待填）">
+            <a class="link-slot" href="#" data-pending>
+              <span class="link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21c-2.4-2.5-3.6-5.5-3.6-9S9.6 5.5 12 3Z"/></svg>
+              </span>
+              <span class="link-label"><b>个人站</b><small>Personal site</small></span>
+              <span class="link-note">链接待填</span>
+              <svg class="link-arrow-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+            <a class="link-slot" href="#" data-pending>
+              <span class="link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"/></svg>
+              </span>
+              <span class="link-label"><b>博客</b><small>Blog</small></span>
+              <span class="link-note">链接待填</span>
+              <svg class="link-arrow-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+            <a class="link-slot" href="#" data-pending>
+              <span class="link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 19.5a10.5 10.5 0 0 1-3-1.9m0 0a9 9 0 1 1 13.4-8.9c0 2.5-1.8 4.3-3.6 4.3-1.2 0-2-.8-2-2V7.5m0 0v6.5c0 2.3-1.6 3.8-3.8 3.8-2.5 0-4.5-2-4.5-4.7 0-2.4 1.8-4.4 4.2-4.4 1.7 0 3.1.9 4.1 2.3"/></svg>
+              </span>
+              <span class="link-label"><b>GitHub</b><small>Chasen-Liao</small></span>
+              <span class="link-note">链接待填</span>
+              <svg class="link-arrow-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+            <a class="link-slot" href="#" data-pending>
+              <span class="link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h4l5.5 7L19 4h4l-7.6 8.7L23 20h-4l-5.8-7.4L6.8 20H3l8-9.1L4 4Z"/></svg>
+              </span>
+              <span class="link-label"><b>X</b><small>@chasen_liao</small></span>
+              <span class="link-note">链接待填</span>
+              <svg class="link-arrow-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+            <a class="link-slot" href="#" data-pending>
+              <span class="link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
+              </span>
+              <span class="link-label"><b>Email</b><small>直接发信</small></span>
+              <span class="link-note">链接待填</span>
+              <svg class="link-arrow-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+          <p class="links-caption">以上入口为预留展示位，链接确认后补上。项目仓库可直接在下方或作品区访问。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">Chasen Liao <span>AI 开发工程师 · 广州</span></div>
+    <span class="foot-note">© <span id="year">2026</span> · 个人介绍页</span>
+    <a class="to-top" href="#top">
+      回到顶部
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+    </a>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite">这个链接还在路上，先看看作品吧。</div>
+
+<script>
+  (function () {
+    // 年份
+    var year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
+
+    // 滚动出现
+    var items = document.querySelectorAll('.reveal');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduce || !('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('is-in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      items.forEach(function (el) { io.observe(el); });
+    }
+
+    // 待填链接提示
+    var toast = document.getElementById('toast');
+    var timer;
+    document.querySelectorAll('[data-pending]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!toast) return;
+        toast.classList.add('is-on');
+        clearTimeout(timer);
+        timer = setTimeout(function () { toast.classList.remove('is-on'); }, 2200);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

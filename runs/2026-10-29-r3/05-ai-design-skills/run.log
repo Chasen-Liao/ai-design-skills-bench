@@ -1,0 +1,18 @@
+=== START 05-ai-design-skills at 2026-10-29 22:11:59 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r3/05-ai-design-skills
+extra=--approve --skill .pi/skills/landing-page-design
+做好了，文件路径：
+
+`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r3/05-ai-design-skills/index.html`
+
+**设计选择**
+- 采用 A 型：经典首屏加快照中段页面。深色底（#000 / #181818），青蓝作点缀，呼应 Q 版角色的耳机；头像卡用浅色形成对比。
+- 字体 Geist + Noto Sans SC（中文必需），等宽字体只用于标签和数字；字号、间距、圆角全部按 skill 的 token 取值。
+- 首屏：名字定位「AI 开发工程师 / 也是 AI 原住民」+ 双 CTA + 数据条；下面接逐词亮起的「名字取自 chase」标签段（B11）。
+- 关于、5 个作品（旗舰 pi-agent-desktop 单独大卡 + 4 个项目，仓库链接真实）、技能按「每天在用 / 主力 / 做过」分组不含百分比、正在折腾 4 条。
+- 联系区：两个岗位卡 + 个人站 / 博客 / GitHub / X / Email 五个入口，全部 `href="#"` 并标「链接待填」，点击不跳转；Email 只显示标签。
+- 动效：IntersectionObserver 逐区块入场、逐词点亮、移动端全屏菜单逐项错峰，统一 `cubic-bezier(0.22,1,0.36,1)`，支持 reduced motion。
+- 手机端单列、桌面端两栏，含跳过链接、focus 环、语义标签、meta / og / favicon。
+
+**验证**：HTML 标签闭合检查通过，外链与 GitHub 地址逐一核对过；未做浏览器截图验证。残余风险是 Google Fonts 在无网络环境下会回退到系统字体，版式不受影响。
+=== END 05-ai-design-skills at 2026-10-29 22:13:44 CST exit=0 dur=105s bytes=37957 ===

@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Chasen Liao，AI 开发工程师、AI 原住民。做 Pi 桌面客户端和 Agent Skills，开放 AI 开发工程师与 AI 产品经理机会，广州或深圳。">
+<meta name="theme-color" content="#f3efe5">
+<title>Chasen Liao — AI 开发工程师 / AI 原住民</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3efe5;
+    --paper-warm:#fbf8f0;
+    --paper-2:#e9e3d4;
+    --ink:#15180f;
+    --ink-soft:#34372c;
+    --muted:#67685b;
+    --line:rgba(21,24,15,.15);
+    --line-strong:rgba(21,24,15,.34);
+    --cyan:#1a8c9b;
+    --cyan-bright:#63ccd8;
+    --cyan-wash:rgba(26,140,155,.10);
+    --pink:#df8ba0;
+    --pink-ink:#8d3d52;
+    --brown:#a9825c;
+    --dark:#12150e;
+    --paper-on-dark:#f2eee3;
+    --muted-on-dark:rgba(242,238,227,.63);
+    --font-display:"Instrument Serif","Noto Serif SC",Georgia,serif;
+    --font-serif:"Noto Serif SC","Songti SC",serif;
+    --font-sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --pad:clamp(20px,4.6vw,64px);
+    --max:1320px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:16px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:100;
+    pointer-events:none;
+    opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+  }
+  ::selection{background:var(--pink);color:var(--ink)}
+  img{max-width:100%}
+  a{color:inherit}
+  h1,h2,h3,h4,p,figure,dl,dd{margin:0}
+  ul,ol{margin:0;padding:0;list-style:none}
+  button{font:inherit}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  .work :focus-visible,.contact :focus-visible{outline-color:var(--cyan-bright)}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+
+  .progress{
+    position:fixed;inset:0 0 auto;height:2px;width:100%;
+    background:var(--cyan);z-index:60;transform:scaleX(0);transform-origin:0 50%;
+  }
+
+  /* ---------- header ---------- */
+  .site-header{
+    position:absolute;top:0;left:0;right:0;z-index:30;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    padding:20px var(--pad);
+  }
+  .brand{display:flex;align-items:baseline;gap:14px;text-decoration:none}
+  .brand__mark{
+    font-family:var(--font-display);font-size:29px;line-height:1;
+    letter-spacing:-.01em;
+  }
+  .brand__meta{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;
+    color:var(--muted);text-transform:uppercase;
+  }
+  .nav{display:flex;align-items:center;gap:28px}
+  .nav a{
+    position:relative;text-decoration:none;padding:4px 0;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .nav a::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+    background:var(--ink);transform:scaleX(0);transform-origin:0 50%;
+    transition:transform .28s ease;
+  }
+  .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+  .status{
+    display:inline-flex;align-items:center;gap:9px;
+    border:1px solid var(--line-strong);padding:6px 11px;
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;
+    text-transform:uppercase;white-space:nowrap;
+  }
+  .status__dot{
+    width:6px;height:6px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 0 3px var(--cyan-wash);
+    animation:pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;min-height:100vh;min-height:100svh;overflow:hidden;
+    padding:104px var(--pad) 26px;
+    display:flex;flex-direction:column;
+    background:
+      radial-gradient(120% 90% at 78% 8%,rgba(99,204,216,.10),transparent 58%),
+      linear-gradient(180deg,#f6f2e9 0%,var(--paper) 62%,#efeadd 100%);
+  }
+  .hero__grid{
+    position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(21,24,15,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(21,24,15,.05) 1px,transparent 1px);
+    background-size:96px 96px;
+    -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.75),transparent 82%);
+    mask-image:linear-gradient(180deg,rgba(0,0,0,.75),transparent 82%);
+    opacity:.8;
+  }
+  .hero__circuit{
+    position:absolute;top:0;right:0;width:54%;height:100%;
+    color:var(--cyan);opacity:.34;pointer-events:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 38%);
+    mask-image:linear-gradient(90deg,transparent 0%,#000 38%);
+  }
+  .hero__inner{
+    position:relative;z-index:2;width:100%;max-width:var(--max);
+    margin:0 auto;display:flex;flex-direction:column;flex:1;
+  }
+  .hero__eyebrow{
+    display:flex;align-items:center;gap:14px;
+    padding-top:11px;border-top:1px solid var(--line-strong);
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-soft);
+    margin-bottom:clamp(26px,5vh,54px);
+  }
+  .hero__eyebrow .dot{
+    width:7px;height:7px;background:var(--pink);flex:none;
+    clip-path:polygon(0 100%,100% 0,100% 100%);
+  }
+  .hero__eyebrow .rule{flex:1;height:1px;background:var(--line)}
+  .hero__eyebrow .coords{color:var(--muted);white-space:nowrap}
+
+  .hero__stage{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center}
+  .hero__word{
+    position:relative;z-index:3;margin:0;
+    font-family:var(--font-display);font-weight:400;
+    font-size:clamp(96px,19.4vw,300px);line-height:.78;
+    letter-spacing:-.045em;white-space:nowrap;
+  }
+  .hero__word-inner{display:inline-block;transform-origin:left bottom}
+  .hero__n{font-style:italic}
+  .hero__word-note{
+    position:relative;z-index:3;margin:15px 0 0;
+    font-size:11.5px;letter-spacing:.07em;color:var(--muted);
+  }
+  .hero__word-note .mono{font-size:9.5px;letter-spacing:.16em;color:var(--ink-soft)}
+  .hero__word-note em{
+    font-family:var(--font-display);font-style:italic;font-weight:400;
+    font-size:16px;letter-spacing:0;color:var(--ink);
+  }
+
+  .portrait{
+    position:absolute;top:0;right:0;z-index:2;
+    width:clamp(210px,22vw,300px);margin:0;
+    transform:rotate(2.4deg);
+  }
+  .portrait__frame{
+    position:relative;background:var(--paper-warm);
+    border:1px solid var(--line-strong);padding:10px 10px 8px;
+    box-shadow:16px 18px 0 var(--cyan-wash);
+  }
+  .portrait__frame::before,.portrait__frame::after{
+    content:"";position:absolute;width:22px;height:22px;pointer-events:none;
+  }
+  .portrait__frame::before{
+    top:-15px;left:-15px;border-top:1px solid var(--cyan);border-left:1px solid var(--cyan);
+  }
+  .portrait__frame::after{
+    right:-15px;bottom:-15px;border-right:1px solid var(--cyan);border-bottom:1px solid var(--cyan);
+  }
+  .portrait__frame img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+  .portrait__tag{
+    position:absolute;top:-9px;right:12px;background:var(--paper);
+    border:1px solid var(--line-strong);padding:2px 6px;
+    font-family:var(--font-mono);font-size:8px;letter-spacing:.14em;color:var(--muted);
+  }
+  .portrait figcaption{
+    display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+    border-top:1px solid var(--line);margin-top:9px;padding:7px 1px 1px;
+    font-family:var(--font-mono);font-size:8.5px;letter-spacing:.09em;
+    color:var(--muted);text-transform:uppercase;
+  }
+  .portrait figcaption b{font-weight:500;color:var(--ink-soft)}
+
+  .hero__copy{position:relative;z-index:4;margin-top:clamp(34px,5.4vh,64px);max-width:min(760px,58%)}
+  .hero__lead{
+    font-family:var(--font-serif);font-weight:600;
+    font-size:clamp(21px,2.2vw,33px);line-height:1.55;
+    letter-spacing:.005em;margin:0 0 26px;max-width:23em;
+  }
+  .mark{
+    font-style:normal;
+    background:linear-gradient(transparent 64%,rgba(223,139,160,.38) 64%,rgba(223,139,160,.38) 92%,transparent 92%);
+  }
+  .hero__cta{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:flex-start;gap:12px;
+    min-height:48px;padding:12px 18px;border:1px solid var(--ink);
+    background:var(--ink);color:var(--paper);text-decoration:none;
+    font-size:14px;font-weight:500;line-height:1;border-radius:2px;
+    transition:background-color .25s ease,color .25s ease,border-color .25s ease,transform .25s ease;
+  }
+  .btn:hover{background:var(--cyan);border-color:var(--cyan);color:var(--ink)}
+  .btn:active{transform:translateY(1px)}
+  .btn__text{display:inline-flex;align-items:center;gap:10px}
+  .btn .todo{margin-left:auto}
+  .btn__arrow{font-size:15px;line-height:1;transition:transform .25s ease}
+  .btn:hover .btn__arrow{transform:translate(2px,-2px)}
+  .btn--ghost{background:transparent;color:var(--ink)}
+  .btn--ghost:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .btn--ghost:hover .btn__arrow{transform:translateY(2px)}
+  .btn--light{background:var(--paper-on-dark);border-color:var(--paper-on-dark);color:var(--ink)}
+  .btn--light:hover{background:var(--cyan-bright);border-color:var(--cyan-bright);color:var(--ink)}
+  .btn--outline{background:transparent;border-color:rgba(242,238,227,.38);color:var(--paper-on-dark)}
+  .btn--outline:hover{background:var(--paper-on-dark);border-color:var(--paper-on-dark);color:var(--ink)}
+  .todo{
+    display:inline-block;white-space:nowrap;vertical-align:1px;
+    font-family:var(--font-mono);font-size:8.5px;font-weight:400;
+    letter-spacing:.06em;line-height:1.4;padding:1px 5px;
+    color:#f6d3dc;border:1px solid rgba(223,139,160,.5);
+    background:rgba(223,139,160,.12);
+  }
+  .todo--paper{color:var(--pink-ink);border-color:rgba(141,61,82,.32);background:rgba(223,139,160,.14)}
+
+  .hero__facts{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    border-top:1px solid var(--line-strong);
+    margin-top:clamp(30px,5vh,54px);
+  }
+  .hero__facts > div{padding:13px 20px 4px 0}
+  .hero__facts > div + div{border-left:1px solid var(--line);padding-left:20px}
+  .hero__facts dt{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:4px;
+  }
+  .hero__facts dd{font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+
+  /* ---------- shared section ---------- */
+  .section{padding:clamp(76px,10.5vw,148px) var(--pad);position:relative}
+  .inner{position:relative;z-index:1;width:100%;max-width:var(--max);margin:0 auto}
+  .sec-label{
+    display:flex;align-items:center;gap:16px;
+    margin-bottom:clamp(34px,5.5vw,66px);
+    font-family:var(--font-mono);font-size:9.5px;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .sec-label b{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:28px;height:20px;border:1px solid var(--line-strong);
+    font-weight:500;color:var(--ink);letter-spacing:.05em;
+  }
+  .sec-label__rule{flex:1;height:1px;background:var(--line)}
+  .h2{
+    font-family:var(--font-serif);font-weight:600;
+    font-size:clamp(32px,4.2vw,58px);line-height:1.32;
+    letter-spacing:-.015em;margin:0;
+  }
+  .line{display:block;overflow:hidden;padding-bottom:.08em}
+  .line > span{display:block}
+  .section__head{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);
+    gap:clamp(28px,4vw,60px);align-items:end;
+    margin-bottom:clamp(40px,6vw,72px);
+  }
+  .section__note{font-size:14px;line-height:1.85;color:var(--muted);max-width:30em;margin:0}
+
+  /* ---------- about ---------- */
+  .about__grid{
+    display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.78fr);
+    gap:clamp(46px,7vw,110px);align-items:start;
+  }
+  .about__statement{
+    font-family:var(--font-serif);font-weight:600;
+    font-size:clamp(28px,3.35vw,48px);line-height:1.42;
+    letter-spacing:-.01em;margin:0 0 34px;
+  }
+  .about__statement .line{padding-bottom:.12em}
+  .about__body p{
+    max-width:34em;margin:0 0 19px;
+    font-size:16.5px;line-height:1.95;color:#3d4034;
+  }
+  .about__body p:last-child{margin-bottom:0}
+  .about__body strong{font-weight:500;color:var(--ink)}
+  .about__foot{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    margin-top:30px;padding-top:15px;border-top:1px solid var(--line);
+    font-family:var(--font-mono);font-size:9.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .about__foot .chip{
+    display:inline-flex;align-items:center;gap:7px;
+    border:1px solid var(--line-strong);padding:4px 9px;color:var(--ink-soft);
+  }
+  .about__foot .chip::before{content:"";width:5px;height:5px;background:var(--pink);border-radius:50%}
+
+  .sheet{margin:0}
+  .sheet__frame{
+    position:relative;background:var(--paper-warm);
+    border:1px solid var(--line-strong);padding:10px;
+    transform:rotate(1.3deg);
+    box-shadow:13px 14px 0 rgba(169,130,92,.13);
+  }
+  .sheet__frame::before{
+    content:"";position:absolute;top:-12px;left:-12px;
+    width:18px;height:18px;border-top:1px solid var(--cyan);border-left:1px solid var(--cyan);
+  }
+  .sheet__frame img{display:block;width:100%;height:auto;filter:saturate(.94)}
+  .sheet__tag{
+    position:absolute;top:-9px;left:14px;background:var(--paper);
+    border:1px solid var(--line-strong);padding:2px 6px;
+    font-family:var(--font-mono);font-size:8px;letter-spacing:.14em;color:var(--muted);
+  }
+  .sheet figcaption{
+    display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+    margin-top:22px;padding-top:12px;border-top:1px solid var(--line);
+  }
+  .sheet figcaption span:first-child{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .sheet figcaption span:last-child{font-size:12px;color:var(--ink-soft);text-align:right}
+  .swatches{display:flex;gap:0;margin-top:13px}
+  .swatches i{display:block;width:22px;height:5px;background:var(--sw)}
+
+  .spec{margin:30px 0 0;border-top:1px solid var(--line-strong)}
+  .spec > div{display:flex;justify-content:space-between;gap:18px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .spec dt{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);padding-top:2px;
+  }
+  .spec dd{font-size:13px;line-height:1.6;text-align:right;color:var(--ink-soft)}
+
+  /* ---------- work ---------- */
+  .work{background:var(--dark);color:var(--paper-on-dark);overflow:hidden}
+  .work::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(242,238,227,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(242,238,227,.045) 1px,transparent 1px);
+    background-size:120px 120px;
+    -webkit-mask-image:radial-gradient(120% 90% at 70% 0%,#000 0%,transparent 72%);
+    mask-image:radial-gradient(120% 90% at 70% 0%,#000 0%,transparent 72%);
+  }
+  .work .sec-label{color:var(--muted-on-dark)}
+  .work .sec-label b{color:var(--paper-on-dark);border-color:rgba(242,238,227,.32)}
+  .work .sec-label__rule{background:rgba(242,238,227,.18)}
+  .work .section__head{margin-bottom:clamp(30px,4.5vw,52px)}
+  .work .section__note{color:var(--muted-on-dark)}
+
+  .projects{border-bottom:1px solid rgba(242,238,227,.16)}
+  .project{position:relative}
+  .project__link{
+    --p-fg:var(--paper-on-dark);
+    --p-mut:var(--muted-on-dark);
+    --p-line:rgba(242,238,227,.17);
+    display:block;position:relative;
+    padding:clamp(24px,3vw,36px) 24px;margin:0 -24px;
+    border-top:1px solid var(--p-line);
+    color:var(--p-fg);text-decoration:none;
+    transition:background-color .28s ease,color .28s ease,border-color .28s ease;
+  }
+  .project__link:hover,.project__link:focus-visible{
+    --p-fg:var(--ink);
+    --p-mut:#54564a;
+    --p-line:rgba(21,24,15,.18);
+    background:var(--paper);
+    border-color:rgba(21,24,15,.18);
+  }
+  .project__row{
+    display:grid;
+    grid-template-columns:54px minmax(0,.98fr) minmax(0,1.12fr) 122px;
+    grid-template-areas:"num title desc meta";
+    gap:clamp(16px,2.4vw,34px);
+    align-items:start;
+  }
+  .project__num{
+    grid-area:num;font-family:var(--font-mono);font-size:10px;
+    letter-spacing:.12em;color:var(--cyan-bright);padding-top:7px;
+  }
+  .project__link:hover .project__num,.project__link:focus-visible .project__num{color:var(--cyan)}
+  .project__title{grid-area:title}
+  .project__title h3{
+    font-family:var(--font-display);font-weight:400;
+    font-size:clamp(27px,2.6vw,36px);line-height:1.08;
+    letter-spacing:-.015em;margin:0 0 9px;overflow-wrap:anywhere;
+  }
+  .project__kind{
+    display:flex;align-items:center;gap:8px;
+    font-family:var(--font-mono);font-size:8.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--p-mut);
+  }
+  .project__kind .dot{width:5px;height:5px;background:var(--pink);border-radius:50%;flex:none}
+  .project__desc{grid-area:desc;padding-top:3px}
+  .project__desc p{
+    margin:0 0 14px;font-size:14.5px;line-height:1.8;color:var(--p-mut);
+    transition:color .28s ease;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chips li{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.04em;
+    line-height:1.4;padding:3px 7px;border:1px solid var(--p-line);
+    color:var(--p-mut);transition:border-color .28s ease,color .28s ease;
+  }
+  .project__meta{
+    grid-area:meta;display:flex;flex-direction:column;align-items:flex-end;
+    justify-content:space-between;gap:18px;padding-top:2px;text-align:right;
+  }
+  .project__stars{
+    font-family:var(--font-mono);font-size:16px;line-height:1;
+    letter-spacing:.01em;white-space:nowrap;
+  }
+  .project__stars span{font-size:11px;color:var(--pink);vertical-align:1px}
+  .project__go{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--p-mut);
+    transition:color .28s ease,transform .28s ease;
+  }
+  .project__link:hover .project__go{transform:translate(2px,-2px);color:var(--ink)}
+  .project__diagram{
+    margin:26px 0 0 88px;color:var(--cyan-bright);
+    border-top:1px dashed var(--p-line);padding-top:16px;
+  }
+  .project__link:hover .project__diagram{color:var(--cyan)}
+  .project__diagram svg{display:block;width:100%;max-width:720px;height:auto}
+  .project__diagram figcaption{
+    margin-top:8px;font-family:var(--font-mono);font-size:9px;
+    letter-spacing:.08em;color:var(--p-mut);
+  }
+
+  /* ---------- toolkit ---------- */
+  .toolkit .section__head{margin-bottom:clamp(32px,5vw,56px)}
+  .racks{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    border-top:1px solid var(--line-strong);
+  }
+  .rack{padding:26px 30px 12px 0;border-right:1px solid var(--line)}
+  .rack + .rack{padding-left:30px}
+  .rack:last-child{border-right:0;padding-right:0}
+  .rack__top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .rack__label{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--cyan);
+  }
+  .rack__cn{font-size:12px;color:var(--muted)}
+  .rack ul{border-top:1px solid var(--line)}
+  .rack li{
+    display:flex;align-items:baseline;gap:11px;
+    padding:12px 0;border-bottom:1px solid var(--line);
+    font-size:19px;line-height:1.35;font-weight:400;letter-spacing:.005em;
+  }
+  .rack li:last-child{border-bottom:0}
+  .rack .plus{
+    font-family:var(--font-mono);font-size:12px;color:var(--cyan);
+    line-height:1;flex:none;transform:translateY(-1px);
+  }
+
+  .now{margin-top:clamp(54px,7vw,86px)}
+  .now__head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+    border-bottom:1px solid var(--line-strong);padding-bottom:12px;margin-bottom:4px;
+  }
+  .now__head h3{font-size:15px;font-weight:500;letter-spacing:.01em}
+  .now__head span{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .now__grid{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(28px,5vw,64px)}
+  .now__item{
+    display:grid;grid-template-columns:38px minmax(0,1fr);gap:14px;
+    padding:19px 0 20px;border-bottom:1px solid var(--line);
+  }
+  .now__idx{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;
+    color:var(--cyan);padding-top:4px;
+  }
+  .now__item h4{font-size:15.5px;font-weight:500;line-height:1.5;margin:0 0 3px}
+  .now__item p{font-size:13.5px;line-height:1.75;color:var(--muted);margin:0}
+
+  /* ---------- contact ---------- */
+  .contact{background:var(--dark);color:var(--paper-on-dark);overflow:hidden}
+  .contact::before{
+    content:"";position:absolute;right:-12vw;top:-18vw;width:60vw;height:60vw;
+    border:1px solid rgba(99,204,216,.20);border-radius:50%;pointer-events:none;
+  }
+  .contact::after{
+    content:"";position:absolute;right:-4vw;top:-6vw;width:36vw;height:36vw;
+    border:1px solid rgba(99,204,216,.14);border-radius:50%;pointer-events:none;
+  }
+  .contact .sec-label{color:var(--muted-on-dark)}
+  .contact .sec-label b{color:var(--paper-on-dark);border-color:rgba(242,238,227,.32)}
+  .contact .sec-label__rule{background:rgba(242,238,227,.18)}
+  .contact__grid{
+    display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.72fr);
+    gap:clamp(48px,7vw,110px);align-items:start;
+  }
+  .contact h2{
+    font-family:var(--font-serif);font-weight:600;
+    font-size:clamp(34px,4.8vw,68px);line-height:1.34;
+    letter-spacing:-.015em;margin:0 0 20px;
+  }
+  .contact__sub{
+    max-width:35em;margin:0;font-size:15.5px;line-height:1.9;
+    color:var(--muted-on-dark);
+  }
+  .contact__roles{margin-top:34px;border-top:1px solid rgba(242,238,227,.18)}
+  .role{
+    display:grid;grid-template-columns:96px minmax(0,1fr);gap:22px;
+    padding:18px 0 19px;border-bottom:1px solid rgba(242,238,227,.18);
+  }
+  .role__label{
+    font-family:var(--font-mono);font-size:8.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--cyan-bright);padding-top:5px;
+  }
+  .role h3{font-size:19px;font-weight:500;line-height:1.4;margin:0 0 3px}
+  .role p{font-size:13.5px;line-height:1.7;color:var(--muted-on-dark);margin:0}
+  .contact__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+  .links__head{
+    display:flex;justify-content:space-between;gap:16px;align-items:baseline;
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted-on-dark);
+  }
+  .links__note{
+    margin:9px 0 0;font-size:12px;line-height:1.65;
+    color:rgba(242,238,227,.46);
+  }
+  .links{list-style:none;margin:20px 0 0;padding:0;border-top:1px solid rgba(242,238,227,.18)}
+  .links a{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:13px 0;
+    border-bottom:1px solid rgba(242,238,227,.18);
+    text-decoration:none;
+  }
+  .links__label{
+    font-family:var(--font-serif);font-size:21px;font-weight:600;
+    line-height:1.35;transition:color .25s ease;
+  }
+  .links__meta{display:flex;align-items:center;gap:9px;flex:none}
+  .links__handle{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.03em;
+    color:var(--muted-on-dark);white-space:nowrap;
+  }
+  .links__arrow{
+    font-size:14px;color:var(--muted-on-dark);
+    transition:transform .25s ease,color .25s ease;
+  }
+  .links a:hover .links__label,.links a:focus-visible .links__label{color:var(--cyan-bright)}
+  .links a:hover .links__arrow{transform:translate(2px,-2px);color:var(--cyan-bright)}
+
+  /* ---------- footer ---------- */
+  .footer{
+    background:var(--dark);color:var(--muted-on-dark);
+    padding:22px var(--pad) 26px;border-top:1px solid rgba(242,238,227,.14);
+  }
+  .footer__inner{
+    max-width:var(--max);margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .footer__mark{
+    font-family:var(--font-display);font-size:22px;line-height:1;
+    letter-spacing:0;text-transform:none;color:var(--paper-on-dark);
+  }
+  .footer__mid{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px}
+  .footer a{text-decoration:none;color:var(--muted-on-dark);border-bottom:1px solid rgba(242,238,227,.3);padding-bottom:2px}
+  .footer a:hover{color:var(--paper-on-dark)}
+  .footer .swatches{margin:0}
+  .footer .swatches i{width:16px;height:4px}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:24px;z-index:80;
+    transform:translate(-50%,14px);opacity:0;visibility:hidden;
+    max-width:calc(100vw - 32px);
+    background:var(--ink);color:var(--paper);
+    border:1px solid rgba(242,238,227,.25);
+    padding:10px 16px;font-family:var(--font-mono);font-size:11px;
+    letter-spacing:.03em;text-align:center;
+    transition:opacity .22s ease,transform .22s ease,visibility .22s;
+  }
+  .toast.is-on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1100px){
+    .hero__word{font-size:clamp(96px,19vw,250px)}
+    .project__row{grid-template-columns:46px minmax(0,1fr) minmax(0,1.05fr) 104px}
+    .project__diagram{margin-left:80px}
+  }
+  @media (max-width:900px){
+    .section__head{grid-template-columns:1fr;align-items:start;gap:18px}
+    .about__grid{grid-template-columns:1fr;gap:44px}
+    .sheet{max-width:420px}
+    .contact__grid{grid-template-columns:1fr;gap:54px}
+    .contact::before,.contact::after{display:none}
+  }
+  @media (max-width:860px){
+    .site-header{padding-top:17px;padding-bottom:13px}
+    .nav{display:none}
+    .brand__meta{display:none}
+    .hero{padding-top:92px;padding-bottom:22px}
+    .hero__eyebrow{font-size:9px;gap:10px;margin-bottom:18px}
+    .hero__eyebrow .coords{display:none}
+    .hero__stage{justify-content:flex-start}
+    .portrait{
+      position:relative;order:1;align-self:flex-end;
+      width:min(44vw,190px);margin:0 -2px -13vw 0;
+      transform:rotate(3deg);
+    }
+    .hero__word{order:2;font-size:clamp(58px,21.5vw,150px);line-height:.84}
+    .portrait figcaption{display:none}
+    .hero__word-note{order:3;margin-top:12px;font-size:11px}
+    .hero__copy{order:4;margin-top:26px;max-width:none}
+    .hero__lead{font-size:clamp(21px,5.5vw,27px);line-height:1.6;margin-bottom:22px}
+    .hero__facts{grid-template-columns:1fr 1fr;margin-top:30px}
+    .hero__facts > div{padding:11px 14px 11px 0}
+    .hero__facts > div + div{border-left:1px solid var(--line);padding-left:14px}
+    .hero__facts > div:nth-child(2n+1){border-left:0;padding-left:0}
+    .hero__facts > div:nth-child(n+3){border-top:1px solid var(--line)}
+    .hero__facts dd{font-size:12.5px}
+    .section{padding-top:72px;padding-bottom:72px}
+    .project__link{padding:24px 16px;margin:0 -16px}
+    .project__row{
+      grid-template-columns:34px minmax(0,1fr) auto;
+      grid-template-areas:
+        "num title meta"
+        "num desc desc";
+      gap:10px 14px;
+    }
+    .project__num{padding-top:5px}
+    .project__title h3{font-size:26px;margin-bottom:7px}
+    .project__meta{flex-direction:row;align-items:center;gap:12px;padding-top:0}
+    .project__stars{font-size:14px}
+    .project__go{display:none}
+    .project__desc{padding-top:6px}
+    .project__desc p{font-size:14px;line-height:1.8;margin-bottom:11px}
+    .project__diagram{display:none}
+    .racks{grid-template-columns:1fr}
+    .rack{padding:22px 0 10px;border-right:0;border-bottom:1px solid var(--line)}
+    .rack + .rack{padding-left:0}
+    .rack:last-child{border-bottom:0}
+    .rack li{font-size:18px;padding:10px 0}
+    .now__grid{grid-template-columns:1fr}
+    .now__item{padding:17px 0}
+    .contact h2{font-size:clamp(32px,8.8vw,50px)}
+    .role{grid-template-columns:1fr;gap:5px;padding:16px 0}
+    .role__label{padding-top:0}
+    .footer__inner{justify-content:flex-start;gap:12px 22px}
+    .footer__mid{order:3;width:100%}
+  }
+  @media (max-width:600px){
+    .status{font-size:8.5px;padding:5px 8px;gap:7px}
+    .hero__word-note{letter-spacing:.04em}
+    .btn{width:100%;justify-content:space-between;padding:13px 16px}
+    .hero__cta{gap:9px}
+    .sec-label{font-size:9px;gap:12px}
+    .about__statement{font-size:clamp(26px,7.8vw,36px)}
+    .about__body p{font-size:15.5px;line-height:1.9}
+    .contact__cta .btn{width:100%}
+    .links__label{font-size:19px}
+    .links__handle{display:none}
+    .toast{left:16px;right:16px;transform:translate(0,14px);max-width:none}
+    .toast.is-on{transform:translate(0,0)}
+  }
+  @media (max-height:760px) and (min-width:861px){
+    .hero__word{font-size:clamp(88px,16.5vw,220px)}
+    .portrait{width:clamp(190px,19vw,250px)}
+    .hero__lead{font-size:clamp(21px,2vw,28px)}
+    .hero__copy{margin-top:28px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+    }
+    .status__dot{animation:none}
+  }
+</style>
+</head>
+<body>
+<a class="sr-only" href="#main">跳到主要内容</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="Chasen 首页">
+    <span class="brand__mark">Chasen</span>
+    <span class="brand__meta">AI Dev / GZ</span>
+  </a>
+  <nav class="nav" aria-label="主导航">
+    <a href="#about">关于</a>
+    <a href="#work">作品</a>
+    <a href="#toolkit">在折腾</a>
+    <a href="#contact">联系</a>
+  </nav>
+  <span class="status"><span class="status__dot" aria-hidden="true"></span>开放机会</span>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="hero__grid" aria-hidden="true"></div>
+    <svg class="hero__circuit" viewBox="0 0 700 900" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="1">
+        <path d="M700 80H560V180H470"/>
+        <path d="M700 300H600V250H520"/>
+        <path d="M700 520H580V600H500V720H430"/>
+        <path d="M700 760H610V690H540"/>
+        <path d="M470 180v62"/>
+        <path d="M520 250v70"/>
+        <path d="M430 720v58"/>
+        <path d="M540 690v44"/>
+        <path d="M560 180h-34"/>
+        <path d="M600 250h-32"/>
+      </g>
+      <g fill="currentColor">
+        <circle cx="470" cy="180" r="3.2"/>
+        <circle cx="520" cy="250" r="3.2"/>
+        <circle cx="430" cy="720" r="3.2"/>
+        <circle cx="540" cy="690" r="3.2"/>
+        <circle cx="560" cy="180" r="2"/>
+        <circle cx="500" cy="600" r="2"/>
+        <rect x="522" y="743" width="7" height="7"/>
+        <rect x="466" y="118" width="7" height="7"/>
+      </g>
+      <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 8" opacity=".8">
+        <path d="M700 640H640V540"/>
+        <path d="M700 420H650V470"/>
+      </g>
+    </svg>
+
+    <div class="hero__inner">
+      <div class="hero__eyebrow">
+        <span class="dot" aria-hidden="true"></span>
+        <span>AI 开发工程师 · AI 原住民</span>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="coords mono">GZ · 23.13°N / 113.26°E</span>
+      </div>
+
+      <div class="hero__stage">
+        <h1 class="hero__word" aria-label="Chasen Liao">
+          <span class="hero__word-inner" aria-hidden="true">CHASE<span class="hero__n">N</span></span>
+        </h1>
+        <p class="hero__word-note">
+          <span class="mono">FROM</span> <em>chase</em> — 不停追逐，无限进步
+        </p>
+
+        <figure class="portrait">
+          <div class="portrait__frame">
+            <span class="portrait__tag">ID / 001</span>
+            <img src="avatar.jpg" alt="Chasen 的头像" width="400" height="400">
+            <figcaption><b>Chasen Liao</b><span>20 · GZ</span></figcaption>
+          </div>
+        </figure>
+
+        <div class="hero__copy">
+          <p class="hero__lead">
+            AI 开发工程师 × AI 原住民。<br>
+            做 Pi 桌面客户端和 Agent Skills，也想试试 <span class="mark">AI 产品经理</span>。
+          </p>
+          <div class="hero__cta">
+            <a class="btn" href="#" data-todo aria-disabled="true" title="链接待填">
+              <span class="btn__text">去 X 找我 <span class="btn__arrow" aria-hidden="true">↗</span></span>
+              <span class="todo">链接待填</span>
+            </a>
+            <a class="btn btn--ghost" href="#work">
+              <span class="btn__text">看作品 <span class="btn__arrow" aria-hidden="true">↓</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <dl class="hero__facts">
+        <div><dt>现在</dt><dd>计算机科学大四 · 实习中</dd></div>
+        <div><dt>位置</dt><dd>广州，也看深圳</dd></div>
+        <div><dt>平台</dt><dd>X @chasen_liao · 约 6k 关注</dd></div>
+        <div><dt>开放</dt><dd>AI 开发 · AI 产品</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section about" id="about">
+    <div class="inner">
+      <p class="sec-label"><b>01</b> About / 关于 <span class="sec-label__rule" aria-hidden="true"></span></p>
+      <div class="about__grid">
+        <div>
+          <h2 class="about__statement">
+            <span class="line"><span>20 岁，计算机科学大四，在广州。</span></span>
+            <span class="line"><span>一边实习，一边把 AI Agent 工具</span></span>
+            <span class="line"><span>做成能用的东西。</span></span>
+          </h2>
+          <div class="about__body">
+            <p>我是 Chasen Liao。名字取自 <strong>chase</strong>——不停追逐，无限进步。用了几年，还是觉得挺适合现在做的事。</p>
+            <p>本职是 AI 开发工程师，现在一边实习，一边做 AI Agent 工具。每天在用 Pi、Claude Code 和 Codex，主力是 Python、TypeScript / React，也做 Agent 和 RAG。</p>
+            <p>最近在认真考虑往 AI 产品经理走。写代码之外，开始更在意一件事：这个东西该不该做，给谁做。</p>
+          </div>
+          <div class="about__foot">
+            <span class="chip">Guangzhou</span>
+            <span class="chip">CS Senior</span>
+            <span>Open to GZ / SZ</span>
+          </div>
+        </div>
+
+        <aside class="about__side" aria-label="角色设定与个人信息">
+          <figure class="sheet">
+            <div class="sheet__frame">
+              <span class="sheet__tag">SHEET / 01</span>
+              <img src="chibi.jpg" alt="Chasen 的 Q 版角色设定卡：浅棕短发、青蓝耳机、粉色发夹" width="1152" height="864" loading="lazy">
+            </div>
+            <figcaption>
+              <span>Character design</span>
+              <span>浅棕短发 · 青蓝耳机 · 粉色点缀</span>
+            </figcaption>
+            <div class="swatches" aria-hidden="true">
+              <i style="--sw:#a9825c"></i>
+              <i style="--sw:#fbf8f0"></i>
+              <i style="--sw:#63ccd8"></i>
+              <i style="--sw:#df8ba0"></i>
+              <i style="--sw:#b9b9b4"></i>
+            </div>
+          </figure>
+
+          <dl class="spec">
+            <div><dt>Name</dt><dd>Chasen Liao</dd></div>
+            <div><dt>Age</dt><dd>20</dd></div>
+            <div><dt>Base</dt><dd>广州</dd></div>
+            <div><dt>Now</dt><dd>计算机科学大四 · 实习中</dd></div>
+            <div><dt>Open to</dt><dd>AI 开发 / AI 产品 · 广州 / 深圳</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section work" id="work">
+    <div class="inner">
+      <p class="sec-label"><b>02</b> Selected work / 作品 <span class="sec-label__rule" aria-hidden="true"></span></p>
+      <div class="section__head">
+        <h2 class="h2">
+          <span class="line"><span>做过的东西，</span></span>
+          <span class="line"><span>按我自己的重要程度排。</span></span>
+        </h2>
+        <p class="section__note">五个仓库，都开源在 GitHub。star 数是写这页时的数字，会变。</p>
+      </div>
+
+      <div class="projects">
+        <article class="project reveal">
+          <a class="project__link" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">
+            <div class="project__row">
+              <span class="project__num">01</span>
+              <div class="project__title">
+                <h3>pi-agent-desktop</h3>
+                <span class="project__kind"><span class="dot" aria-hidden="true"></span>Flagship · Desktop app</span>
+              </div>
+              <div class="project__desc">
+                <p>给 Pi 编程智能体做的 Electron 桌面客户端：原生窗口、会话分叉、SSE 流式对话、模型中途切换、内置文件浏览器。</p>
+                <ul class="chips" aria-label="技术栈">
+                  <li>TypeScript</li><li>Electron</li><li>React</li>
+                </ul>
+              </div>
+              <div class="project__meta">
+                <span class="project__stars">331 <span aria-hidden="true">★</span><span class="sr-only">GitHub stars</span></span>
+                <span class="project__go">GitHub <span aria-hidden="true">↗</span></span>
+              </div>
+            </div>
+            <figure class="project__diagram" aria-hidden="true">
+              <svg viewBox="0 0 720 150" fill="none">
+                <g stroke="currentColor" stroke-width="1">
+                  <path d="M24 30v90" opacity=".35"/>
+                  <circle cx="24" cy="75" r="4"/>
+                  <path d="M24 75h54"/>
+                  <path d="M78 75C108 75 108 33 148 33h84"/>
+                  <path d="M78 75h154"/>
+                  <path d="M78 75c30 0 30 42 70 42h84"/>
+                  <path d="M320 33h286" stroke-dasharray="3 7" opacity=".7"/>
+                  <path d="M320 75h286" stroke-dasharray="3 7" opacity=".7"/>
+                  <path d="M320 117h286" stroke-dasharray="3 7" opacity=".7"/>
+                  <rect x="606" y="29" width="8" height="8"/>
+                  <rect x="606" y="71" width="8" height="8"/>
+                  <rect x="606" y="113" width="8" height="8"/>
+                </g>
+                <g fill="currentColor" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="1.2">
+                  <text x="0" y="16" opacity=".6">PI SESSION</text>
+                  <text x="148" y="24">FORK 01</text>
+                  <text x="148" y="66">MAIN</text>
+                  <text x="148" y="108">FORK 02</text>
+                  <text x="628" y="37">SSE</text>
+                  <text x="628" y="79">MODEL</text>
+                  <text x="628" y="121">FILES</text>
+                </g>
+                <circle cx="148" cy="33" r="3" fill="currentColor"/>
+                <circle cx="148" cy="75" r="3" fill="currentColor"/>
+                <circle cx="148" cy="117" r="3" fill="currentColor"/>
+              </svg>
+              <figcaption>会话分叉 · SSE 流式 · 中途换模型 · 内置文件浏览</figcaption>
+            </figure>
+          </a>
+        </article>
+
+        <article class="project reveal">
+          <a class="project__link" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener">
+            <div class="project__row">
+              <span class="project__num">02</span>
+              <div class="project__title">
+                <h3>resume-skills</h3>
+                <span class="project__kind"><span class="dot" aria-hidden="true"></span>Agent skill</span>
+              </div>
+              <div class="project__desc">
+                <p>一句话让 Agent 生成精美简历，还能按 JD 匹配。</p>
+                <ul class="chips" aria-label="项目类型"><li>Agent Skill</li><li>Resume</li></ul>
+              </div>
+              <div class="project__meta">
+                <span class="project__stars">38 <span aria-hidden="true">★</span><span class="sr-only">GitHub stars</span></span>
+                <span class="project__go">GitHub <span aria-hidden="true">↗</span></span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="project reveal">
+          <a class="project__link" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener">
+            <div class="project__row">
+              <span class="project__num">03</span>
+              <div class="project__title">
+                <h3>Chasen-Skills</h3>
+                <span class="project__kind"><span class="dot" aria-hidden="true"></span>Skill collection</span>
+              </div>
+              <div class="project__desc">
+                <p>自用的 Agent Skills 合集：并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建。用 npx skills 安装。</p>
+                <ul class="chips" aria-label="项目类型"><li>Agent Skills</li><li>npx</li></ul>
+              </div>
+              <div class="project__meta">
+                <span class="project__stars">33 <span aria-hidden="true">★</span><span class="sr-only">GitHub stars</span></span>
+                <span class="project__go">GitHub <span aria-hidden="true">↗</span></span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="project reveal">
+          <a class="project__link" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener">
+            <div class="project__row">
+              <span class="project__num">04</span>
+              <div class="project__title">
+                <h3>Everything-claude-code-Doc</h3>
+                <span class="project__kind"><span class="dot" aria-hidden="true"></span>Documentation</span>
+              </div>
+              <div class="project__desc">
+                <p>Everything Claude Code 的使用指南，持续更新。</p>
+                <ul class="chips" aria-label="项目类型"><li>Docs</li><li>Claude Code</li></ul>
+              </div>
+              <div class="project__meta">
+                <span class="project__stars">15 <span aria-hidden="true">★</span><span class="sr-only">GitHub stars</span></span>
+                <span class="project__go">GitHub <span aria-hidden="true">↗</span></span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <article class="project reveal">
+          <a class="project__link" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener">
+            <div class="project__row">
+              <span class="project__num">05</span>
+              <div class="project__title">
+                <h3>SuperMew</h3>
+                <span class="project__kind"><span class="dot" aria-hidden="true"></span>Agentic RAG</span>
+              </div>
+              <div class="project__desc">
+                <p>Agentic RAG 实验，关注 Context Engineering 和三层记忆架构。</p>
+                <ul class="chips" aria-label="项目类型"><li>RAG</li><li>Context</li></ul>
+              </div>
+              <div class="project__meta">
+                <span class="project__go">GitHub <span aria-hidden="true">↗</span></span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section toolkit" id="toolkit">
+    <div class="inner">
+      <p class="sec-label"><b>03</b> Toolkit / 在折腾 <span class="sec-label__rule" aria-hidden="true"></span></p>
+      <div class="section__head">
+        <h2 class="h2">
+          <span class="line"><span>每天在用的东西，</span></span>
+          <span class="line"><span>和最近在折腾的事。</span></span>
+        </h2>
+        <p class="section__note">按使用频率分组，不标熟练度百分比。用得多就是多，用得少就是少。</p>
+      </div>
+
+      <div class="racks">
+        <div class="rack">
+          <div class="rack__top"><span class="rack__label">Daily</span><span class="rack__cn">每天在用</span></div>
+          <ul>
+            <li><span class="plus" aria-hidden="true">+</span>Pi</li>
+            <li><span class="plus" aria-hidden="true">+</span>Claude Code</li>
+            <li><span class="plus" aria-hidden="true">+</span>Codex</li>
+          </ul>
+        </div>
+        <div class="rack">
+          <div class="rack__top"><span class="rack__label">Core</span><span class="rack__cn">主力</span></div>
+          <ul>
+            <li><span class="plus" aria-hidden="true">+</span>Python</li>
+            <li><span class="plus" aria-hidden="true">+</span>TypeScript / React</li>
+            <li><span class="plus" aria-hidden="true">+</span>Agent / RAG</li>
+          </ul>
+        </div>
+        <div class="rack">
+          <div class="rack__top"><span class="rack__label">Built</span><span class="rack__cn">做过</span></div>
+          <ul>
+            <li><span class="plus" aria-hidden="true">+</span>Electron</li>
+            <li><span class="plus" aria-hidden="true">+</span>FastAPI</li>
+            <li><span class="plus" aria-hidden="true">+</span>向量检索</li>
+            <li><span class="plus" aria-hidden="true">+</span>HTML / CSS</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="now">
+        <div class="now__head">
+          <h3>最近在折腾</h3>
+          <span>Now / 2026</span>
+        </div>
+        <div class="now__grid">
+          <div class="now__item reveal">
+            <span class="now__idx">01</span>
+            <div><h4>在实习，做 AI 开发</h4><p>一边实习，一边做 AI 开发；大四这年也在找工作。</p></div>
+          </div>
+          <div class="now__item reveal">
+            <span class="now__idx">02</span>
+            <div><h4>项目继续更新</h4><p>pi-agent-desktop 和 Chasen-Skills 都在维护；后者本来就是我自己在用的流程合集。</p></div>
+          </div>
+          <div class="now__item reveal">
+            <span class="now__idx">03</span>
+            <div><h4>在 X 上记录</h4><p>Pi / Agent 实测、新模型上手、大四找工作，都写在 @chasen_liao。</p></div>
+          </div>
+          <div class="now__item reveal">
+            <span class="now__idx">04</span>
+            <div><h4>从开发往产品看</h4><p>认真考虑 AI 产品经理方向，在学怎么看需求、怎么判断一个功能值不值得做。</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact" id="contact">
+    <div class="inner">
+      <p class="sec-label"><b>04</b> Contact / 联系 <span class="sec-label__rule" aria-hidden="true"></span></p>
+      <div class="contact__grid">
+        <div>
+          <h2>
+            <span class="line"><span>开放 AI 开发工程师，</span></span>
+            <span class="line"><span>也想试试 AI 产品经理。</span></span>
+          </h2>
+          <p class="contact__sub">城市广州或深圳。如果你在做 Agent 工具，或者需要一个既写代码又愿意想产品的人，聊聊。</p>
+
+          <div class="contact__roles">
+            <div class="role">
+              <span class="role__label">Role 01</span>
+              <div>
+                <h3>AI 开发工程师</h3>
+                <p>Python、TypeScript / React、Agent / RAG。做过 Electron 桌面端，也做过向量检索。</p>
+              </div>
+            </div>
+            <div class="role">
+              <span class="role__label">Role 02</span>
+              <div>
+                <h3>AI 产品经理</h3>
+                <p>从开发视角看需求，正在补产品的方法和判断。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact__cta">
+            <a class="btn btn--light" href="#" data-todo aria-disabled="true" title="链接待填">
+              <span class="btn__text">Email 我 <span class="btn__arrow" aria-hidden="true">↗</span></span>
+              <span class="todo todo--paper">链接待填</span>
+            </a>
+            <a class="btn btn--outline" href="#" data-todo aria-disabled="true" title="链接待填">
+              <span class="btn__text">X @chasen_liao <span class="btn__arrow" aria-hidden="true">↗</span></span>
+              <span class="todo">链接待填</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="contact__links">
+          <div class="links__head">
+            <span>Elsewhere / 其他入口</span>
+            <span>05</span>
+          </div>
+          <p class="links__note">这些位置的链接还没填，先留了占位。</p>
+          <ul class="links">
+            <li>
+              <a href="#" data-todo aria-disabled="true" title="链接待填">
+                <span class="links__label">个人站</span>
+                <span class="links__meta"><span class="todo">链接待填</span><span class="links__arrow" aria-hidden="true">↗</span></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-todo aria-disabled="true" title="链接待填">
+                <span class="links__label">博客</span>
+                <span class="links__meta"><span class="todo">链接待填</span><span class="links__arrow" aria-hidden="true">↗</span></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-todo aria-disabled="true" title="链接待填">
+                <span class="links__label">GitHub</span>
+                <span class="links__meta"><span class="links__handle">@Chasen-Liao</span><span class="todo">链接待填</span><span class="links__arrow" aria-hidden="true">↗</span></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-todo aria-disabled="true" title="链接待填">
+                <span class="links__label">X</span>
+                <span class="links__meta"><span class="links__handle">@chasen_liao</span><span class="todo">链接待填</span><span class="links__arrow" aria-hidden="true">↗</span></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-todo aria-disabled="true" title="链接待填">
+                <span class="links__label">Email</span>
+                <span class="links__meta"><span class="todo">链接待填</span><span class="links__arrow" aria-hidden="true">↗</span></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <span class="footer__mark">Chasen</span>
+    <span>© 2026 Chasen Liao · GZ</span>
+    <span class="footer__mid">
+      <span>23.13°N / 113.26°E</span>
+      <span class="swatches" aria-hidden="true">
+        <i style="--sw:#a9825c"></i>
+        <i style="--sw:#fbf8f0"></i>
+        <i style="--sw:#63ccd8"></i>
+        <i style="--sw:#df8ba0"></i>
+        <i style="--sw:#b9b9b4"></i>
+      </span>
+      <span>手写 HTML / CSS / JS</span>
+    </span>
+    <a href="#top">回到顶部 ↑</a>
+  </div>
+</footer>
+
+<div class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // 未填链接：阻止跳转并给出明确反馈
+  var toast = document.querySelector(".toast");
+  var toastTimer;
+  document.querySelectorAll("[data-todo]").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      toast.textContent = "这个链接还没填，之后再补。";
+      toast.classList.add("is-on");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        toast.classList.remove("is-on");
+      }, 2200);
+    });
+  });
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hasGSAP = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+  if (!hasGSAP || reduceMotion) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(".progress", {
+    scaleX: 1,
+    ease: "none",
+    scrollTrigger: {
+      trigger: document.documentElement,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: true
+    }
+  });
+
+  var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+  intro
+    .from(".hero__eyebrow", { opacity: 0, y: 12, duration: 0.6 })
+    .from(".hero__word-inner", { opacity: 0, yPercent: 12, duration: 1.05 }, "-=0.35")
+    .from(".hero__word-note", { opacity: 0, y: 10, duration: 0.55 }, "-=0.75")
+    .from(".portrait", { opacity: 0, y: 24, rotate: 4.5, duration: 0.9 }, "-=0.7")
+    .from(".hero__lead", { opacity: 0, y: 16, duration: 0.65 }, "-=0.65")
+    .from(".hero__cta > *", { opacity: 0, y: 12, duration: 0.5, stagger: 0.08 }, "-=0.45")
+    .from(".hero__facts > div", { opacity: 0, y: 10, duration: 0.5, stagger: 0.06 }, "-=0.35");
+
+  gsap.matchMedia().add("(min-width: 861px)", function () {
+    var hero = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "+=110%",
+        pin: true,
+        scrub: 0.8,
+        anticipatePin: 1
+      }
+    });
+    hero
+      .to(".hero__word-inner", { scale: 1.18, y: -24, ease: "none" }, 0)
+      .to(".portrait", { y: -96, rotate: 0, ease: "none" }, 0)
+      .to(".hero__circuit", { y: -160, ease: "none" }, 0)
+      .to(".hero__grid", { y: -90, ease: "none" }, 0)
+      .to(".hero__facts", { opacity: 0.35, ease: "none" }, 0);
+  });
+
+  gsap.utils.toArray(".line").forEach(function (line) {
+    var inner = line.querySelector(":scope > span");
+    if (!inner) return;
+    gsap.from(inner, {
+      yPercent: 110,
+      duration: 0.95,
+      ease: "power3.out",
+      immediateRender: false,
+      scrollTrigger: { trigger: line, start: "top 88%", once: true }
+    });
+  });
+
+  gsap.utils.toArray(".reveal").forEach(function (el, index) {
+    gsap.from(el, {
+      opacity: 0,
+      y: 26,
+      duration: 0.8,
+      delay: (index % 3) * 0.04,
+      ease: "power3.out",
+      immediateRender: false,
+      scrollTrigger: { trigger: el, start: "top 92%", once: true }
+    });
+  });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      ScrollTrigger.refresh();
+    });
+  }
+})();
+</script>
+</body>
+</html>

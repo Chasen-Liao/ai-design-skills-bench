@@ -1,0 +1,73 @@
+帮我做一个个人介绍落地页，主角是 Chasen。
+
+下面是真实资料，请基于这些信息来写文案和排版，不要编造经历、数字或公司名。风格不限，自己做有主见的设计选择，不要停下来问我选风格。需要做选择的地方一律选第一个方案。
+
+【基本信息】
+- 名字：Chasen / Chasen Liao，GitHub：Chasen-Liao
+- 20 岁，计算机科学大四，广州
+- 身份：AI 开发工程师 · AI 原住民 · 一边实习一边做 AI Agent 工具
+- 名字取自 chase：不停追逐，无限进步
+- 当前身份与想法：本职是 AI 开发工程师，正在认真考虑往 AI 产品经理方向尝试
+- 求职意向：开放 AI 开发工程师 和 AI 产品经理，城市广州或深圳
+- 常驻平台：X @chasen_liao（约 6k 粉丝），在上面写 Pi / Agent 工具实测、新模型上手、大四找工作，以及从开发转产品探索的真实记录
+
+【一句话定位，可改写但别歪】
+AI 开发工程师 × AI 原住民，做 Pi 桌面客户端和 Agent Skills，也想试试 AI 产品经理。
+
+【精选项目，按重要程度】
+1. pi-agent-desktop · 旗舰
+   - Electron 桌面客户端，给 Pi 编程智能体用
+   - 原生窗口、会话分叉、SSE 流式对话、模型中途切换、内置文件浏览器
+   - TypeScript / Electron / React
+   - GitHub 约 331 star
+   - https://github.com/Chasen-Liao/pi-agent-desktop
+2. resume-skills
+   - 一句话让 Agent 生成精美简历，还能按 JD 匹配
+   - 约 38 star · https://github.com/Chasen-Liao/resume-skills
+3. Chasen-Skills
+   - 自用 Agent Skills 合集，npx skills 安装，含并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建等
+   - 约 33 star · https://github.com/Chasen-Liao/Chasen-Skills
+4. Everything-claude-code-Doc
+   - Everything Claude Code 使用指南，持续更新
+   - 约 15 star · https://github.com/Chasen-Liao/Everything-claude-code-Doc
+5. SuperMew
+   - Agentic RAG，关注 Context Engineering 和三层记忆架构
+   - https://github.com/Chasen-Liao/SuperMew
+
+【技能信号，按日常强度，不要做成进度条百分比瞎编】
+- 每天在用：Pi、Claude Code、Codex
+- 主力：Python、TypeScript / React、Agent / RAG
+- 做过：Electron、FastAPI、向量检索、HTML/CSS
+
+【外链展示位，具体 URL 先留空】
+页面里要做出这些入口的展示位置和文案标签，但链接先空着，不要填真实 URL，也不要编造假域名。可以用按钮、文字链或图标位，href 写成 # 或留空，文案旁标「链接待填」即可：
+- 个人站
+- 博客
+- GitHub
+- X（文案可用 @chasen_liao，但不要写死完整链接）
+- Email（只显示「Email」标签，不要写具体邮箱地址）
+
+【素材】
+项目根目录里有：
+- avatar.jpg：真人头像
+- chibi.jpg：Q 版角色设定卡（浅棕短发、青蓝耳机、粉色点缀）
+头像和角色图可以选用，也可以不用；不要依赖外网图片 URL。
+
+【页面至少包含】
+- 首屏：名字 + 一句话定位 + 主 CTA（去 X 或 Email，链接留空）和次 CTA（看作品 / GitHub，链接留空）
+- About：简短自我介绍
+- 精选作品：上面 5 个里至少放 3 个，项目仓库用上面给的 GitHub 链接；个人站/博客/X/Email 等外链仍按外链规则留空
+- 技能或正在折腾的东西
+- 联系 / 开放机会：AI 开发工程师、AI 产品经理
+- 页脚
+
+【交付要求】
+- 只输出一个 index.html，纯 HTML、CSS、JS，不要构建工具，可以用 CDN 和 Google Fonts
+- 桌面和手机都要适配
+- 文案要像真人个人站，不要「赋能」「革命性」「深耕」这类空词
+- 做完告诉我文件路径
+
+本次请使用已安装的 ui-ux-pro-max skill：先读 SKILL.md，按它的设计方法直接出稿，不要展开冗长自检循环。
+
+
+要求一次性成版交付：先读 skill/DESIGN.md（若有），然后直接写出完整可用的 index.html 并交付。禁止反复自检、禁止反复截图/开无头浏览器验证、禁止多轮大改。最多允许一次小幅修正明显错误。完成后停止。

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chasen · AI 开发工程师，做 Pi 桌面客户端和 Agent Skills</title>
+<meta name="description" content="Chasen，20 岁，计算机科学大四，在广州。AI 开发工程师，做 Pi 桌面客户端与 Agent Skills，开放 AI 开发工程师和 AI 产品经理机会。">
+<meta property="og:title" content="Chasen · AI 开发工程师与 AI 原住民">
+<meta property="og:description" content="做 Pi 桌面客户端和 Agent Skills，也认真在考虑 AI 产品经理。开放广州与深圳机会。">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="avatar.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='18' font-weight='600' fill='%239BDCE8' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --surface:#181818;
+    --surface-2:#1F1F1F;
+    --surface-3:#272727;
+    --line:#313131;
+    --ink:#F5F5F5;
+    --muted:#9B9B9B;
+    --dim:#6B6B6B;
+    --accent:#9BDCE8;
+    --pink:#F0A8C0;
+    --light:#F5F5F5;
+    --ease:cubic-bezier(0.22,1,0.36,1);
+    --nav-h:64px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:96px}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Geist","Noto Sans SC",system-ui,sans-serif;
+    font-size:1rem;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  p,h1,h2,h3,ul{margin:0}
+  ul{padding:0;list-style:none}
+  ::selection{background:var(--accent);color:#000}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  .skip{
+    position:absolute;left:24px;top:-80px;z-index:100;
+    background:var(--ink);color:#000;padding:8px 12px;border-radius:8px;
+    font-size:.875rem;font-weight:600;transition:top .3s var(--ease);
+  }
+  .skip:focus{top:16px}
+
+  .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
+  .mono{font-family:"Geist Mono",ui-monospace,monospace}
+  .eyebrow{
+    display:flex;align-items:center;gap:8px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);
+  }
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:999px;background:var(--accent);flex:none}
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%);
+    z-index:50;width:calc(100% - 32px);max-width:720px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:8px 8px 8px 16px;
+    background:rgba(24,24,24,.72);
+    border:1px solid var(--line);
+    border-radius:999px;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+  .brand{display:flex;align-items:baseline;gap:8px;font-weight:600;font-size:1rem;letter-spacing:-.01em}
+  .brand span{font-family:"Geist Mono",ui-monospace,monospace;font-size:.75rem;font-weight:400;color:var(--dim);letter-spacing:0}
+  .nav-links{display:flex;align-items:center;gap:4px}
+  .nav-links a{
+    display:block;padding:8px 12px;border-radius:999px;
+    font-size:.875rem;line-height:1.25rem;color:var(--muted);
+    transition:color .3s var(--ease),background .3s var(--ease);
+  }
+  .nav-links a:hover{color:var(--ink);background:var(--surface-3)}
+  .nav-links a[aria-current="true"]{color:var(--ink);background:var(--surface-3)}
+  .nav-cta{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 12px;border-radius:999px;
+    background:var(--ink);color:#0A0A0A;
+    font-size:.875rem;font-weight:600;line-height:1.25rem;
+    transition:transform .3s var(--ease),background .3s var(--ease);
+  }
+  .nav-cta:hover{background:#fff;transform:translateY(-1px)}
+  .nav-cta:active{transform:scale(.98)}
+  .nav-toggle{
+    display:none;width:40px;height:40px;border-radius:999px;
+    background:var(--surface-3);border:1px solid var(--line);
+    align-items:center;justify-content:center;flex-direction:column;gap:4px;
+    cursor:pointer;padding:0;
+  }
+  .nav-toggle span{display:block;width:16px;height:1.5px;background:var(--ink);transition:transform .4s var(--ease)}
+  .nav-toggle[aria-expanded="true"] span:first-child{transform:translateY(2.75px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] span:last-child{transform:translateY(-2.75px) rotate(-45deg)}
+
+  .mobile-menu{
+    position:fixed;inset:0;z-index:40;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:96px 24px 40px;
+    background:rgba(0,0,0,.96);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    opacity:0;visibility:hidden;
+    transition:opacity .4s var(--ease),visibility .4s var(--ease);
+  }
+  .mobile-menu.open{opacity:1;visibility:visible}
+  .mobile-menu a.m-link{
+    display:block;padding:12px 0;
+    font-size:1.875rem;line-height:2.25rem;font-weight:500;letter-spacing:-.01em;
+    border-bottom:1px solid var(--surface-3);
+    opacity:0;transform:translateY(24px);
+    transition:opacity .5s var(--ease),transform .5s var(--ease),color .3s var(--ease);
+  }
+  .mobile-menu a.m-link:hover{color:var(--accent)}
+  .mobile-menu.open a.m-link{opacity:1;transform:none}
+  .mobile-menu .m-foot{
+    margin-top:32px;font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--dim);letter-spacing:.04em;
+    opacity:0;transition:opacity .5s var(--ease);
+  }
+  .mobile-menu.open .m-foot{opacity:1;transition-delay:.28s}
+
+  /* ---------- hero ---------- */
+  .hero{padding:128px 0 80px}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:end}
+  .hero h1{
+    margin-top:24px;
+    max-width:680px;
+    font-size:3rem;line-height:1.05;letter-spacing:-.02em;font-weight:600;
+    text-wrap:balance;
+    background:linear-gradient(90deg,#FFFFFF 0%,#9B9B9B 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .hero-sub{
+    margin-top:24px;max-width:680px;
+    font-size:1.25rem;line-height:1.75rem;color:var(--muted);
+    text-wrap:pretty;
+  }
+  .hero-sub strong{color:var(--ink);font-weight:500}
+  .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:32px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:8px 12px;min-height:40px;border-radius:999px;
+    font-size:1rem;line-height:1.5rem;font-weight:600;
+    transition:transform .3s var(--ease),background .3s var(--ease),border-color .3s var(--ease);
+  }
+  .btn svg{flex:none}
+  .btn-primary{background:var(--ink);color:#0A0A0A}
+  .btn-primary:hover{background:#fff;transform:translateY(-1px)}
+  .btn-primary:active{transform:scale(.98)}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:var(--surface-2);border-color:var(--muted);transform:translateY(-1px)}
+  .btn-ghost:active{transform:scale(.98)}
+  .hero-note{
+    margin-top:16px;font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--dim);letter-spacing:.02em;
+  }
+  .hero-note b{font-weight:400;color:var(--muted)}
+
+  .portrait{
+    max-width:360px;background:var(--light);border-radius:24px;padding:8px;
+    color:#0A0A0A;
+  }
+  .portrait-media{border-radius:16px;overflow:hidden;background:#fff}
+  .portrait-media img{width:100%;aspect-ratio:1/1;object-fit:cover}
+  .portrait-meta{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:16px 12px 8px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;letter-spacing:.02em;color:#5A5A5A;
+  }
+  .portrait-meta strong{font-family:"Geist","Noto Sans SC",sans-serif;font-size:.875rem;font-weight:600;color:#0A0A0A}
+
+  .hero-stats{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+    margin-top:48px;border-top:1px solid var(--surface-3);
+  }
+  .hero-stats div{
+    padding:16px 0;
+    border-bottom:1px solid var(--surface-3);
+  }
+  .hero-stats dt{
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--dim);letter-spacing:.04em;
+  }
+  .hero-stats dd{margin:4px 0 0;font-size:1rem;line-height:1.5rem;color:var(--ink)}
+
+  /* ---------- sections ---------- */
+  section{padding:80px 0}
+  .section-head{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+  .section-head h2{
+    font-size:1.875rem;line-height:2.25rem;letter-spacing:-.02em;font-weight:600;
+    max-width:680px;text-wrap:balance;
+  }
+  .section-head p{max-width:680px;color:var(--muted);text-wrap:pretty}
+
+  /* ---------- tagline ---------- */
+  .tagline-section{padding:96px 0}
+  .tagline{
+    max-width:680px;
+    font-size:2.25rem;line-height:1.15;letter-spacing:-.02em;font-weight:500;
+    text-wrap:balance;
+  }
+  .tagline .line{display:block}
+  .tagline .w{
+    display:inline-block;
+    color:rgba(245,245,245,.28);
+    transition:color .6s var(--ease);
+  }
+  .tagline.in .w{color:var(--ink)}
+  .tagline-section .eyebrow{margin-bottom:24px}
+
+  /* ---------- about ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:start}
+  .about-copy p{color:var(--muted);text-wrap:pretty}
+  .about-copy p + p{margin-top:16px}
+  .about-copy p strong{color:var(--ink);font-weight:500}
+  .about-aside{
+    background:var(--surface);border:1px solid var(--surface-3);
+    border-radius:16px;padding:8px;
+  }
+  .about-aside img{
+    width:100%;aspect-ratio:1/1;object-fit:cover;object-position:0% 42%;
+    border-radius:8px;background:#fff;
+  }
+  .about-aside figcaption{
+    padding:12px 8px 4px;font-size:.875rem;line-height:1.25rem;color:var(--muted);
+  }
+  .about-aside figcaption span{
+    display:block;margin-top:4px;
+    font-family:"Geist Mono",ui-monospace,monospace;font-size:.75rem;
+    line-height:1rem;color:var(--dim);letter-spacing:.02em;
+  }
+  .about-facts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
+  .about-facts li{
+    padding:16px;border:1px solid var(--surface-3);border-radius:8px;
+    font-size:.875rem;line-height:1.25rem;
+  }
+  .about-facts span{
+    display:block;margin-bottom:4px;
+    font-family:"Geist Mono",ui-monospace,monospace;font-size:.75rem;
+    color:var(--dim);letter-spacing:.04em;
+  }
+
+  /* ---------- work ---------- */
+  .work-grid{display:grid;grid-template-columns:1fr;gap:16px}
+  .card{
+    background:var(--surface);border:1px solid var(--surface-3);border-radius:16px;
+    padding:24px;
+    transition:background .3s var(--ease),border-color .3s var(--ease),transform .5s var(--ease);
+  }
+  .card:hover{background:var(--surface-2);border-color:var(--line);transform:translateY(-2px)}
+  .featured{
+    display:grid;grid-template-columns:1fr;gap:24px;
+    padding:24px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:4px 8px;border-radius:999px;
+    border:1px solid var(--line);
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--accent);letter-spacing:.04em;
+  }
+  .card h3{font-size:1.5rem;line-height:2rem;font-weight:600;letter-spacing:-.01em}
+  .card h3 a{transition:color .3s var(--ease)}
+  .card h3 a:hover{color:var(--accent)}
+  .project-desc{margin-top:8px;color:var(--muted);font-size:1rem;line-height:1.5rem;max-width:52ch;text-wrap:pretty}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .tags li{
+    padding:4px 8px;border-radius:8px;background:var(--surface-3);
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--muted);
+  }
+  .card-foot{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+    margin-top:24px;padding-top:16px;border-top:1px solid var(--surface-3);
+  }
+  .stars{
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.875rem;line-height:1.25rem;color:var(--ink);
+  }
+  .stars span{color:var(--dim)}
+  .go{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.875rem;line-height:1.25rem;font-weight:500;color:var(--muted);
+    transition:color .3s var(--ease),gap .3s var(--ease);
+  }
+  .go:hover{color:var(--ink);gap:12px}
+  .feature-list{display:grid;gap:8px;align-self:start}
+  .feature-list li{
+    display:flex;align-items:flex-start;gap:8px;
+    font-size:.875rem;line-height:1.25rem;color:var(--muted);
+    padding:12px;background:var(--bg);border-radius:8px;
+  }
+  .feature-list li::before{content:"↳";color:var(--accent);font-family:"Geist Mono",monospace;flex:none}
+  .featured .card-foot{margin-top:0}
+  .featured-side{display:flex;flex-direction:column;gap:16px}
+
+  /* ---------- stack ---------- */
+  .stack-grid{display:grid;grid-template-columns:1fr;gap:16px}
+  .skill-card h3{font-size:1.25rem;line-height:1.75rem;font-weight:600}
+  .skill-card .note{margin-top:4px;color:var(--dim);font-size:.875rem;line-height:1.25rem}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chips li{
+    padding:8px 12px;border-radius:8px;border:1px solid var(--surface-3);
+    background:var(--surface-2);font-size:.875rem;line-height:1.25rem;
+  }
+  .now{display:grid;grid-template-columns:1fr;gap:0;margin-top:16px}
+  .now li{
+    display:flex;gap:16px;align-items:flex-start;
+    padding:16px 0;border-top:1px solid var(--surface-3);
+  }
+  .now li:last-child{border-bottom:1px solid var(--surface-3)}
+  .now b{
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1.5rem;color:var(--accent);font-weight:400;flex:none;
+  }
+  .now p{font-size:1rem;line-height:1.5rem;color:var(--ink)}
+  .now p span{display:block;font-size:.875rem;line-height:1.25rem;color:var(--dim);margin-top:2px}
+
+  /* ---------- contact ---------- */
+  .roles{display:grid;grid-template-columns:1fr;gap:16px}
+  .role{padding:24px}
+  .role .num{
+    font-family:"Geist Mono",ui-monospace,monospace;font-size:.75rem;
+    line-height:1rem;color:var(--dim);letter-spacing:.04em;
+  }
+  .role h3{margin-top:8px;font-size:1.5rem;line-height:2rem;font-weight:600}
+  .role p{margin-top:8px;color:var(--muted);font-size:1rem;line-height:1.5rem;text-wrap:pretty}
+  .link-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:40px}
+  .ext{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:16px;border:1px solid var(--surface-3);border-radius:8px;
+    background:var(--surface);
+    transition:background .3s var(--ease),border-color .3s var(--ease);
+  }
+  .ext-label{display:flex;align-items:baseline;gap:8px;font-size:1rem;line-height:1.5rem}
+  .ext-label span{
+    font-family:"Geist Mono",ui-monospace,monospace;font-size:.75rem;
+    line-height:1rem;color:var(--dim);
+  }
+  .ext-note{
+    display:flex;align-items:center;gap:8px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--dim);flex:none;
+  }
+  .ext.pending{cursor:default}
+  .ext.pending:hover{background:var(--surface-2);border-color:var(--line)}
+  .ext.pending .ext-note::after{
+    content:"";width:6px;height:6px;border-radius:999px;background:var(--surface-3);
+  }
+  .contact-note{
+    margin-top:16px;display:flex;align-items:center;gap:8px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--dim);
+  }
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--surface-3);padding:40px 0 48px}
+  .footer-grid{display:flex;flex-direction:column;gap:24px}
+  .footer-brand{font-weight:600;font-size:1rem}
+  .footer-brand span{
+    display:block;margin-top:4px;font-weight:400;color:var(--dim);
+    font-family:"Geist Mono",ui-monospace,monospace;font-size:.75rem;line-height:1rem;
+  }
+  .footer-links{display:flex;flex-wrap:wrap;gap:24px;font-size:.875rem;line-height:1.25rem;color:var(--muted)}
+  .footer-links a{transition:color .3s var(--ease)}
+  .footer-links a:hover{color:var(--ink)}
+  .footer-bottom{
+    margin-top:32px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:.75rem;line-height:1rem;color:var(--dim);
+  }
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}
+  .reveal.d2{transition-delay:.16s}
+
+  @media (min-width:640px){
+    .hero-stats{grid-template-columns:repeat(4,1fr)}
+    .hero-stats div{padding:16px 16px 16px 0;border-bottom:0;border-top:0}
+    .hero-stats div + div{padding-left:24px;border-left:1px solid var(--surface-3)}
+    .work-grid{grid-template-columns:repeat(2,1fr)}
+    .featured{grid-column:1/-1;grid-template-columns:1.1fr .9fr;gap:32px}
+    .stack-grid{grid-template-columns:repeat(3,1fr)}
+    .roles{grid-template-columns:repeat(2,1fr)}
+    .link-grid{grid-template-columns:repeat(2,1fr)}
+    .about-facts{grid-template-columns:repeat(2,1fr)}
+    .footer-grid{flex-direction:row;justify-content:space-between;align-items:flex-start}
+  }
+  @media (min-width:900px){
+    .nav-links{display:flex}
+    .hero{padding:160px 0 96px}
+    .hero-grid{grid-template-columns:1fr 360px;gap:64px}
+    .hero h1{font-size:4.5rem;line-height:1}
+    .hero-sub{font-size:1.25rem}
+    section{padding:96px 0}
+    .tagline-section{padding:96px 0}
+    .tagline{font-size:3.75rem;line-height:1.1}
+    .section-head h2{font-size:2.25rem;line-height:2.5rem}
+    .about-grid{grid-template-columns:1.4fr .6fr;gap:64px}
+    .about-aside{margin-top:8px}
+    .featured{padding:32px}
+    .card{padding:24px}
+    .portrait{justify-self:end}
+  }
+  @media (max-width:899px){
+    .nav-links{display:none}
+    .nav-cta{display:none}
+    .nav-toggle{display:flex}
+    .nav{max-width:560px}
+  }
+  @media (max-width:400px){
+    .hero h1{font-size:2.25rem}
+    .tagline{font-size:1.875rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;transition-delay:0ms!important}
+    .reveal{opacity:1;transform:none}
+    .tagline .w{color:var(--ink)}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+
+<nav class="nav" aria-label="主导航">
+  <a class="brand" href="#top">Chasen <span>廖</span></a>
+  <div class="nav-links">
+    <a href="#about">关于</a>
+    <a href="#work">作品</a>
+    <a href="#stack">技能</a>
+    <a href="#contact">联系</a>
+  </div>
+  <a class="nav-cta" href="#contact">
+    开放机会
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="打开菜单">
+    <span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a class="m-link" href="#about">关于</a>
+  <a class="m-link" href="#work">作品</a>
+  <a class="m-link" href="#stack">技能</a>
+  <a class="m-link" href="#contact">联系</a>
+  <p class="m-foot">广州 · 开放 AI 开发与 AI 产品机会</p>
+</div>
+
+<main id="main">
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">广州 · 计算机科学大四 · 开放广州与深圳机会</p>
+          <h1>AI 开发工程师<br>也是 AI 原住民</h1>
+          <p class="hero-sub">20 岁，在广州。做 <strong>Pi 桌面客户端</strong>和 <strong>Agent Skills</strong>，白天实习写代码，晚上折腾工具和自己。最近在认真想往 AI 产品经理那边走一步。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#" data-pending="X">
+              去 X 找我
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="#work">
+              看作品
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v9M4.5 8.5 8 12l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <p class="hero-note">X <b>@chasen_liao</b> · 约 6k 关注 · 链接待填</p>
+        </div>
+
+        <div class="portrait reveal">
+          <div class="portrait-media">
+            <img src="avatar.jpg" alt="Chasen 的 Q 版头像：浅棕短发、青蓝耳机、粉色发夹" width="400" height="400">
+          </div>
+          <div class="portrait-meta">
+            <strong>Chasen Liao</strong>
+            <span>GZ · 广州 / 20</span>
+          </div>
+        </div>
+      </div>
+
+      <dl class="hero-stats reveal">
+        <div><dt>旗舰项目</dt><dd>pi-agent-desktop · 331 star</dd></div>
+        <div><dt>开源仓库</dt><dd>5 个，都在 GitHub</dd></div>
+        <div><dt>常驻</dt><dd>X，约 6k 关注</dd></div>
+        <div><dt>看机会</dt><dd>广州 / 深圳</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <section class="tagline-section" aria-label="一句话">
+    <div class="wrap">
+      <p class="eyebrow">名字的来处</p>
+      <p class="tagline" id="tagline">
+        <span class="line"><span class="w">名字</span><span class="w">取自</span><span class="w">chase。</span></span>
+        <span class="line"><span class="w">不停</span><span class="w">追逐，</span><span class="w">无限</span><span class="w">进步。</span></span>
+      </p>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">关于</p>
+        <h2>先做出来，再想它该长什么样。</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-copy reveal">
+          <p>我叫 Chasen，也叫 Chasen Liao，20 岁，计算机科学大四。名字取自 chase，不停追逐，无限进步。这句话我用了很久，也没打算换。</p>
+          <p>本职是 AI 开发工程师，一边实习一边做自己的工具。主力是 Python 和 TypeScript，日常离不开 Pi、Claude Code 和 Codex。做的东西大多从自己的麻烦开始：觉得桌面端不够顺手，就写一个客户端；简历改到烦，就让 Agent 来写。</p>
+          <p>写代码之外，我在 X 上记录 Pi 和 Agent 工具的实测、新模型上手、大四找工作，以及从开发往产品转的真实过程。也在认真考虑 AI 产品经理这条路，想把「知道怎么实现」和「知道该做什么」接起来。</p>
+          <ul class="about-facts">
+            <li><span>现在</span>AI 开发工程师，实习中</li>
+            <li><span>也在想</span>AI 产品经理</li>
+            <li><span>坐标</span>广州，可去深圳</li>
+            <li><span>常写</span>Pi / Agent 实测与找工作记录</li>
+          </ul>
+        </div>
+        <figure class="about-aside reveal d1">
+          <img src="chibi.jpg" alt="Chasen 的 Q 版角色设定卡：正面、侧面、背面三视图，浅棕短发、青蓝耳机、粉色发夹" width="1152" height="864" loading="lazy">
+          <figcaption>角色设定卡。浅棕短发、青蓝耳机、一点粉色。
+            <span>设定：Chasen / 自用</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">精选作品</p>
+        <h2>从自己的麻烦里长出来的工具，都开源了。</h2>
+        <p>五个项目，四种做法。代码在 GitHub，用起来有问题可以直接提 issue。</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="card featured reveal">
+          <div>
+            <span class="badge">旗舰</span>
+            <h3 style="margin-top:16px"><a href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">pi-agent-desktop</a></h3>
+            <p class="project-desc">给 Pi 编程智能体用的 Electron 桌面客户端。把命令行里的事搬进原生窗口，同时开着几个会话也不乱。</p>
+            <ul class="tags">
+              <li>TypeScript</li><li>Electron</li><li>React</li>
+            </ul>
+            <div class="card-foot">
+              <span class="stars">331 <span>star</span></span>
+              <a class="go" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">
+                在 GitHub 看代码
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="featured-side">
+            <ul class="feature-list">
+              <li>原生窗口，会话可以分叉</li>
+              <li>SSE 流式对话，字跟着出来</li>
+              <li>聊到一半换模型，不用重开</li>
+              <li>内置文件浏览器，改完直接看</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <h3><a href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener">resume-skills</a></h3>
+          <p class="project-desc">一句话让 Agent 生成精美的简历，还能对着 JD 做匹配。投不同岗位之前不用再手改一遍。</p>
+          <ul class="tags"><li>Agent Skills</li></ul>
+          <div class="card-foot">
+            <span class="stars">38 <span>star</span></span>
+            <a class="go" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener">GitHub
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card reveal d1">
+          <h3><a href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener">Chasen-Skills</a></h3>
+          <p class="project-desc">自用的 Agent Skills 合集，npx skills 装上就能用。并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建都在里面。</p>
+          <ul class="tags"><li>Agent Skills</li><li>Skills CLI</li></ul>
+          <div class="card-foot">
+            <span class="stars">33 <span>star</span></span>
+            <a class="go" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener">GitHub
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <h3><a href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener">Everything-claude-code-Doc</a></h3>
+          <p class="project-desc">Everything Claude Code 的使用指南，从装好到用顺，一直在更新。踩过的坑基本都写在里面。</p>
+          <ul class="tags"><li>文档</li><li>Claude Code</li></ul>
+          <div class="card-foot">
+            <span class="stars">15 <span>star</span></span>
+            <a class="go" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener">GitHub
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card reveal d1">
+          <h3><a href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener">SuperMew</a></h3>
+          <p class="project-desc">Agentic RAG 的一次实验，关注 Context Engineering 和三层记忆架构。想看看 Agent 到底能记住多少、记住多久。</p>
+          <ul class="tags"><li>RAG</li><li>Agent</li></ul>
+          <div class="card-foot">
+            <span class="stars">开源 <span>实验</span></span>
+            <a class="go" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener">GitHub
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">技能与日常</p>
+        <h2>按每天用到的频率排，不按百分比。</h2>
+      </div>
+
+      <div class="stack-grid">
+        <article class="card skill-card reveal">
+          <h3>每天在用</h3>
+          <p class="note">打开电脑就会点开的三样。</p>
+          <ul class="chips">
+            <li>Pi</li><li>Claude Code</li><li>Codex</li>
+          </ul>
+        </article>
+        <article class="card skill-card reveal d1">
+          <h3>主力</h3>
+          <p class="note">真正拿来交付的东西。</p>
+          <ul class="chips">
+            <li>Python</li><li>TypeScript / React</li><li>Agent / RAG</li>
+          </ul>
+        </article>
+        <article class="card skill-card reveal d2">
+          <h3>做过</h3>
+          <p class="note">项目里踩过一遍，能接着写。</p>
+          <ul class="chips">
+            <li>Electron</li><li>FastAPI</li><li>向量检索</li><li>HTML / CSS</li>
+          </ul>
+        </article>
+      </div>
+
+      <div style="margin-top:48px" class="reveal">
+        <p class="eyebrow" style="margin-bottom:16px">正在折腾</p>
+        <ul class="now">
+          <li><b>01</b><p>把 pi-agent-desktop 打磨到能日常用<span>会话、模型切换、文件浏览，一个个抠。</span></p></li>
+          <li><b>02</b><p>resume-skills 按 JD 匹配简历<span>让 Agent 先读懂岗位，再动笔。</span></p></li>
+          <li><b>03</b><p>用 Skills 编排并行任务<span>一次开几条线，各自跑各自的。</span></p></li>
+          <li><b>04</b><p>从开发往产品走的那一步<span>在广州和深圳看机会，开发和产品都聊。</span></p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">联系 / 开放机会</p>
+        <h2>聊聊，或者一起做点东西。</h2>
+        <p>开放 AI 开发工程师和 AI 产品经理机会，广州或深圳。项目、岗位、工具上的问题，都可以直接找我。</p>
+      </div>
+
+      <div class="roles">
+        <article class="card role reveal">
+          <p class="num">01</p>
+          <h3>AI 开发工程师</h3>
+          <p>写 Agent 工具、桌面端和 RAG，从原型推到能用的版本。TypeScript 和 Python 都写，Electron 也碰。</p>
+        </article>
+        <article class="card role reveal d1">
+          <p class="num">02</p>
+          <h3>AI 产品经理</h3>
+          <p>把技术判断带进产品决策。正在往这个方向走，愿意从真实需求和小范围验证开始。</p>
+        </article>
+      </div>
+
+      <div class="link-grid">
+        <a class="ext pending reveal" href="#" aria-disabled="true">
+          <span class="ext-label">个人站</span>
+          <span class="ext-note">链接待填</span>
+        </a>
+        <a class="ext pending reveal d1" href="#" aria-disabled="true">
+          <span class="ext-label">博客</span>
+          <span class="ext-note">链接待填</span>
+        </a>
+        <a class="ext pending reveal" href="#" aria-disabled="true">
+          <span class="ext-label">GitHub <span>Chasen-Liao</span></span>
+          <span class="ext-note">链接待填</span>
+        </a>
+        <a class="ext pending reveal d1" href="#" aria-disabled="true">
+          <span class="ext-label">X <span>@chasen_liao</span></span>
+          <span class="ext-note">链接待填</span>
+        </a>
+        <a class="ext pending reveal" href="#" aria-disabled="true">
+          <span class="ext-label">Email</span>
+          <span class="ext-note">链接待填</span>
+        </a>
+      </div>
+      <p class="contact-note">以上入口的链接还在填，填好会直接挂在这里。</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <p class="footer-brand">Chasen Liao<span>广州 · 开放广州与深圳机会</span></p>
+      <nav class="footer-links" aria-label="页脚导航">
+        <a href="#about">关于</a>
+        <a href="#work">作品</a>
+        <a href="#stack">技能</a>
+        <a href="#contact">联系</a>
+        <a href="#top">回到顶部</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Chasen Liao</span>
+      <span>纯 HTML / CSS / JS · 没有追踪脚本</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 年份
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // 移动端菜单
+  const toggle = document.querySelector('.nav-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const menuLinks = menu.querySelectorAll('a.m-link');
+
+  function setMenu(open){
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+    menu.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    menuLinks.forEach((link, i) => {
+      link.style.transitionDelay = open ? Math.min(i * 60, 300) + 'ms' : '0ms';
+    });
+  }
+  toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  menuLinks.forEach(link => link.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 900) setMenu(false);
+  });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 区块进入
+  const reveals = document.querySelectorAll('.reveal');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    reveals.forEach(el => el.classList.add('in'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(el => revealObserver.observe(el));
+  }
+
+  // 名字来处：逐词亮起
+  const tagline = document.getElementById('tagline');
+  if (tagline) {
+    const words = tagline.querySelectorAll('.w');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      tagline.classList.add('in');
+    } else {
+      words.forEach((word, i) => {
+        word.style.transitionDelay = Math.min(i * 60, 360) + 'ms';
+      });
+      const taglineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tagline.classList.add('in');
+            taglineObserver.unobserve(entry.target);
+          } else {
+            tagline.classList.remove('in');
+          }
+        });
+      }, { threshold: 0.4 });
+      taglineObserver.observe(tagline);
+    }
+  }
+
+  // 导航当前区块
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sections = [...document.querySelectorAll('#about, #work, #stack, #contact')];
+  if ('IntersectionObserver' in window && sections.length) {
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(link => {
+          link.setAttribute('aria-current', link.getAttribute('href') === '#' + entry.target.id ? 'true' : 'false');
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(section => navObserver.observe(section));
+  }
+
+  // 外链待填：不跳转，也说明原因
+  document.querySelectorAll('a.ext.pending').forEach(link => {
+    link.addEventListener('click', e => e.preventDefault());
+    link.addEventListener('keydown', e => {
+      if (e.key === 'Enter') e.preventDefault();
+    });
+  });
+  document.querySelectorAll('a[data-pending]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const note = document.querySelector('.hero-note');
+      if (note) note.innerHTML = 'X <b>@chasen_liao</b> · 链接还在填，稍后补上';
+    });
+  });
+</script>
+</body>
+</html>
