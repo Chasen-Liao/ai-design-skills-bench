@@ -1,0 +1,27 @@
+=== START 07-hallmark at 2026-10-29 18:34:44 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r2/07-hallmark
+extra=--approve --skill .pi/skills/hallmark
+文件路径：`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r2/07-hallmark/index.html`
+
+**做法**：Hallmark 流程，Blueprint 图纸主题（普鲁士蓝纸面、Chakra Petch 大写、白色线框），版式是作品索引优先。首屏把名字做成图纸标题，右侧放一张手绘的 Pi 会话分叉图（session fork / model switch / SSE），不冒充产品截图；下面依次是 5 个项目索引、pi-agent-desktop 案例册、About、工具、X 笔记、联系、页脚。头像用 `avatar.jpg` 做了蓝晒双色调。
+
+**Hallmark · v2.0.0**
+- Shape · Index-First（抽到 Workbench，但目录里没有可截的界面，换成作品索引；hero 仍为 Banner）· job: hire
+- Theme · Blueprint，deal 1/3（seed `039d64cf`；blueprint: cyanotype）
+- Chrome · 可招聘状态条 + 吸顶导航（左名、右五项；手机端收进 Menu）· footer: statement
+- Hero · 名字 112px / 主张 63px，右侧 4 栏会话图；Email + 链接待填、See the work 均在首屏
+- Signature · 首屏的会话分叉图 + 案例区的 331
+- Sections · Hero · 作品索引 · pi-agent-desktop 案例 · About · 工具 · X 笔记 · 联系 · 页脚
+- Material · real：5 个项目、331/38/33/15 stars、20 岁、广州、@chasen_liao 约 6k；pictures：本地头像 + 手绘会话图；absent：产品截图、个人站/博客/X/Email 的真实 URL
+- Sweep · Floor 0 FAIL · Reflex 0 · WARN 0 · finish-review: in-thread · ship
+
+**验证**：`sloplint --render` 全绿；渲染层输出 1280×800、1440×900、1920×1080、375 全页截图（在 `.hallmark/shots/`）。另用脚本量了 320–1920 的横向溢出、首屏折叠、标签重叠、页脚换行，均通过；对比度按 OKLCH 实算过。页面只有一个 HTML 文件，头像走本地，字体走 Google Fonts，无构建步骤。
+
+**待你补的素材**：
+1. 五个外链 URL（个人站 / Blog / GitHub 主页 / X / Email），现在都是 `href="#"` + 中文「链接待填」标签。
+2. 如果要让旗舰项目更“实”，给我一张 pi-agent-desktop 的 2× 窗口截图（最好带一次 session fork 和模型切换），可以把首屏那张示意图换掉，或在案例区加一个真实截图位。这是最值得补的一项。
+3. 更大的头像原图（现在 400×400，页面显示约 416px，略吃紧）。
+4. `chibi.jpg` 我没用；如果你想在页脚或 About 放一个个人标记，可以再加，但会破坏现在的单色图纸感。
+
+另外：页面是英文文案，面向 AI 工具/Agent 的读者和 GitHub；如果你要投广州/深圳的中文岗位，我可以再出一版中文文案（显示字体会相应换成中文字体，观感会不一样）。
+=== END 07-hallmark at 2026-10-29 18:55:37 CST exit=0 dur=1253s bytes=36049 ===

@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chasen Liao，AI 开发工程师</title>
+<meta name="description" content="Chasen Liao，AI 开发工程师、AI 原住民，20 岁，广州，计算机科学大四。做 Pi 桌面客户端和 Agent Skills，开放 AI 开发工程师与 AI 产品经理机会。">
+<meta name="theme-color" content="#0d0c0b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%235fd3c3'/%3E%3Cpath d='M22 11a7 7 0 1 0 0 10' stroke='%23062522' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+:root{
+  --bg:#0d0c0b;
+  --surface:#191715;
+  --surface-2:#24211e;
+  --ink:#f8f8f7;
+  --muted:#a49d95;
+  --accent:#5fd3c3;
+  --accent-ink:#062522;
+  --paper:#e5e4e2;
+  --paper-2:#d7d6d3;
+  --paper-ink:#191614;
+  --paper-muted:#57524c;
+  --paper-accent:#0d6f63;
+  --pad:clamp(16px,2.2vw,32px);
+  --gap:10px;
+  --sect:clamp(88px,12vw,176px);
+  --step-head:clamp(2rem,3.9vw,3.5rem);
+  --step-lead:1.5rem;
+  --step-body:1.125rem;
+  --step-small:.8125rem;
+  --font:"Archivo","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font);font-size:var(--step-body);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img{max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4,p,dl,dd,figure,ul{margin:0}
+ul{padding:0;list-style:none}
+::selection{background:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{width:100%;padding-inline:var(--pad)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:var(--accent-ink);padding:12px 16px;z-index:20}
+.skip:focus{left:16px;top:16px}
+
+/* header */
+.site-head{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-block:18px}
+.brand{font-size:18px;font-weight:600;letter-spacing:-.01em;text-decoration:none;white-space:nowrap}
+.nav{display:flex;gap:clamp(12px,2vw,30px);font-size:18px}
+.nav a{color:var(--muted);text-decoration:none;padding-block:8px}
+.nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{padding-top:clamp(24px,4vw,52px)}
+.hero-top{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:end}
+.hero h1{
+  grid-column:1/8;font-size:clamp(3.9rem,19vw,12rem);font-weight:400;
+  line-height:.84;letter-spacing:-.05em;white-space:nowrap;
+}
+.hero-copy{grid-column:8/13;padding-bottom:10px}
+.hero-copy p{font-size:var(--step-lead);line-height:1.38;max-width:31ch;text-wrap:pretty}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:24px}
+.btn{
+  display:inline-flex;align-items:center;min-height:46px;padding:0 18px;
+  background:var(--accent);color:var(--accent-ink);text-decoration:none;
+  font-size:18px;font-weight:600;letter-spacing:-.01em;
+  transition:background .25s,color .25s;
+}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.btn .pending{color:rgba(6,37,34,.62);margin-left:9px}
+.btn:hover .pending{color:rgba(13,12,11,.6)}
+.link-2{font-size:18px;font-weight:500;color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px;transition:color .2s}
+.link-2:hover{color:var(--accent)}
+.hero-facts{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:clamp(30px,3.4vw,48px);padding-bottom:clamp(26px,3vw,38px);
+}
+.hero-facts dt{font-size:13px;color:var(--muted);margin-bottom:5px}
+.hero-facts dd{font-size:18px;line-height:1.5;max-width:34ch;text-wrap:pretty}
+
+/* strip */
+.strip-outer{--strip-scale:1}
+.strip{
+  display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;cursor:grab;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.strip:active{cursor:grabbing}
+.strip::-webkit-scrollbar{display:none}
+.strip .win{width:calc(var(--w,340px) * var(--strip-scale));height:240px;scroll-snap-align:center;opacity:.46;transition:opacity .3s}
+.strip .win.is-active,.strip .win:hover{opacity:1}
+.strip-cap{display:flex;justify-content:space-between;gap:18px;margin-top:12px;font-size:13px;color:var(--muted)}
+.strip-cap b{color:var(--ink);font-weight:500}
+.strip-cap .hint{color:var(--muted)}
+.strip-cap .hint{white-space:nowrap}
+
+/* sections */
+.sect{padding-top:var(--sect)}
+.sect-head{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:end;margin-bottom:clamp(30px,4vw,54px)}
+.sect-head h2{grid-column:1/7;font-size:var(--step-head);font-weight:500;line-height:1.02;letter-spacing:-.035em;text-wrap:balance}
+.sect-head p{grid-column:8/13;font-size:var(--step-body);line-height:1.55;max-width:42ch;text-wrap:pretty}
+
+/* windows */
+.win{
+  background:var(--paper);color:var(--paper-ink);display:flex;flex-direction:column;
+  height:var(--fh,240px);overflow:hidden;min-width:0;flex:0 0 auto;
+  transition:opacity .3s;
+}
+.win-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 10px;background:var(--paper-2);flex:0 0 auto}
+.win-app{font-size:13px;font-weight:600;letter-spacing:-.01em;color:#4a443d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.win-dots{display:flex;gap:4px;flex:0 0 auto}
+.win-dots i{display:block;width:6px;height:6px;border-radius:50%;background:#c3bbaf}
+.win-body{flex:1;min-height:0;padding:10px;display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.4}
+.photo{background:var(--surface-2)}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* frames: chat */
+.chat{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+.msg{padding:6px 8px;border-radius:6px;line-height:1.38;max-width:92%}
+.msg.me{align-self:flex-end;background:var(--paper-accent);color:#f4fbf9}
+.msg.ai{align-self:flex-start;background:#e9e2d8}
+.composer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;padding:6px 8px;border-radius:6px;color:#6a625a}
+.composer .send{color:var(--paper-accent);font-weight:600}
+.status{display:flex;align-items:center;gap:6px;color:#655d55;font-size:13px}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--paper-accent);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* frames: lists, panes */
+.pane-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;color:#4a443d;font-weight:600}
+.pane-title span{font-weight:400;color:#6a625a;font-size:13px}
+.rows{display:flex;flex-direction:column;gap:4px}
+.rows li{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;padding:8px}
+.rows li.on{background:var(--paper-accent);color:#f4fbf9}
+.rows em{font-style:normal;opacity:.68;font-size:13px}
+.hint{color:#6a625a;font-size:13px;margin-top:auto}
+
+/* frames: files + code */
+.files{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;flex:1;min-height:0}
+.tree{font-size:13px;line-height:1.85;color:#5f5850}
+.tree .on{color:var(--paper-accent);font-weight:600}
+pre.code{
+  margin:0;background:#1c1916;color:#e8e1d6;padding:8px;overflow:hidden;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5; /* taste-skill-ignore: literal code inside data-ui frame */
+  border-radius:3px;
+}
+
+/* frames: model menu, resume, match, terminal, skills */
+.menu{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0}
+.menu-label{color:#6a625a;font-size:13px}
+.menu ul{display:flex;flex-direction:column;gap:4px}
+.menu li{display:flex;align-items:center;justify-content:space-between;background:#fff;padding:7px 8px}
+.menu li.on{background:var(--paper-accent);color:#f4fbf9}
+.menu li em{font-style:normal;font-size:13px;opacity:.65}
+.menu p{color:#6a625a;font-size:13px;margin-top:auto}
+.prompt{background:#fff;padding:7px 8px;border-radius:6px;color:#4a443d;line-height:1.38}
+.resume{background:#fff;padding:8px;flex:1;min-height:0;display:flex;flex-direction:column;gap:3px}
+.resume-name{font-size:17px;font-weight:600;letter-spacing:-.025em}
+.resume-sub{color:#6a625a;font-size:13px}
+.resume-sec{font-size:13px;font-weight:600;margin-top:3px}
+.resume-line{font-size:13px;color:#4a443d;line-height:1.35}
+.match{display:flex;flex-direction:column;gap:4px;flex:1;min-height:0}
+.match-head{font-weight:600;color:#4a443d}
+.match li{display:flex;justify-content:space-between;gap:10px;background:#fff;padding:7px 8px}
+.match em{font-style:normal;color:var(--paper-accent);font-size:13px}
+.term{
+  background:#171412;color:#d9d2c6;margin:0;padding:10px;flex:1;min-height:0;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.7; /* taste-skill-ignore: literal terminal output inside data-ui frame */
+  overflow:hidden;border-radius:3px;
+}
+.term .ok{color:var(--accent)}
+.term .cmd::before{content:"$ ";color:#7d766e}
+.skillgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;min-height:0}
+.skill{background:#fff;padding:8px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.skill b{font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.skill span{color:#6a625a;font-size:13px}
+.install{color:#6a625a;font-size:13px}
+.doc{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,3fr);gap:16px;flex:1;min-height:0}
+.doc-nav{display:flex;flex-direction:column;gap:5px;color:#655d55;font-size:13px;line-height:1.5}
+.doc-nav .on{color:var(--paper-ink);font-weight:600}
+.doc-main{display:flex;flex-direction:column;gap:6px;min-height:0}
+.doc-main h4{margin:0;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.doc-main p{color:#4a443d;line-height:1.45;font-size:13px}
+.tag{align-self:flex-start;margin-top:auto;background:var(--paper-accent);color:#f4fbf9;padding:2px 7px;font-size:13px}
+.layers{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0}
+.layers .cap{color:#6a625a;font-size:13px;margin-bottom:2px}
+.layer{background:#fff;padding:6px 8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.layer:nth-child(3){margin-left:12px}
+.layer:nth-child(4){margin-left:24px}
+.layer b{font-weight:600}
+.layer span{color:#6a625a;font-size:13px}
+.ctx{display:flex;flex-direction:column;gap:4px;flex:1;min-height:0}
+.ctx span{background:#fff;padding:6px 8px;display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.ctx span::after{content:"载入";color:#6f675f;font-size:13px}
+.ctx span.new{background:var(--paper-accent);color:#f4fbf9}
+.ctx span.new::after{color:#bfe6df}
+.ctx-note{color:#6a625a;font-size:13px}
+
+/* work */
+.work-grid:has(.project:hover) .project:not(:hover) .win{opacity:.42}
+.project{padding-bottom:clamp(44px,5.4vw,76px)}
+.project-head{display:grid;grid-template-columns:repeat(12,1fr);gap:22px;align-items:start;margin-bottom:16px}
+.project h3{grid-column:1/6;font-size:var(--step-lead);font-weight:500;line-height:1.15;letter-spacing:-.025em;text-wrap:balance}
+.project h3 a{text-decoration:none;transition:color .2s}
+.project h3 a:hover{color:var(--accent)}
+.project-desc{grid-column:6/10;font-size:var(--step-body);line-height:1.55;max-width:46ch;text-wrap:pretty}
+.project-meta{grid-column:10/13;display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);line-height:1.5;text-align:right}
+.project-meta .stars{color:var(--ink);font-variant-numeric:tabular-nums}
+.run{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.run-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.run-1{grid-template-columns:1fr}
+.run .win{width:100%}
+.run-1 .win{--fh:320px}
+
+/* about */
+.about-top{display:grid;grid-template-columns:34% minmax(0,1fr);gap:24px}
+.about-left h2{font-size:var(--step-head);font-weight:500;line-height:1.02;letter-spacing:-.035em;margin-bottom:clamp(24px,3vw,40px)}
+.facts{display:flex;flex-direction:column;gap:16px;max-width:220px}
+.facts dt{font-size:13px;color:var(--muted);margin-bottom:3px}
+.facts dd{font-size:18px;line-height:1.45}
+.about-text{font-size:var(--step-lead);line-height:1.48;max-width:50ch;text-wrap:pretty}
+.records{display:grid;grid-template-columns:34% minmax(0,1fr);gap:24px;margin-top:clamp(44px,6vw,84px)}
+.record-word{font-size:13px;color:var(--muted)}
+.record-cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px)}
+.record-label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.record li{display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:18px;line-height:1.9}
+.record li em{font-style:normal;font-size:13px;color:var(--muted);text-align:right}
+.places{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:clamp(48px,6.5vw,92px)}
+.places figure{min-width:0}
+.places .shot{overflow:hidden}
+.places img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;display:block}
+.places img.drift{animation:drift 32s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(1.01)}to{transform:scale(1.07)}}
+.places figcaption{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.4}
+
+/* tools */
+.tools-head{max-width:780px}
+.tools-head h2{font-size:var(--step-head);font-weight:500;line-height:1.02;letter-spacing:-.035em;margin-bottom:16px}
+.tools-head p{font-size:var(--step-body);line-height:1.55;max-width:46ch;text-wrap:pretty}
+.tool-table{width:100%;margin-top:clamp(32px,4vw,56px);border-collapse:collapse;table-layout:fixed}
+.tool-table th{font-size:13px;font-weight:400;color:var(--muted);text-align:left;padding:0 0 12px;white-space:nowrap}
+.tool-table th:nth-child(1){width:28%}
+.tool-table th:nth-child(2){width:18%}
+.tool-table th:nth-child(3){width:34%}
+.tool-table th:nth-child(4){width:20%;text-align:right}
+.tool-table td{font-size:var(--step-lead);line-height:1.3;padding:13px 0;vertical-align:baseline;border:0}
+.tool-table td:nth-child(1){white-space:nowrap}
+.tool-table td:nth-child(2){color:var(--ink);white-space:nowrap}
+.tool-table td:nth-child(3),.tool-table td:nth-child(4){color:var(--muted)}
+.tool-table td:nth-child(4){text-align:right}
+.tool-table tbody tr{transition:background .2s}
+.tool-table tbody tr:hover{background:var(--surface)}
+.tool-table td:first-child{position:relative}
+.tool-table .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--muted);margin-right:11px;vertical-align:2px}
+.tool-table .dot.daily{background:var(--accent)}
+.tool-table .dot.mid{background:#d8d1c7}
+
+/* contact */
+.contact{background:var(--paper);color:var(--paper-ink);margin-top:var(--sect);padding-block:clamp(56px,7vw,96px)}
+.contact :focus-visible,.footer :focus-visible{outline-color:var(--paper-accent)}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) clamp(220px,26vw,340px);gap:clamp(32px,7vw,110px);align-items:end}
+.contact h2{font-size:var(--step-head);font-weight:500;line-height:1.02;letter-spacing:-.035em}
+.contact-line{font-size:var(--step-lead);line-height:1.38;max-width:30ch;margin-top:clamp(18px,2.4vw,30px);text-wrap:pretty}
+.contact-note{font-size:18px;line-height:1.6;max-width:48ch;margin-top:18px;color:var(--paper-ink);text-wrap:pretty}
+.contact-links{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 30px;margin-top:clamp(24px,3vw,38px)}
+.contact-links a{display:inline-flex;align-items:baseline;font-size:var(--step-lead);font-weight:500;letter-spacing:-.03em;text-decoration:none;transition:color .2s}
+.contact-links a:hover{color:var(--paper-accent)}
+.contact-more{display:flex;flex-wrap:wrap;gap:14px 26px;margin-top:22px;font-size:18px}
+.contact-more a{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;transition:color .2s}
+.contact-more a:hover{color:var(--paper-accent)}
+.contact .pending,.footer .pending{color:var(--paper-muted);margin-left:7px}
+.portrait img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;display:block}
+.portrait figcaption{font-size:13px;color:var(--paper-muted);margin-top:8px}
+.pending{font-size:13px;color:var(--muted);font-weight:400;white-space:nowrap}
+
+/* footer */
+.footer{background:var(--paper);color:var(--paper-ink);padding-top:clamp(48px,7vw,96px);padding-bottom:28px}
+.footer-name{font-size:clamp(2.9rem,19vw,12rem);font-weight:400;line-height:.82;letter-spacing:-.05em;color:var(--paper-ink)}
+.footer-info{display:grid;grid-template-columns:1fr minmax(0,2fr);gap:24px;margin-top:clamp(32px,4vw,56px);font-size:13px;color:var(--paper-muted);line-height:1.7}
+.credits{max-width:88ch;text-wrap:pretty}
+.credits a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.credits a:hover{color:var(--paper-ink)}
+
+/* reveal */
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;transition-delay:var(--d,0ms)}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .js .reveal{opacity:1;transform:none;transition:none}
+  .pulse{animation:none}
+  .places img.drift{animation:none}
+  .strip .win,.win,.btn,.link-2{transition:none}
+}
+
+@media (max-width:1100px){
+  .project-head{gap:18px}
+  .project h3{grid-column:1/7}
+  .project-desc{grid-column:7/13;margin-bottom:0}
+  .project-meta{grid-column:1/13;flex-direction:row;justify-content:flex-start;gap:18px;text-align:left;grid-row:2}
+}
+@media (max-width:900px){
+  .tool-table{margin-top:28px}
+  .tool-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;margin:-1px}
+  .tool-table,.tool-table tbody,.tool-table tr,.tool-table td{display:block}
+  .tool-table tr{display:grid;grid-template-columns:1fr auto;gap:3px 18px;padding:14px 0}
+  .tool-table td{padding:0;font-size:18px}
+  .tool-table td:nth-child(1){grid-column:1}
+  .tool-table td:nth-child(2){grid-column:2;text-align:right;font-size:13px;color:var(--muted)}
+  .tool-table td:nth-child(3){grid-column:1;font-size:13px;color:var(--muted)}
+  .tool-table td:nth-child(4){grid-column:2;font-size:13px;text-align:right;color:var(--muted)}
+  .hero-top{grid-template-columns:1fr;gap:22px}
+  .hero h1{grid-column:1;font-size:clamp(3.9rem,19vw,12rem)}
+  .hero-copy{grid-column:1;padding-bottom:0}
+  .hero-copy p{max-width:40ch}
+  .sect-head{grid-template-columns:1fr;gap:14px}
+  .sect-head h2,.sect-head p{grid-column:1}
+  .sect-head p{max-width:48ch}
+  .about-top,.records,.contact-grid{grid-template-columns:1fr;gap:26px}
+  .about-text{max-width:42ch}
+  .facts{max-width:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 24px}
+  .record-cols{gap:32px}
+  .contact-grid{align-items:start}
+  .portrait{max-width:320px;margin-top:8px}
+  .about-text{font-size:18px;line-height:1.6;max-width:44ch}
+  .footer-info{grid-template-columns:1fr}
+  .run{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:4px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .run::-webkit-scrollbar{display:none}
+  .run .win{flex:0 0 82%;width:82%;scroll-snap-align:start}
+  .run .win.photo{flex-basis:auto}
+}
+@media (min-width:900px){
+  .hero h1{font-size:clamp(6rem,15.2vw,12rem)}
+  .footer-name{font-size:clamp(6rem,15.2vw,12rem)}
+}
+@media (min-width:641px) and (max-width:900px){
+  .contact-grid{grid-template-columns:minmax(0,1fr) 240px;align-items:end}
+  .portrait{max-width:240px;margin-top:0}
+  .footer{padding-top:150px}
+}
+@media (max-width:640px){
+  .site-head{padding-block:14px;gap:12px}
+  .brand{font-size:14px}
+  .nav{font-size:13px;gap:12px}
+  .hero-facts{grid-template-columns:1fr;gap:16px;padding-bottom:26px}
+  .hero-facts dd{max-width:38ch}
+  .strip-outer{--strip-scale:.9}
+  .strip .win{height:220px}
+  .project h3,.project-desc,.project-meta{grid-column:1/-1}
+  .project-meta{flex-direction:row;flex-wrap:wrap;justify-content:flex-start;gap:8px 18px;text-align:left}
+  .places{grid-template-columns:1fr;gap:26px}
+  .record-cols{grid-template-columns:1fr;gap:26px}
+  .tool-row{min-height:48px}
+  .contact-links{flex-direction:column;align-items:flex-start;gap:12px}
+  .footer-name{font-size:clamp(2.4rem,13vw,4.6rem)}
+}
+@media (max-width:380px){
+  .brand{font-size:16px}
+  .nav{font-size:16px;gap:8px}
+  .btn{padding:0 14px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#work">跳到作品</a>
+
+<header class="wrap site-head">
+  <a class="brand" href="#top">Chasen Liao</a>
+  <nav class="nav" aria-label="页面导航">
+    <a href="#work">作品</a>
+    <a href="#about">关于</a>
+    <a href="#tools">工具</a>
+    <a href="#contact">联系</a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="wrap hero" aria-labelledby="hero-name">
+    <div class="hero-top">
+      <h1 id="hero-name">Chasen</h1>
+      <div class="hero-copy reveal">
+        <p>AI 开发工程师，AI 原住民，20 岁，广州。做 Pi 的桌面客户端和 Agent Skills，也在认真考虑转 AI 产品经理。</p>
+        <div class="hero-actions">
+          <a class="btn" href="#" data-pending>去 X 看看<span class="pending">链接待填</span></a>
+          <a class="link-2" href="#work">看作品</a>
+        </div>
+      </div>
+    </div>
+
+    <dl class="hero-facts reveal" style="--d:90ms">
+      <div>
+        <dt>现在</dt>
+        <dd>计算机科学大四，一边实习，一边做 Agent 工具。</dd>
+      </div>
+      <div>
+        <dt>在做</dt>
+        <dd>pi-agent-desktop，和一套自己每天在用的 Agent Skills。</dd>
+      </div>
+      <div>
+        <dt>开放</dt>
+        <dd>AI 开发工程师、AI 产品经理，广州或深圳。</dd>
+      </div>
+    </dl>
+
+    <div class="strip-outer reveal" style="--d:150ms">
+      <div class="strip" data-strip role="region" aria-label="作品与广州的横向缩略图，可左右滚动" tabindex="0">
+        <figure data-ui class="win" style="--w:360px" data-project="pi-agent-desktop" data-label="SSE 流式对话">
+          <div class="win-bar"><span class="win-app">pi-agent-desktop</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <div class="chat">
+              <p class="msg me">把会话按项目分叉，模型也留着能换。</p>
+              <p class="msg ai">分好了。三个分支各自保留上下文，要现在切到另一个模型试试吗？</p>
+            </div>
+            <div class="composer"><span>继续输入…</span><span class="send">发送</span></div>
+            <div class="status"><span class="pulse" aria-hidden="true"></span>SSE 流式 · 模型已连接</div>
+          </div>
+        </figure>
+
+        <figure data-ui class="win" style="--w:330px" data-project="pi-agent-desktop" data-label="会话分叉">
+          <div class="win-bar"><span class="win-app">pi-agent-desktop</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <div class="pane-title">会话分叉 <span>3 个分支</span></div>
+            <ul class="rows">
+              <li class="on"><span>主线</span><em>当前</em></li>
+              <li><span>改侧栏</span><em>新窗口</em></li>
+              <li><span>试新模型</span><em>新窗口</em></li>
+            </ul>
+            <p class="hint">每个分支保留自己的上下文</p>
+          </div>
+        </figure>
+
+        <figure data-ui class="win" style="--w:350px" data-project="resume-skills" data-label="按 JD 改简历">
+          <div class="win-bar"><span class="win-app">resume-skills</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+            <p class="prompt">用这份 JD 改简历，项目往前放，写清楚 Agent 和 RAG。</p>
+            <div class="resume">
+              <div class="resume-name">Chasen Liao</div>
+              <div class="resume-sub">计算机科学 · 广州</div>
+              <div class="resume-sec">项目</div>
+              <div class="resume-line">pi-agent-desktop / Electron 桌面客户端</div>
+              <div class="resume-line">Chasen-Skills / Agent Skills 合集</div>
+            </div>
+          </div>
+        </figure>
+
+        <figure data-ui class="win" style="--w:310px" data-project="Chasen-Skills" data-label="npx skills 安装">
+          <div class="win-bar"><span class="win-app">Terminal</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="win-body">
+<pre class="term"><span class="cmd">npx skills add Chasen-Liao/Chasen-Skills</span>
+<span class="ok">+</span> 并行编排
+<span class="ok">+</span> X 内容复盘
+<span class="ok">+</span> AI 热帖雷达
+<span class="ok">+</span> 个人 IP 资产构建</pre>
+          </div>
+        </figure>
+
+        <figure data-ui class="win photo" style="--w:420px" data-project="广州" data-label="玉毛路">
+          <img src="assets/yumao-road-guangzhou-2.jpg" width="1000" height="575" alt="广州玉毛路街景" loading="eager" decoding="async">
+        </figure>
+
+        <figure data-ui class="win photo" style="--w:180px" data-project="广州" data-label="广州塔">
+          <img src="assets/canton-tower-guangzhou-5928990138.jpg" width="600" height="800" alt="从地面仰拍的广州塔" loading="lazy" decoding="async">
+        </figure>
+
+        <figure data-ui class="win photo" style="--w:240px" data-project="Chasen" data-label="本人">
+          <img src="avatar.jpg" width="400" height="400" alt="Chasen 的头像" loading="lazy" decoding="async">
+        </figure>
+      </div>
+      <p class="strip-cap"><span><b data-cap-project>pi-agent-desktop</b>，<span data-cap-label>SSE 流式对话</span></span><span class="hint">左右拖动</span></p>
+    </div>
+  </section>
+
+  <section class="wrap sect" id="work" aria-labelledby="work-title">
+    <div class="sect-head">
+      <h2 id="work-title">做过的东西</h2>
+      <p>五个公开仓库，从桌面客户端到自用 Skills。星标是 GitHub 上的公开数字。</p>
+    </div>
+
+    <div class="work-grid">
+      <article class="project reveal">
+        <div class="project-head">
+          <h3><a href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener" aria-label="pi-agent-desktop 的 GitHub 仓库，新窗口打开">pi-agent-desktop</a></h3>
+          <p class="project-desc">给 Pi 编程智能体做的 Electron 桌面客户端。原生窗口、会话分叉、SSE 流式对话、模型中途切换、内置文件浏览器。</p>
+          <p class="project-meta"><span class="stars">331 star</span><span>TypeScript / Electron / React</span></p>
+        </div>
+        <div class="run">
+          <figure data-ui class="win" style="--fh:240px">
+            <div class="win-bar"><span class="win-app">pi-agent-desktop</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="chat">
+                <p class="msg me">把会话按项目分叉，模型也留着能换。</p>
+                <p class="msg ai">分好了。三个分支各自保留上下文，要现在切到另一个模型试试吗？</p>
+              </div>
+              <div class="composer"><span>继续输入…</span><span class="send">发送</span></div>
+              <div class="status"><span class="pulse" aria-hidden="true"></span>SSE 流式 · 模型已连接</div>
+            </div>
+          </figure>
+
+          <figure data-ui class="win" style="--fh:240px">
+            <div class="win-bar"><span class="win-app">pi-agent-desktop</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="pane-title">会话分叉 <span>3 个分支</span></div>
+              <ul class="rows">
+                <li class="on"><span>主线</span><em>当前</em></li>
+                <li><span>改侧栏</span><em>新窗口</em></li>
+                <li><span>试新模型</span><em>新窗口</em></li>
+              </ul>
+              <p class="hint">每个分支保留自己的上下文</p>
+            </div>
+          </figure>
+
+          <figure data-ui class="win" style="--fh:240px">
+            <div class="win-bar"><span class="win-app">pi-agent-desktop</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="files">
+                <ul class="tree">
+                  <li>src</li>
+                  <li class="on">main.ts</li>
+                  <li>preload.ts</li>
+                  <li>app.tsx</li>
+                  <li>package.json</li>
+                </ul>
+<pre class="code">for await (const p of stream(id)) {
+  send('chunk', p)
+}</pre>
+              </div>
+            </div>
+          </figure>
+
+          <figure data-ui class="win" style="--fh:240px">
+            <div class="win-bar"><span class="win-app">pi-agent-desktop</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="menu">
+                <p class="menu-label">切换模型</p>
+                <ul>
+                  <li class="on">Claude <em>当前</em></li>
+                  <li>GPT</li>
+                  <li>Gemini</li>
+                </ul>
+                <p>切换后保留当前上下文</p>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="project reveal">
+        <div class="project-head">
+          <h3><a href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener" aria-label="resume-skills 的 GitHub 仓库，新窗口打开">resume-skills</a></h3>
+          <p class="project-desc">一句话让 Agent 生成简历，也能按 JD 匹配。把岗位描述里真正重要的词挑出来，再决定项目怎么排。</p>
+          <p class="project-meta"><span class="stars">38 star</span><span>Agent Skill</span></p>
+        </div>
+        <div class="run run-2">
+          <figure data-ui class="win" style="--fh:260px">
+            <div class="win-bar"><span class="win-app">resume-skills</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <p class="prompt">用这份 JD 改简历，项目往前放，写清楚 Agent 和 RAG。</p>
+              <div class="resume">
+                <div class="resume-name">Chasen Liao</div>
+                <div class="resume-sub">计算机科学 · 广州</div>
+                <div class="resume-sec">项目</div>
+                <div class="resume-line">pi-agent-desktop / Electron 桌面客户端</div>
+                <div class="resume-line">Chasen-Skills / Agent Skills 合集</div>
+                <div class="resume-line">SuperMew / Agentic RAG</div>
+              </div>
+            </div>
+          </figure>
+
+          <figure data-ui class="win" style="--fh:260px">
+            <div class="win-bar"><span class="win-app">resume-skills</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="match">
+                <p class="match-head">按 JD 对一遍</p>
+                <ul>
+                  <li><span>Agent 工具经历</span><em>已覆盖</em></li>
+                  <li><span>Electron 桌面端</span><em>已覆盖</em></li>
+                  <li><span>RAG 与检索</span><em>已覆盖</em></li>
+                  <li><span>产品经历</span><em>待补</em></li>
+                </ul>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="project reveal">
+        <div class="project-head">
+          <h3><a href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener" aria-label="Chasen-Skills 的 GitHub 仓库，新窗口打开">Chasen-Skills</a></h3>
+          <p class="project-desc">自用 Agent Skills 合集，用 npx skills 安装。里面有并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建。</p>
+          <p class="project-meta"><span class="stars">33 star</span><span>Agent Skills</span></p>
+        </div>
+        <div class="run run-2">
+          <figure data-ui class="win" style="--fh:240px">
+            <div class="win-bar"><span class="win-app">Terminal</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+<pre class="term"><span class="cmd">npx skills add Chasen-Liao/Chasen-Skills</span>
+<span class="ok">+</span> 并行编排
+<span class="ok">+</span> X 内容复盘
+<span class="ok">+</span> AI 热帖雷达
+<span class="ok">+</span> 个人 IP 资产构建
+
+安装完成，重启 Agent 后可用</pre>
+            </div>
+          </figure>
+
+          <figure data-ui class="win" style="--fh:240px">
+            <div class="win-bar"><span class="win-app">Chasen-Skills</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="skillgrid">
+                <div class="skill"><b>并行编排</b><span>几个任务一起推</span></div>
+                <div class="skill"><b>X 内容复盘</b><span>拆自己的帖子</span></div>
+                <div class="skill"><b>AI 热帖雷达</b><span>找值得看的讨论</span></div>
+                <div class="skill"><b>个人 IP 资产构建</b><span>把输出留下来</span></div>
+              </div>
+              <p class="install">npx skills 安装，自用为主</p>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="project reveal">
+        <div class="project-head">
+          <h3><a href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener" aria-label="Everything-claude-code-Doc 的 GitHub 仓库，新窗口打开">Everything-claude-code-Doc</a></h3>
+          <p class="project-desc">Everything Claude Code 的使用指南，持续更新。一份能翻的中文文档，从安装到工作流。</p>
+          <p class="project-meta"><span class="stars">15 star</span><span>文档</span></p>
+        </div>
+        <div class="run run-1">
+          <figure data-ui class="win" style="--fh:320px">
+            <div class="win-bar"><span class="win-app">Everything Claude Code</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="doc">
+                <div class="doc-nav">
+                  <span class="on">开始</span>
+                  <span>安装</span>
+                  <span>工作流</span>
+                  <span>Skills</span>
+                  <span>常见问题</span>
+                  <span>更新记录</span>
+                </div>
+                <div class="doc-main">
+                  <h4>Everything Claude Code</h4>
+                  <p>一份关于 Claude Code 的中文使用指南。从装好它，到把它放进每天的工作流，再到 Skills 怎么写。</p>
+                  <p>内容跟着工具一起更新，尽量保持能查。</p>
+                  <span class="tag">持续更新</span>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="project reveal">
+        <div class="project-head">
+          <h3><a href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener" aria-label="SuperMew 的 GitHub 仓库，新窗口打开">SuperMew</a></h3>
+          <p class="project-desc">Agentic RAG 实验，关注 Context Engineering 和三层记忆架构。问题不是塞多少上下文，而是先放什么。</p>
+          <p class="project-meta"><span>Agentic RAG</span><span>Python</span></p>
+        </div>
+        <div class="run run-2">
+          <figure data-ui class="win" style="--fh:260px">
+            <div class="win-bar"><span class="win-app">SuperMew</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="layers">
+                <p class="cap">三层记忆</p>
+                <div class="layer"><b>当前上下文</b><span>这一轮对话</span></div>
+                <div class="layer"><b>会话记忆</b><span>这条任务线</span></div>
+                <div class="layer"><b>长期记忆</b><span>跨会话沉淀</span></div>
+              </div>
+            </div>
+          </figure>
+
+          <figure data-ui class="win" style="--fh:260px">
+            <div class="win-bar"><span class="win-app">SuperMew</span><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+            <div class="win-body">
+              <div class="ctx">
+                <span>系统提示</span>
+                <span>检索片段</span>
+                <span>最近对话</span>
+                <span>工具结果</span>
+                <span class="new">这次的问题</span>
+              </div>
+              <p class="ctx-note">先排序，再取用，最后才拼上下文</p>
+            </div>
+          </figure>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap sect" id="about" aria-labelledby="about-title">
+    <div class="about-top">
+      <div class="about-left reveal">
+        <h2 id="about-title">关于</h2>
+        <dl class="facts">
+          <div><dt>年龄</dt><dd>20 岁</dd></div>
+          <div><dt>坐标</dt><dd>广州，也看深圳</dd></div>
+          <div><dt>学历</dt><dd>计算机科学大四</dd></div>
+          <div><dt>现在</dt><dd>一边实习，一边做 Agent 工具</dd></div>
+          <div><dt>开放</dt><dd>AI 开发工程师、AI 产品经理</dd></div>
+        </dl>
+      </div>
+      <p class="about-text reveal" style="--d:80ms">名字取自 chase，意思是别停。20 岁，计算机科学大四，在广州。一边实习，一边做 Pi 的桌面客户端和自己的 Agent Skills，过程写在 X 上。现在更想弄明白的是：一个 AI 工具要怎么做，人才会愿意每天打开它。所以我开始往 AI 产品经理那边看。</p>
+    </div>
+
+    <div class="records reveal">
+      <p class="record-word">记录</p>
+      <div class="record-cols">
+        <div>
+          <p class="record-label">在做</p>
+          <ul class="record">
+            <li><span>pi-agent-desktop</span><em>桌面客户端</em></li>
+            <li><span>Chasen-Skills</span><em>技能合集</em></li>
+            <li><span>resume-skills</span><em>简历生成</em></li>
+          </ul>
+        </div>
+        <div>
+          <p class="record-label">在写</p>
+          <ul class="record">
+            <li><span>Pi 与 Agent 工具实测</span><em>X</em></li>
+            <li><span>新模型上手</span><em>X</em></li>
+            <li><span>大四找工作</span><em>X</em></li>
+            <li><span>从开发转产品</span><em>X</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="places reveal">
+      <figure>
+        <div class="shot"><img src="chibi.jpg" width="900" height="675" alt="Q 版角色设定卡：浅棕短发、青蓝耳机，粉色点缀" loading="lazy" decoding="async"></div>
+        <figcaption>Q 版设定：浅棕短发、青蓝耳机、粉色点缀</figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img class="drift" src="assets/20985652-jpg.jpg" width="1000" height="672" alt="珠江新城傍晚的天际线" loading="lazy" decoding="async"></div>
+        <figcaption>广州，珠江新城</figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="assets/guangzhou-location-map-in-guangdong-province-china.jpg" width="800" height="623" alt="广州在广东省的位置地图" loading="lazy" decoding="async"></div>
+        <figcaption>广州在广东的位置</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap sect" id="tools" aria-labelledby="tools-title">
+    <div class="tools-head reveal">
+      <h2 id="tools-title">每天在用的</h2>
+      <p>按顺手程度排，不按百分比。没有数字，只有用得多不多。</p>
+    </div>
+    <table class="tool-table reveal" style="--d:80ms" aria-label="工具与技能，按使用强度排列">
+      <thead>
+        <tr><th scope="col">工具</th><th scope="col">强度</th><th scope="col">用来做什么</th><th scope="col">类型</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="dot daily" aria-hidden="true"></span>Pi</td><td>每天</td><td>跑 Agent</td><td>智能体</td></tr>
+        <tr><td><span class="dot daily" aria-hidden="true"></span>Claude Code</td><td>每天</td><td>写代码</td><td>终端</td></tr>
+        <tr><td><span class="dot daily" aria-hidden="true"></span>Codex</td><td>每天</td><td>写代码</td><td>终端</td></tr>
+        <tr><td><span class="dot mid" aria-hidden="true"></span>Python</td><td>主力</td><td>脚本、后端</td><td>语言</td></tr>
+        <tr><td><span class="dot mid" aria-hidden="true"></span>TypeScript / React</td><td>主力</td><td>桌面端、前端</td><td>语言</td></tr>
+        <tr><td><span class="dot mid" aria-hidden="true"></span>Agent / RAG</td><td>主力</td><td>工具编排、检索</td><td>方向</td></tr>
+        <tr><td><span class="dot" aria-hidden="true"></span>Electron</td><td>做过</td><td>桌面应用</td><td>框架</td></tr>
+        <tr><td><span class="dot" aria-hidden="true"></span>FastAPI</td><td>做过</td><td>接口</td><td>框架</td></tr>
+        <tr><td><span class="dot" aria-hidden="true"></span>向量检索</td><td>做过</td><td>检索</td><td>技术</td></tr>
+        <tr><td><span class="dot" aria-hidden="true"></span>HTML / CSS</td><td>做过</td><td>界面</td><td>语言</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-grid">
+      <div class="reveal">
+        <h2 id="contact-title">联系</h2>
+        <p class="contact-line">我在找 AI 开发工程师或 AI 产品经理的岗位，广州、深圳都行。有合适的岗位，或者想聊 Pi 和 Agent，直接找我。</p>
+        <p class="contact-note">X 上大约 6k 关注。平时写 Pi 与 Agent 工具实测、新模型上手，还有大四找工作和从开发转产品的过程。</p>
+        <div class="contact-links">
+          <a href="#" data-pending>X @chasen_liao<span class="pending">链接待填</span></a>
+          <a href="#" data-pending>Email<span class="pending">链接待填</span></a>
+          <a href="#" data-pending>GitHub<span class="pending">链接待填</span></a>
+        </div>
+        <div class="contact-more">
+          <a href="#" data-pending>个人站<span class="pending">链接待填</span></a>
+          <a href="#" data-pending>博客<span class="pending">链接待填</span></a>
+        </div>
+      </div>
+      <figure class="portrait reveal" style="--d:80ms">
+        <img src="avatar.jpg" width="400" height="400" alt="Chasen 的头像" loading="lazy" decoding="async">
+        </figure>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-name">Chasen Liao</p>
+    <div class="footer-info">
+      <p>广州，2026</p>
+      <p class="credits">广州照片：<a href="https://commons.wikimedia.org/wiki/File:YUMAO_ROAD,_GUANGZHOU_(2).jpg" target="_blank" rel="noopener">玉毛路</a>，Dinkun Chen，<a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a>；<a href="https://commons.wikimedia.org/wiki/File:Canton_Tower,_Guangzhou_(5928990138).jpg" target="_blank" rel="noopener">广州塔</a>，Eduardo M. C.，<a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener">CC BY 2.0</a>；<a href="https://commons.wikimedia.org/wiki/File:Zhujiang_New_Town_at_sunset_(217673035).jpg" target="_blank" rel="noopener">珠江新城</a>，William Alen，<a href="https://creativecommons.org/licenses/by/3.0" target="_blank" rel="noopener">CC BY 3.0</a>；<a href="https://commons.wikimedia.org/wiki/File:Guangzhou-location-MAP-in-Guangdong-Province-China.jpg" target="_blank" rel="noopener">广州位置图</a>，Dagvidur，<a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a>。都来自 Wikimedia Commons，已裁切。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // external placeholders stay on the page
+  document.querySelectorAll('[data-pending]').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); });
+  });
+
+  // reveal on enter, once
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce.matches) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.12, rootMargin: '0px 0px -6% 0px'});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // the contact strip: nearest frame to centre is the active one
+  var strip = document.querySelector('[data-strip]');
+  if (!strip) return;
+  var frames = Array.prototype.slice.call(strip.querySelectorAll('.win'));
+  var capProject = document.querySelector('[data-cap-project]');
+  var capLabel = document.querySelector('[data-cap-label]');
+  var raf = 0;
+
+  function update(){
+    raf = 0;
+    var box = strip.getBoundingClientRect();
+    var mid = box.left + box.width / 2;
+    var best = null, bestDist = Infinity;
+    frames.forEach(function(f){
+      var r = f.getBoundingClientRect();
+      var d = Math.abs((r.left + r.width / 2) - mid);
+      if (d < bestDist) { bestDist = d; best = f; }
+    });
+    if (!best) return;
+    frames.forEach(function(f){ f.classList.toggle('is-active', f === best); });
+    if (capProject) capProject.textContent = best.dataset.project || '';
+    if (capLabel) capLabel.textContent = best.dataset.label || '';
+  }
+
+  strip.addEventListener('scroll', function(){
+    if (!raf) raf = window.requestAnimationFrame(update);
+  }, {passive:true});
+
+  window.addEventListener('resize', function(){
+    if (!raf) raf = window.requestAnimationFrame(update);
+  });
+
+  window.addEventListener('load', update);
+  update();
+})();
+</script>
+</body>
+</html>

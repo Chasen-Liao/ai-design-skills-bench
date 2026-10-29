@@ -1,0 +1,14 @@
+{
+  "id": "08-taste-skill",
+  "round": 2,
+  "skill": "design-taste-frontend",
+  "start": "2026-10-29 18:39:20 CST",
+  "end": "2026-10-29 19:13:14 CST",
+  "duration_s": 2034,
+  "over_30min": true,
+  "exit": null,
+  "index_html": "runs/2026-10-29-r2/08-taste-skill/index.html",
+  "bytes": 46440,
+  "screenshots": "ok",
+  "note": "interrupted-but-html-ok: session ends mid inspect after last toolResult; run.log has START only; index.html present and screenshotted"
+}
