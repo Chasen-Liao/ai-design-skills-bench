@@ -1,0 +1,25 @@
+=== START 01-frontend-design at 2026-10-29 18:03:21 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r2/01-frontend-design
+extra=--approve --skill .pi/skills/frontend-design
+已完成。
+
+**文件**：`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r2/01-frontend-design/index.html`
+
+**设计方向**
+- **概念**：把页面做成“一个正在运行的工作会话”。左侧固定侧栏（角色、章节、状态、广州实时钟），右侧文档式内容，呼应他做的 Pi 桌面客户端。
+- **配色**：取自那张 Q 版设定卡，浅棕、青蓝、粉色，落到冷调纸白 `#F1F4F2`、墨绿黑、玫瑰红、青蓝上，避开了 AI 页常见的奶油底 + 陶土色。
+- **字体**：Bricolage Grotesque（名字与标题，紧字距、大字号）+ Noto Sans SC（正文），中文行高 1.8–1.9，正文限宽约 33 字。
+- **记忆点**：首屏 184px 的名字与融合在纸面上的头像；作品区用 HTML/CSS 画了一个「会话分叉」的小界面示意，呼应 `main` / `fork-01` 和他“开发 → 产品”的两条路。只有一次入场动效，且遵从 `prefers-reduced-motion`。
+
+**内容与规则**
+- 5 个项目全放，旗舰单独展开，GitHub 仓库用真实链接；star 数保留原值。
+- 个人站 / 博客 / GitHub / X / Email 全部 `href="#"`，标「链接待填」，点击弹出提示，不发散跳转。
+- 没有编造公司、经历或数字；文案用了「工具好不好用，看它怎么把能力交到人手上」这类他的真实关注点。
+- 头像和 Q 版图都用本地文件，用 `multiply` 混色贴合纸面。
+
+**验证**
+- 320 / 390 / 600 / 768 / 900 / 1024 / 1080 / 1440 / 1920 均无横向溢出，布局无破格。
+- axe-core WCAG 2.1 A/AA 扫描 0 违规；正文与暗色区对比度均达标。
+- 实际点击验证了占位链接提示、章节高亮、时钟与年份。
+- 唯一没做的是真人肉眼观感复核（当前环境无法看图）；建议你在浏览器里过一眼首屏和移动端。
+=== END 01-frontend-design at 2026-10-29 18:14:17 CST exit=0 dur=656s bytes=37526 ===

@@ -1,0 +1,13 @@
+{
+  "id": "03-baoyu-design",
+  "round": 2,
+  "skill": "baoyu-design",
+  "start": "2026-10-29 18:08:42 CST",
+  "end": "2026-10-29 18:39:08 CST",
+  "duration_s": 1826,
+  "over_30min": true,
+  "exit": 0,
+  "index_html": "runs/2026-10-29-r2/03-baoyu-design/index.html",
+  "bytes": 202037,
+  "screenshots": "ok"
+}

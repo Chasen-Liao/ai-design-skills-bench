@@ -1,0 +1,13 @@
+{
+  "id": "09-awesome-design-md",
+  "round": 2,
+  "skill": "DESIGN.md(claude)",
+  "start": "2026-10-29 18:45:05 CST",
+  "end": "2026-10-29 18:50:55 CST",
+  "duration_s": 350,
+  "over_30min": false,
+  "exit": 0,
+  "index_html": "runs/2026-10-29-r2/09-awesome-design-md/index.html",
+  "bytes": 59737,
+  "screenshots": "ok"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "01-frontend-design",
+  "round": 2,
+  "skill": "frontend-design",
+  "start": "2026-10-29 18:03:21 CST",
+  "end": "2026-10-29 18:14:17 CST",
+  "duration_s": 656,
+  "over_30min": false,
+  "exit": 0,
+  "index_html": "runs/2026-10-29-r2/01-frontend-design/index.html",
+  "bytes": 37526,
+  "screenshots": "ok"
+}

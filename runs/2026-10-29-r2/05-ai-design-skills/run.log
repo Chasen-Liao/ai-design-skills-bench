@@ -1,0 +1,37 @@
+=== START 05-ai-design-skills at 2026-10-29 18:14:32 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r2/05-ai-design-skills
+extra=--approve --skill .pi/skills/landing-page-design
+完成，文件在：
+
+`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29-r2/05-ai-design-skills/index.html`
+
+**设计主线**
+- 版式选 A（经典首屏 + 章节），单页个人站，主行动是「聊 AI 开发 / 产品机会」
+- 黑底 + Geist / Geist Mono，青蓝作强调色，粉色只出现在 star 和 Q 版元素上
+- 头像做黑白处理以统一视觉，Q 版设定卡放在 About 侧栏
+- 不造假产品截图，旗舰项目用功能清单面板呈现
+
+**页面结构**
+1. 首屏：名字、定位、去 X 找我（链接待填）、看作品、331 star / 约 6k / 5 个项目
+2. chase 标签墙：逐词随滚动点亮
+3. About：20 岁、广州、大四、实习、转产品探索 + 角色卡与速览
+4. 精选作品：5 个项目全放，pi-agent-desktop 为旗舰，仓库均为真实 GitHub 链接
+5. 每天在用的：Pi / Claude Code / Codex，Python / TypeScript / React / Agent / RAG，Electron / FastAPI / 向量检索 / HTML / CSS
+6. 6 条 FAQ
+7. 联系：开放 AI 开发工程师、AI 产品经理，广州或深圳
+8. 页脚 + 隐私与条款弹窗
+
+**链接处理**
+- 个人站、博客、GitHub、X、Email 全部 `href="#"`，旁标「链接待填」，点击有提示
+- 项目仓库使用你给的真实 GitHub 地址
+- 「看作品」用页内锚点，不伪造外链
+
+**已验证**
+- Chrome 320 / 390 / 768 / 1024 / 1440 宽度无横向溢出、无控制台报错
+- 移动菜单、Esc 关闭、焦点管理、Toast、隐私弹窗、FAQ 展开、滚动揭示、逐词点亮均可用
+- 关闭 JS 与 `prefers-reduced-motion` 下内容仍完整可见
+
+**残余**
+- 五个外链入口仍是占位，等你补 URL
+- `og:image` 用相对路径 `avatar.jpg`，没有域名可写绝对地址
+=== END 05-ai-design-skills at 2026-10-29 18:24:09 CST exit=0 dur=577s bytes=47829 ===

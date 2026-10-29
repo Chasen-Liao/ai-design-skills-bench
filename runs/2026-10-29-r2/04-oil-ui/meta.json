@@ -1,0 +1,13 @@
+{
+  "id": "04-oil-ui",
+  "round": 2,
+  "skill": "oil-ui",
+  "start": "2026-10-29 18:12:47 CST",
+  "end": "2026-10-29 18:34:34 CST",
+  "duration_s": 1307,
+  "over_30min": false,
+  "exit": 0,
+  "index_html": "runs/2026-10-29-r2/04-oil-ui/index.html",
+  "bytes": 33862,
+  "screenshots": "ok"
+}

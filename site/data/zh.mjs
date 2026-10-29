@@ -1,42 +1,16 @@
-// 站点展示用中文译文。原始数据（runs/ 下的 _metrics.md、meta.json）保持英文不动，
-// 构建时按原文精确匹配替换；找不到译文会在构建时告警并原样显示。
+// 展示站用的中文标注。原始数据（runs/ 下的 _metrics.json、meta.json）保持英文不动，
+// 构建时按 id / 原文精确匹配替换；匹配不到会在构建时告警并原样显示。
+// 注：旧版按 ZenMux 时间段估算的 _tokens.md 已弃用，构建不再读取。
 
-export const WEIGHT_ZH = {
-  'light': '轻',
-  'light-medium': '轻到中',
-  'medium': '中',
-  'medium-heavy': '中到重',
-  'heavy': '重',
-  'very heavy': '很重',
-  'light (truncated wall clock)': '轻（计时被截断）',
+// 轮次 id → 页面显示名。未列出的直接用 meta.json 里的 skill 名。
+export const SKILL_LABEL = {
+  '00-bare': '裸 Pi（不装 skill）',
+  '05-ai-design-skills': 'landing-page-design',
+  '09-awesome-design-md': 'DESIGN.md（claude）',
 };
 
-export const NOTES_ZH = {
-  'none observed': '未发现问题',
-  'none observed (completed exit=0); workdir .oil-ui not committed':
-    '未发现问题（正常完成，退出码 0）；工作目录 .oil-ui 未提交到仓库',
-  'Pi interrupted after html written; meta/log finalized without rerun; leftover chrome/pi later killed before 06':
-    '写出页面文件后 Pi 被中断；没有重跑，直接补全 meta.json 和日志；残留的 chrome / pi 进程在 06 开跑前被结束',
-  'none observed; direction*.md left untracked': '未发现问题；direction*.md 未纳入版本管理',
-  'none observed (completed exit=0); .hallmark not committed':
-    '未发现问题（正常完成，退出码 0）；.hallmark 未提交到仓库',
-  'Pi process exited mid-inspect loop after ~23m wall; remaining WARN findings size-count/no-footage/blank-gap; finalized without rerun; .taste-skill not committed':
-    '约 23 分钟后 Pi 进程在检查循环中途退出；剩余警告项 size-count / no-footage / blank-gap；没有重跑，直接收尾；.taste-skill 未提交到仓库',
-};
-
-export const LOOP_ZH = {
-  'bare Pi; write index + headless multi-width check': '裸 Pi；写出 index.html，再用无头浏览器按多种宽度检查',
-  'single skill + write + viewport check': '单个 skill；写页面，再做视口检查',
-  'skill-guided write; wall clock ~9m': '按 skill 指引写页面；总用时约 9 分钟',
-  'skill-guided write + verify': '按 skill 指引写页面，再校验',
-  'long run (~22m); .oil-ui evidence/views/design-notes; multi-viewport verify; GSAP/CDN':
-    '长时间运行（约 22 分钟）；在 .oil-ui 下生成 evidence / views / design-notes；多视口校验；通过 CDN 使用 GSAP',
-  'landing-page-design; html appeared quickly': 'landing-page-design；页面文件很快就写出来了',
-  'directions.md → direction-approved.md → large single-file html (images inlined); axe/lint mentions in log':
-    'directions.md → direction-approved.md → 体积较大的单文件页面（图片内联）；日志里提到 axe / lint 检查',
-  '.hallmark salt/tokens/measure/shots + sloplint --render; multi device shots':
-    '在 .hallmark 下做 salt / tokens / measure / shots，并运行 sloplint --render；多设备截图',
-  'design-taste-frontend inspect loop (desktop/tablet/mobile shots + report.json + CSS probe iterations)':
-    'design-taste-frontend 检查循环（桌面 / 平板 / 手机截图 + report.json + 多轮 CSS 探测调整）',
-  '--no-skills + root DESIGN.md; QA/check scripts then polish': '--no-skills，加根目录 DESIGN.md；先跑质检和检查脚本，再打磨',
+// meta.note 原文 → 中文备注。
+export const NOTE_ZH = {
+  'interrupted-but-html-ok: session ends mid inspect after last toolResult; run.log has START only; index.html present and screenshotted':
+    '中途断过但有页面：会话在最后一次工具结果后的检查循环里中断；run.log 只有 START；index.html 已在磁盘并完成截图。耗时与 token 以 _metrics.json 的会话统计为准。',
 };

@@ -1,0 +1,13 @@
+{
+  "id": "00-bare",
+  "round": 2,
+  "skill": "none",
+  "start": "2026-10-29 18:02:04 CST",
+  "end": "2026-10-29 18:08:32 CST",
+  "duration_s": 388,
+  "over_30min": false,
+  "exit": 0,
+  "index_html": "runs/2026-10-29-r2/00-bare/index.html",
+  "bytes": 54390,
+  "screenshots": "ok"
+}
