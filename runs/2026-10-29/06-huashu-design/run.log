@@ -1,0 +1,31 @@
+=== START 06-huashu-design at 2026-10-29 15:44:10 CST ===
+cwd=/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29/06-huashu-design
+extra=--approve --skill .pi/skills/huashu-design
+做完了，文件在：
+
+`/workspace/chasen-writing/drafts/ai-design-skills-runs/repo-seed/runs/2026-10-29/06-huashu-design/index.html`
+
+## 设计选择
+
+- **方向**：编目纸 / 技术索引。暖纸底 + 巨号 Archivo 宽体字 + 1px 规则线，信息按「索引」排而不是卡片堆。
+- **配色**：青色 `#0B6D7B` / 粉色 `#F49AB0` 从 Q 版角色的耳机和点缀里采样；粉色只在首屏「AI 产品经理」做一处马克笔高亮。
+- **首屏**：Chasen 巨字 + 定位句 + 两个 CTA + 头像板；「Liao」贴在名字右端。
+- **内容**：5 个项目按重要度排成索引行（旗舰行反色，star 数真实、SuperMew 留「—」）；技能按「每天在用 / 主力 / 做过」分栏，没有百分比；联系区做了 5 个外链位。
+- **素材**：头像裁成 4:5 证件板，Q 版图放在 About，文件名和图片都 base64 内嵌，单文件可直接双击打开。
+- **交互**：滚动进度条、导航当前节高亮、跑马灯、hover 反色和箭头位移；`prefers-reduced-motion` 下全部停。
+
+## 链接占位（共 6 处）
+
+`链接待填` 已标在按钮/文字链旁，`href="#"`：
+
+- 首屏「去 X 聊聊」
+- 联系区：个人站、博客、GitHub、X（@chasen_liao）、Email
+
+项目仓库用的是你给的真实 GitHub 地址。
+
+## 验证
+
+- 无头 Chrome 跑过 1920 / 1440 / 1280 / 1024 / 768 / 375 / 320：无横向溢出、无文字裁切、无控制台报错，首屏在 1440×900、1280×800 下正好占满一屏。
+- axe-core 在 1440 和 375 下 0 违规；字体、图片加载正常。
+- design_lint 只剩「等宽小字标签 35 处」这条黄色提示——等宽在这里用于 star 数、技术栈、链接状态等真实元数据，是这套索引版式的一部分，保留。
+=== END 06-huashu-design at 2026-10-29 15:54:11 CST exit=0 dur=601s html=runs/2026-10-29/06-huashu-design/index.html bytes=178290 ===
