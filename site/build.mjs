@@ -2,8 +2,8 @@
 // Zero-dependency static site builder for the A1 design-skills benchmark.
 // Usage: node site/build.mjs   ->   site/dist/
 //
-// 支持多版并列（V2 / V3）：总览可切换，详情按版本分目录。
-// 数据来源：runs/<RUN_DATE>/_metrics.json + 各轮 meta.json。
+// 支持多版并列（V2 / V3）：总览可切换；详情为 runs/<id>/detail.html 左右栏对比。
+// 数据来源：runs/<RUN_DATE>/_metrics.json + 各轮 meta.json。原始产出仅复制，不改写。
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, readdirSync, statSync, copyFileSync } from 'node:fs';
 import { join, resolve, basename } from 'node:path';
@@ -266,7 +266,7 @@ function buildEditionPanel(edition, runs) {
       const thumb = existsSync(thumbPath)
         ? `<img src="${esc(thumbRel)}" alt="${esc(run.id)} 页面缩略图" loading="lazy" width="720" height="450">`
         : '<div class="thumb-missing">缩略图缺失</div>';
-      return `      <a class="card" href="${esc(edition.key)}/runs/${esc(run.id)}/detail.html">
+      return `      <a class="card" href="runs/${esc(run.id)}/detail.html">
         <div class="card-thumb">
           ${thumb}
           <span class="card-idx">${String(index).padStart(2, '0')}</span>
@@ -279,7 +279,7 @@ function buildEditionPanel(edition, runs) {
             <div><dt>LLM 调用</dt><dd>${esc(fmtInt(run.llmCalls))}</dd></div>
             <div><dt>工具调用</dt><dd>${esc(fmtInt(run.toolCalls))}</dd></div>
           </dl>
-          <p class="card-foot"><span>读了 skill ${readSkillFlag(run)}</span><span class="go">查看详情</span></p>
+          <p class="card-foot"><span>读了 skill ${readSkillFlag(run)}</span><span class="go">左右对比</span></p>
         </div>
       </a>`;
     })
@@ -288,7 +288,7 @@ function buildEditionPanel(edition, runs) {
   const tableRows = runs
     .map(
       (run) => `          <tr>
-            <th scope="row" class="col-id"><a href="${esc(edition.key)}/runs/${esc(run.id)}/detail.html">${esc(run.id)}</a></th>
+            <th scope="row" class="col-id"><a href="runs/${esc(run.id)}/detail.html">${esc(run.id)}</a></th>
             <td class="skill">${esc(run.skill)}</td>
             <td class="num">${esc(formatDuration(run.duration))}${interruptedFlag(run)}</td>
             <td class="num">${exitCell(run)}</td>
@@ -349,7 +349,7 @@ ${points}
 
       <div class="edition-block" aria-labelledby="${esc(edition.key)}-grid">
         <h3 id="${esc(edition.key)}-grid">10 组实测</h3>
-        <p class="section-note">缩略图取自各轮的 shot-hero.png；点开可看原页面、全页截图、指标与评价位。</p>
+        <p class="section-note">缩略图取自各轮的 shot-hero.png；点开进入同一 skill 的 V2 / V3 左右栏对比（原页面、截图、指标与评价位分列）。</p>
         <div class="grid">
 ${cards}
         </div>
@@ -532,27 +532,26 @@ ${promptBlocks}
 
 // --------------------------------------------------------------------- detail
 
-function buildDetail(edition, run, prev, next, siblingEdition) {
-  const root = '../../../';
-  const nav = [
-    `<a class="back" href="${root}index.html#${esc(edition.key)}">← 返回总览 · ${esc(edition.versionShort)}</a>`,
-    '<span class="pager">',
-    prev
-      ? `<a href="../${esc(prev.id)}/detail.html">← ${esc(prev.id)}</a>`
-      : '<span class="disabled">← 上一个</span>',
-    next
-      ? `<a href="../${esc(next.id)}/detail.html">${esc(next.id)} →</a>`
-      : '<span class="disabled">下一个 →</span>',
-    '</span>',
-  ].join('\n      ');
+function compactStats(run) {
+  return [
+    ['耗时', formatDuration(run.duration)],
+    ['LLM 调用', fmtInt(run.llmCalls)],
+    ['工具调用', fmtInt(run.toolCalls)],
+    ['输入 token', tokenCells(run.tokens, 'input')],
+    ['输出 token', tokenCells(run.tokens, 'output')],
+    ['缓存读取', tokenCells(run.tokens, 'cacheRead')],
+    ['读了 skill', run.readSkill ? '是' : '否'],
+    ['费用', '暂无'],
+  ]
+    .map(
+      ([label, value]) =>
+        `          <div class="stat"><span class="label">${esc(label)}</span><span class="value">${esc(value)}</span></div>`,
+    )
+    .join('\n');
+}
 
-  const cross =
-    siblingEdition != null
-      ? `<a class="compare-link" href="${root}${esc(siblingEdition.key)}/runs/${esc(run.id)}/detail.html">看同 skill 的 ${esc(siblingEdition.versionShort)} · ${esc(siblingEdition.versionLabel)}</a>`
-      : '';
-
+function factRowsFor(edition, run) {
   const facts = [
-    ['版本', `${edition.versionShort} · ${edition.versionLabel}`],
     ['数据目录', edition.runDate],
     ['开始', cstToZh(run.start) || '暂无'],
     ['结束', cstToZh(run.end) || '暂无'],
@@ -568,122 +567,182 @@ function buildDetail(edition, run, prev, next, siblingEdition) {
     ['费用', '暂无'],
     ['备注', run.note || '无异常记录'],
   ];
-
-  const factRows = facts
+  return facts
     .map(([label, value]) => {
       const mono = /[\d]/.test(String(value)) && String(value).length < 24 ? ' class="mono"' : '';
-      return `            <tr><th scope="row">${esc(label)}</th><td${mono}>${esc(value)}</td></tr>`;
+      return `              <tr><th scope="row">${esc(label)}</th><td${mono}>${esc(value)}</td></tr>`;
     })
     .join('\n');
+}
 
+/** One side of the V2|V3 split detail column. assetBase is relative to runs/<id>/detail.html */
+function buildCompareColumn(edition, run, assetBase, thumbRel) {
   const notice = run.interrupted
-    ? `    <aside class="notice">
-      ${flag('warn', '中途断过但有页面')}
-      <span>本轮会话在检查循环里中断，没有正常收尾；index.html 已在磁盘并完成截图。耗时与 token 取会话统计，退出码没有记录。</span>
-    </aside>`
+    ? `        <aside class="notice">
+          ${flag('warn', '中途断过但有页面')}
+          <span>本轮会话在检查循环里中断，没有正常收尾；index.html 已在磁盘并完成截图。</span>
+        </aside>`
     : '';
 
-  const stats = [
-    ['耗时', formatDuration(run.duration)],
-    ['LLM 调用', fmtInt(run.llmCalls)],
-    ['工具调用', fmtInt(run.toolCalls)],
-    ['输入 token', tokenCells(run.tokens, 'input')],
-    ['输出 token', tokenCells(run.tokens, 'output')],
-    ['缓存读取', tokenCells(run.tokens, 'cacheRead')],
-    ['读了 skill', run.readSkill ? '是' : '否'],
-    ['费用', '暂无'],
-  ]
-    .map(
-      ([label, value]) =>
-        `        <div class="stat"><span class="label">${esc(label)}</span><span class="value">${esc(value)}</span></div>`,
-    )
-    .join('\n');
+  const thumb = thumbRel
+    ? `        <div class="compare-thumb">
+          <img src="${esc(thumbRel)}" alt="${esc(edition.versionShort)} ${esc(run.id)} 缩略图" loading="lazy" width="720" height="450">
+        </div>`
+    : `        <div class="compare-thumb thumb-missing">缩略图缺失</div>`;
 
   const reviewEmpty = run.review ? '' : ' is-empty';
 
+  return `      <article class="compare-col" data-edition="${esc(edition.key)}" aria-labelledby="${esc(edition.key)}-col-title">
+        <header class="compare-col-head">
+          <p class="eyebrow">${esc(edition.roundLabel)}</p>
+          <h2 id="${esc(edition.key)}-col-title">
+            <span class="badge ${esc(edition.badgeClass)}">${esc(edition.versionShort)}</span>
+            ${esc(edition.versionLabel)}
+          </h2>
+          <p class="compare-blurb">${esc(edition.constraintBlurb)}</p>
+          <ul class="chip-row">
+            <li>${esc(run.id)}</li>
+            <li>${esc(edition.runDate)}</li>
+            <li>读了 skill：${run.readSkill ? '是' : '否'}</li>
+            <li>退出码：${hasNumber(run.exit) ? esc(run.exit) : '无记录'}</li>
+          </ul>
+        </header>
+${notice}
+
+        <section class="compare-block" aria-labelledby="${esc(edition.key)}-stats">
+          <h3 id="${esc(edition.key)}-stats">关键数字</h3>
+          <dl class="stats stats-compact">
+${compactStats(run)}
+          </dl>
+        </section>
+
+        <section class="compare-block" aria-labelledby="${esc(edition.key)}-thumb">
+          <h3 id="${esc(edition.key)}-thumb">页面缩略</h3>
+${thumb}
+        </section>
+
+        <section class="compare-block" aria-labelledby="${esc(edition.key)}-live">
+          <h3 id="${esc(edition.key)}-live">真实页面</h3>
+          <p class="section-note">直接渲染本轮产出的 index.html，未做任何修改。</p>
+          <div class="browser">
+            <div class="browser-bar">
+              <span class="browser-path">runs/${esc(edition.runDate)}/${esc(run.id)}/index.html</span>
+              <span class="spacer"></span>
+              <a class="button" href="${esc(assetBase)}/index.html" target="_blank" rel="noopener">新窗口</a>
+            </div>
+            <iframe class="live-frame live-frame-compare" src="${esc(assetBase)}/index.html" loading="lazy" title="${esc(edition.versionShort)} ${esc(run.id)} 生成的页面"></iframe>
+          </div>
+        </section>
+
+        <section class="compare-block" aria-labelledby="${esc(edition.key)}-shot">
+          <h3 id="${esc(edition.key)}-shot">全页截图</h3>
+          <div class="shot-frame shot-frame-compare">
+            <a href="${esc(assetBase)}/shot-desktop.png" target="_blank" rel="noopener"><img src="${esc(assetBase)}/shot-desktop.png" loading="lazy" alt="${esc(edition.versionShort)} ${esc(run.id)} 全页截图"></a>
+          </div>
+        </section>
+
+        <section class="compare-block" aria-labelledby="${esc(edition.key)}-facts">
+          <h3 id="${esc(edition.key)}-facts">实测数据</h3>
+          <div class="table-wrap">
+            <table class="kv">
+              <tbody>
+${factRowsFor(edition, run)}
+              </tbody>
+            </table>
+          </div>
+          <p class="fine">数字取自 <code>runs/${esc(edition.runDate)}/_metrics.json</code>；费用记为「暂无」。不排名、不打分。</p>
+        </section>
+
+        <section class="compare-block" aria-labelledby="${esc(edition.key)}-review">
+          <h3 id="${esc(edition.key)}-review">Chasen 的评价</h3>
+          <div class="review${reviewEmpty}">
+${reviewBlock(run.review)}
+          </div>
+          <p class="fine">编辑 runs/${esc(edition.runDate)}/${esc(run.id)}/review.md 后重新构建即可更新。</p>
+        </section>
+      </article>`;
+}
+
+function buildRedirect(targetRel, label) {
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="0;url=${esc(targetRel)}">
+<link rel="canonical" href="${esc(targetRel)}">
+<title>跳转到并列对比</title>
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F4EFE6">
+<link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+<main class="wrap" style="padding-top:48px">
+  <p class="lede"><a href="${esc(targetRel)}">${esc(label)}</a></p>
+</main>
+</body>
+</html>
+`;
+}
+
+function buildCompareDetail({ id, skill, columns, prevId, nextId }) {
+  const root = '../../';
+  const nav = [
+    `<a class="back" href="${root}index.html">← 返回总览</a>`,
+    '<span class="pager">',
+    prevId
+      ? `<a href="../${esc(prevId)}/detail.html">← ${esc(prevId)}</a>`
+      : '<span class="disabled">← 上一个</span>',
+    nextId
+      ? `<a href="../${esc(nextId)}/detail.html">${esc(nextId)} →</a>`
+      : '<span class="disabled">下一个 →</span>',
+    '</span>',
+  ].join('\n      ');
+
+  const colHtml = columns
+    .map(({ edition, run }) => {
+      const assetBase = `${root}${edition.key}/runs/${run.id}`;
+      const thumbPath = join(DIST, 'thumbs', edition.key, `${run.id}.webp`);
+      const thumbRel = existsSync(thumbPath) ? `${root}thumbs/${edition.key}/${run.id}.webp` : null;
+      return buildCompareColumn(edition, run, assetBase, thumbRel);
+    })
+    .join('\n\n');
+
   const body = `${topbar({
-    depth: 3,
-    edition,
-    right: `<a class="topbar-link" href="index.html" target="_blank" rel="noopener">原页面</a>`,
+    depth: 2,
+    right: '',
   })}
-  <main class="wrap" id="main">
+  <main class="wrap wrap-compare" id="main">
     <nav class="topnav" aria-label="页面导航">
       ${nav}
     </nav>
-${cross ? `    <p class="cross-edition">${cross}</p>` : ''}
 
     <header class="hero detail-head">
-      <p class="eyebrow">${esc(edition.versionShort)} · ${esc(edition.versionLabel)} · 第 ${esc(run.id.slice(0, 2))} 组</p>
-      <h1><span class="idx">${esc(run.id.slice(0, 2))}</span>${esc(run.skill)}</h1>
-      <p class="lede">同一提示词族 · 同一模型 ${esc(MODEL_LABEL)} · 极简 Pi 四工具 · 本版约束：${esc(edition.constraintTitle)}。</p>
+      <p class="eyebrow">V2 / V3 左右并列 · 第 ${esc(id.slice(0, 2))} 组</p>
+      <h1><span class="idx">${esc(id.slice(0, 2))}</span>${esc(skill)}</h1>
+      <p class="lede">同一 skill、同一提示词族、同一模型 ${esc(MODEL_LABEL)}。左栏 V2＝未约束版（会过度自检）；右栏 V3＝一次成版 + thinking high。本页直接对照，无需再跳转另一版。</p>
       <ul class="chip-row">
-        <li>${esc(run.id)}</li>
-        <li>${esc(edition.runDate)}</li>
-        <li>读了 skill：${run.readSkill ? '是' : '否'}</li>
-        <li>退出码：${hasNumber(run.exit) ? esc(run.exit) : '无记录'}</li>
-        <li>费用：暂无</li>
+        <li>${esc(id)}</li>
+        <li>不排名 · 不打分</li>
+        <li>评价待 Chasen 填写</li>
       </ul>
     </header>
-${notice}
 
-    <section aria-labelledby="stats-title">
-      <h2 id="stats-title">关键数字</h2>
-      <dl class="stats">
-${stats}
-      </dl>
-    </section>
-
-    <section aria-labelledby="facts-title">
-      <h2 id="facts-title">实测数据</h2>
-      <div class="table-wrap">
-        <table class="kv">
-          <tbody>
-${factRows}
-          </tbody>
-        </table>
-      </div>
-      <p class="fine">数字取自 <code>runs/${esc(edition.runDate)}/_metrics.json</code>；费用没有实际账单，记为「暂无」。不排名、不打分。</p>
-    </section>
-
-    <section aria-labelledby="live-title">
-      <h2 id="live-title">真实页面</h2>
-      <p class="section-note">直接渲染本轮产出的 index.html，未做任何修改。</p>
-      <div class="browser">
-        <div class="browser-bar">
-          <span class="browser-path">runs/${esc(edition.runDate)}/${esc(run.id)}/index.html</span>
-          <span class="spacer"></span>
-          <a class="button" href="index.html" target="_blank" rel="noopener">新窗口打开</a>
-        </div>
-        <iframe class="live-frame" src="index.html" loading="lazy" title="${esc(run.id)} 生成的页面"></iframe>
-      </div>
-    </section>
-
-    <section aria-labelledby="shot-title">
-      <h2 id="shot-title">全页截图</h2>
-      <div class="shot-frame">
-        <a href="shot-desktop.png" target="_blank" rel="noopener"><img src="shot-desktop.png" loading="lazy" alt="${esc(run.id)} 全页截图"></a>
-      </div>
-    </section>
-
-    <section aria-labelledby="review-title">
-      <h2 id="review-title">Chasen 的评价</h2>
-      <div class="review${reviewEmpty}">
-${reviewBlock(run.review)}
-      </div>
-      <p class="fine">编辑 runs/${esc(edition.runDate)}/${esc(run.id)}/review.md 后重新构建即可更新。</p>
-    </section>
+    <div class="compare-split" role="group" aria-label="V2 与 V3 左右对比">
+${colHtml}
+    </div>
 
     <footer class="footer">
       <p class="repo"><a href="${esc(REPO_URL)}">${esc(REPO_URL)}</a></p>
-      <p>数据：runs/${esc(edition.runDate)}/_metrics.json · runs/${esc(edition.runDate)}/${esc(run.id)}/meta.json</p>
+      <p>数据：runs/2026-10-29-r2、runs/2026-10-29-r3 的 _metrics.json 与各轮 meta.json。原始产出未改写。</p>
     </footer>
   </main>`;
 
   return pageShell({
-    title: `${edition.versionShort} · ${run.id} · ${run.skill} · 设计 Skill 横评`,
-    description: `${run.id}（${run.skill}）在 ${edition.versionShort}（${edition.versionLabel}）中的实测数据与页面。`,
+    title: `${id} · ${skill} · V2 / V3 对比 · 设计 Skill 横评`,
+    description: `${id}（${skill}）在 V2（未约束版）与 V3（一次成版 + thinking high）中的左右栏对照。`,
     body,
-    depth: 3,
+    depth: 2,
   });
 }
 
@@ -714,29 +773,61 @@ function main() {
       }
     }
 
-    const sibling = editionsData.find((item) => item.edition.key !== edition.key)?.edition ?? null;
-
-    runs.forEach((run, index) => {
+    for (const run of runs) {
       const outDir = join(DIST, edition.key, 'runs', run.id);
       mkdirSync(outDir, { recursive: true });
 
       for (const name of readdirSync(run.dir)) {
         if (!isPlainFile(run.dir, name)) continue;
+        // Never overwrite generated detail.html with a source file of the same name.
+        if (name === 'detail.html') continue;
         copyFileSync(join(run.dir, name), join(outDir, name));
       }
-
-      const prev = index > 0 ? runs[index - 1] : null;
-      const next = index < runs.length - 1 ? runs[index + 1] : null;
-      writeFileSync(join(outDir, 'detail.html'), buildDetail(edition, run, prev, next, sibling), 'utf8');
-    });
+    }
   }
+
+  // Pair runs by id across editions for side-by-side detail pages.
+  const byId = new Map();
+  for (const { edition, runs } of editionsData) {
+    for (const run of runs) {
+      if (!byId.has(run.id)) byId.set(run.id, []);
+      byId.get(run.id).push({ edition, run });
+    }
+  }
+
+  const ids = [...byId.keys()].sort();
+  ids.forEach((id, index) => {
+    const columns = byId.get(id);
+    const skill = columns[0].run.skill;
+    const prevId = index > 0 ? ids[index - 1] : null;
+    const nextId = index < ids.length - 1 ? ids[index + 1] : null;
+
+    const compareDir = join(DIST, 'runs', id);
+    mkdirSync(compareDir, { recursive: true });
+    writeFileSync(
+      join(compareDir, 'detail.html'),
+      buildCompareDetail({ id, skill, columns, prevId, nextId }),
+      'utf8',
+    );
+
+    // Old per-edition detail URLs redirect to the shared compare page.
+    for (const { edition } of columns) {
+      const legacy = join(DIST, edition.key, 'runs', id, 'detail.html');
+      writeFileSync(
+        legacy,
+        buildRedirect(`../../runs/${id}/detail.html`, `前往 ${id} 的 V2 / V3 左右栏对比`),
+        'utf8',
+      );
+    }
+  });
 
   writeFileSync(join(DIST, 'index.html'), buildIndex(editionsData), 'utf8');
 
   for (const { edition, runs } of editionsData) {
     console.log(`built ${edition.key} (${edition.runDate}): ${runs.length} runs`);
-    for (const run of runs) console.log(`  ${edition.key}/runs/${run.id}/ (${basename(run.dir)})`);
+    for (const run of runs) console.log(`  ${edition.key}/runs/${run.id}/ (assets)`);
   }
+  console.log(`compare pages -> ${DIST}/runs/<id>/detail.html (${ids.length})`);
   console.log(`overview -> ${DIST}/index.html`);
 }
 
