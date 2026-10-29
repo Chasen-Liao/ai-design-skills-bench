@@ -4,6 +4,7 @@
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, readdirSync, statSync, copyFileSync } from 'node:fs';
 import { join, resolve, basename } from 'node:path';
+import { WEIGHT_ZH, NOTES_ZH, LOOP_ZH } from './data/zh.mjs';
 
 const RUN_DATE = '2026-10-29';
 const HERE = import.meta.dirname;
@@ -34,11 +35,19 @@ const esc = (value) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+const zh = (dict, text, what) => {
+  if (!text) return text;
+  if (Object.prototype.hasOwnProperty.call(dict, text)) return dict[text];
+  console.warn(`warning: no Chinese translation for ${what}: ${text}`);
+  return text;
+};
+const cstToZh = (value) => String(value ?? '').replace(/\s*CST$/, '（上海时间）');
+
 const readText = (path) => readFileSync(path, 'utf8');
 
 function formatDuration(seconds) {
   const total = Number(seconds);
-  if (!Number.isFinite(total)) return 'n/a';
+  if (!Number.isFinite(total)) return '暂无';
   const whole = Math.max(0, Math.round(total));
   const mins = Math.floor(whole / 60);
   const secs = whole % 60;
@@ -136,13 +145,13 @@ function loadRuns() {
       id: name,
       dir,
       meta,
-      skill: meta.skill ? meta.skill : 'none（裸 Pi 对照）',
+      skill: meta.skill ? meta.skill : '无（裸 Pi 对照）',
       duration: meta.duration_s,
       exit: meta.exit,
       bytes: meta.bytes,
-      processWeight: summaryRow.process_weight || weightRow.weight || 'n/a',
-      loop: weightRow['what happened in the loop'] || '',
-      notes: summaryRow['notes / issues'] || meta.notes || '',
+      processWeight: zh(WEIGHT_ZH, summaryRow.process_weight || weightRow.weight || '', 'weight') || '暂无',
+      loop: zh(LOOP_ZH, weightRow['what happened in the loop'] || '', 'loop'),
+      notes: zh(NOTES_ZH, summaryRow['notes / issues'] || meta.notes || '', 'notes'),
       review,
       tokens: tokensByRun.get(name) ?? null,
     };
@@ -212,7 +221,7 @@ function buildIndex(runs, prompt) {
             <td class="num">${esc(tokVal(run, 'requests'))}</td>
             <td class="num">${esc(tokVal(run, 'input'))}${incompleteMark(run)}</td>
             <td class="num">${esc(tokVal(run, 'output'))}</td>
-            <td class="na">n/a</td>
+            <td class="na">暂无</td>
             <td>${esc(run.processWeight)}</td>
             <td class="notes">${esc(run.notes)}</td>
           </tr>`,
@@ -230,7 +239,7 @@ function buildIndex(runs, prompt) {
       <ul>
         <li><strong>同一提示词</strong>：Chasen 个人介绍落地页（原文见下方）。</li>
         <li><strong>同一模型</strong>：ZenMux 上的 ${esc(MODEL_NAME)}（<code>${esc(MODEL_ID)}</code>）。</li>
-        <li><strong>同一 harness</strong>：极简 Pi，仅 read / bash / edit / write 四个工具，<code>--no-session</code>。</li>
+        <li><strong>同一运行框架</strong>：极简 Pi，仅 read / bash / edit / write 四个工具，<code>--no-session</code>。</li>
         <li><strong>每个目录只装一个被测 skill</strong>，00-bare 为不装 skill 的对照。</li>
         <li><strong>单次运行</strong>，结果有随机性。</li>
         <li><strong>本站不排名、不打分。</strong></li>
@@ -250,11 +259,11 @@ ${cards}
         <table>
           <thead>
             <tr>
-              <th>run</th>
-              <th>skill</th>
-              <th>耗时(s)</th>
-              <th>exit</th>
-              <th>HTML 字节</th>
+              <th>轮次</th>
+              <th>被测 skill</th>
+              <th>耗时（秒）</th>
+              <th>退出码</th>
+              <th>页面字节数</th>
               <th>请求数</th>
               <th>输入 token</th>
               <th>输出 token</th>
@@ -270,7 +279,7 @@ ${tableRows}
       </div>
       <p class="fine">token 说明：</p>
       ${tokenNotesHtml()}
-      <p class="fine">费用未取得实际账单，记为 n/a，不做估算。数字仅为实测记录，不代表排名。</p>
+      <p class="fine">费用没有取得实际账单，记为「暂无」，不做估算。数字仅为实测记录，不代表排名。</p>
     </section>
 
     <section aria-labelledby="prompt-title">
@@ -305,18 +314,18 @@ function buildDetail(run, prev, next) {
   ].join('\n      ');
 
   const facts = [
-    ['开始', run.meta.start],
-    ['结束', run.meta.end],
+    ['开始', cstToZh(run.meta.start)],
+    ['结束', cstToZh(run.meta.end)],
     ['耗时', formatDuration(run.duration)],
-    ['exit', run.exit],
-    ['HTML 字节', run.bytes],
+    ['退出码', run.exit],
+    ['页面字节数', run.bytes],
     ['请求数', tokVal(run, 'requests') + (run.tokens?.interrupted ? '（不完整）' : '')],
     ['输入 token', tokVal(run, 'input') + (run.tokens?.interrupted ? '（不完整）' : '')],
     ['输出 token', tokVal(run, 'output') + (run.tokens?.interrupted ? '（不完整）' : '')],
-    ['费用', 'n/a'],
+    ['费用', '暂无'],
     ['流程轻重', run.processWeight],
-    ['循环中发生了什么', run.loop || 'n/a'],
-    ['备注', run.notes || 'n/a'],
+    ['运行过程', run.loop || '暂无'],
+    ['备注', run.notes || '暂无'],
   ]
     .map(
       ([label, value]) => `          <tr><th scope="row">${esc(label)}</th><td>${esc(value)}</td></tr>`,
