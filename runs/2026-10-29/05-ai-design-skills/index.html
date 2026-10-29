@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chasen · AI 开发工程师，做 Pi 桌面客户端和 Agent Skills</title>
+<meta name="description" content="Chasen（Chasen Liao），20 岁，广州，计算机科学大四。AI 开发工程师，做 Pi 桌面客户端和 Agent Skills，也在考虑往 AI 产品经理走。开放广州、深圳的机会。">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Chasen · AI 开发工程师 × AI 原住民">
+<meta property="og:description" content="做 Pi 桌面客户端和 Agent Skills，也想试试 AI 产品经理。广州，开放 AI 开发与 AI 产品岗位。">
+<meta property="og:image" content="avatar.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial,sans-serif' font-size='36' font-weight='600' fill='%23ffffff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --surface:#181818;
+    --surface-2:#1F1F1F;
+    --line:#272727;
+    --text:#FFFFFF;
+    --muted:#9B9B9B;
+    --accent:#8FD8E6;
+    --curve:cubic-bezier(0.22,1,0.36,1);
+    --max:1120px;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  section[id]{scroll-margin-top:96px}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Geist","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+  ::selection{background:var(--accent);color:#000}
+
+  .mono{
+    font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12px;
+    line-height:16px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .skip{
+    position:absolute;left:-9999px;top:8px;z-index:100;
+    background:#fff;color:#000;padding:8px 12px;border-radius:8px;font-size:14px;font-weight:600;
+  }
+  .skip:focus{left:16px}
+
+  .wrap{
+    width:100%;
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:60;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    padding:8px 8px 8px 16px;
+    width:calc(100% - 32px);
+    max-width:640px;
+    border:1px solid var(--line);
+    border-radius:9999px;
+    background:rgba(24,24,24,.72);
+    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(16px);
+  }
+  .brand{
+    display:flex;align-items:center;gap:8px;
+    font-weight:600;font-size:16px;line-height:24px;
+    margin-right:auto;
+    transition:opacity 300ms var(--curve);
+  }
+  .brand:hover{opacity:.7}
+  .brand .mark{
+    width:8px;height:8px;border-radius:9999px;background:var(--accent);
+    box-shadow:0 0 0 4px rgba(143,216,230,.12);
+  }
+  .nav-links{display:flex;align-items:center;gap:2px}
+  .nav-links a{
+    padding:8px 12px;
+    font-size:14px;line-height:20px;
+    color:var(--muted);
+    border-radius:9999px;
+    transition:color 300ms var(--curve),background-color 300ms var(--curve);
+  }
+  .nav-links a:hover{color:var(--text);background:#272727}
+  .nav-links a[aria-current="true"]{color:var(--text);background:#1F1F1F}
+  .nav-links a:active{transform:scale(.98)}
+
+  .menu-toggle{
+    display:none;
+    position:relative;
+    width:40px;height:40px;
+    align-items:center;justify-content:center;
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:9999px;
+    cursor:pointer;
+    padding:0;
+  }
+  .menu-toggle span{
+    display:block;
+    position:absolute;
+    width:16px;height:2px;
+    background:var(--text);
+    border-radius:9999px;
+    transition:transform 500ms var(--curve),opacity 300ms var(--curve);
+  }
+  .menu-toggle span:nth-child(1){transform:translateY(-5px)}
+  .menu-toggle span:nth-child(3){transform:translateY(5px)}
+  .menu-toggle[aria-expanded="true"] span:nth-child(1){transform:rotate(45deg)}
+  .menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .menu-toggle[aria-expanded="true"] span:nth-child(3){transform:rotate(-45deg)}
+
+  .mobile-menu{
+    position:fixed;
+    inset:0;
+    z-index:55;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:8px;
+    padding:96px 24px 32px;
+    background:rgba(0,0,0,.94);
+    -webkit-backdrop-filter:blur(24px);
+    backdrop-filter:blur(24px);
+    visibility:hidden;
+    opacity:0;
+    transition:opacity 400ms var(--curve),visibility 400ms var(--curve);
+  }
+  .mobile-menu[data-open="true"]{visibility:visible;opacity:1}
+  .mobile-menu a{
+    font-size:30px;
+    line-height:36px;
+    font-weight:600;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 500ms var(--curve),transform 500ms var(--curve),color 300ms var(--curve);
+  }
+  .mobile-menu[data-open="true"] a{opacity:1;transform:none}
+  .mobile-menu a:hover{color:var(--accent)}
+  .mobile-menu .mm-foot{
+    margin-top:32px;
+    color:var(--muted);
+    font-size:14px;
+    line-height:20px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:96px 0 64px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:40px;
+    align-items:end;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    margin:0 0 24px;
+    padding:4px 12px;
+    border:1px solid var(--line);
+    border-radius:9999px;
+    font-size:12px;line-height:16px;
+    color:var(--muted);
+  }
+  .eyebrow .dot{
+    width:6px;height:6px;border-radius:9999px;background:var(--accent);
+  }
+  h1.hero-title{
+    margin:0 0 24px;
+    font-size:60px;
+    line-height:1;
+    font-weight:600;
+    letter-spacing:-0.02em;
+    max-width:680px;
+    background:linear-gradient(90deg,#FFFFFF,#9B9B9B);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-wrap:balance;
+  }
+  .hero-sub{
+    margin:0 0 32px;
+    max-width:680px;
+    font-size:20px;
+    line-height:28px;
+    color:var(--muted);
+    text-wrap:pretty;
+  }
+  .hero-sub strong{color:var(--text);font-weight:500}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 12px;
+    font-size:16px;line-height:24px;font-weight:600;
+    border-radius:8px;
+    border:1px solid transparent;
+    transition:transform 500ms var(--curve),background-color 300ms var(--curve),border-color 300ms var(--curve),color 300ms var(--curve);
+  }
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--text);color:#000}
+  .btn-primary:hover{background:#DEDEDE}
+  .btn-ghost{border-color:var(--line);color:var(--text);background:transparent}
+  .btn-ghost:hover{background:#181818;border-color:#313131}
+  .hero-note{
+    margin:24px 0 0;
+    font-size:14px;line-height:20px;
+    color:var(--muted);
+    max-width:680px;
+  }
+  .hero-note b{color:var(--text);font-weight:500}
+
+  .portrait{margin:0;max-width:280px}
+  .portrait-frame{
+    padding:8px;
+    border:1px solid var(--line);
+    border-radius:24px;
+    background:var(--surface);
+  }
+  .portrait-frame img{
+    width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+    border-radius:16px;
+    filter:saturate(.95) contrast(1.02);
+  }
+  .portrait figcaption{
+    display:flex;justify-content:space-between;gap:8px;
+    margin-top:12px;
+    font-size:12px;line-height:16px;color:var(--muted);
+  }
+  .portrait figcaption .mono{color:#7A7A7A}
+
+  /* ---------- tagline reveal ---------- */
+  .tagline{
+    padding:96px 0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .tagline p{
+    margin:0;
+    max-width:680px;
+    font-size:36px;
+    line-height:40px;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    text-wrap:balance;
+  }
+  .tagline .w{
+    color:rgba(255,255,255,.28);
+    transition:color 500ms var(--curve);
+  }
+  .tagline .w.lit{color:var(--text)}
+  .tagline .label{margin:0 0 24px}
+
+  /* ---------- section shell ---------- */
+  section{position:relative}
+  .sec{padding:80px 0}
+  .sec-head{
+    display:flex;align-items:baseline;gap:12px;
+    margin:0 0 32px;
+  }
+  .sec-head h2{
+    margin:0;
+    font-size:30px;
+    line-height:36px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    text-wrap:balance;
+  }
+  .sec-head .idx{color:#7A7A7A}
+  .lede{
+    margin:0 0 32px;
+    max-width:640px;
+    font-size:16px;line-height:24px;
+    color:var(--muted);
+    text-wrap:pretty;
+  }
+
+  /* ---------- about ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:40px;
+  }
+  .about-text{max-width:680px}
+  .about-text p{
+    margin:0 0 16px;
+    font-size:16px;line-height:24px;
+    color:#D2D2D2;
+    text-wrap:pretty;
+  }
+  .about-text p:last-child{margin-bottom:0}
+  .about-text em{font-style:normal;color:var(--text);font-weight:500}
+  .facts{
+    display:flex;flex-wrap:wrap;gap:8px;
+    margin:24px 0 0;
+    padding:0;list-style:none;
+  }
+  .facts li{
+    padding:4px 12px;
+    border:1px solid var(--line);
+    border-radius:9999px;
+    font-size:14px;line-height:20px;
+    color:var(--muted);
+  }
+  .chibi{margin:0}
+  .chibi-frame{
+    padding:8px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--surface);
+  }
+  .chibi-frame img{
+    width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;
+    border-radius:8px;
+  }
+  .chibi figcaption{
+    margin-top:12px;
+    font-size:12px;line-height:16px;
+    color:var(--muted);
+  }
+
+  /* ---------- work ---------- */
+  .work-top{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:24px;
+  }
+  .card{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    transition:transform 500ms var(--curve),border-color 300ms var(--curve),background-color 300ms var(--curve);
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    border-color:#313131;
+    background:#1F1F1F;
+  }
+
+  .flag{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:32px;
+    padding:24px;
+    margin-bottom:24px;
+    border-radius:24px;
+  }
+  .flag .kicker{
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:16px;
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:2px 8px;
+    border:1px solid #313131;
+    border-radius:9999px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:12px;line-height:16px;
+    color:var(--accent);
+    background:rgba(143,216,230,.06);
+  }
+  .flag h3{
+    margin:0 0 12px;
+    font-size:24px;line-height:32px;font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .flag h3 .tld{margin-left:8px;font-family:"Geist Mono",monospace;font-size:14px;font-weight:400;color:#7A7A7A}
+  .flag p{
+    margin:0;
+    font-size:16px;line-height:24px;
+    color:var(--muted);
+    max-width:56ch;
+    text-wrap:pretty;
+  }
+  .feats{
+    display:flex;flex-wrap:wrap;gap:8px;
+    margin:24px 0 0;padding:0;list-style:none;
+  }
+  .feats li{
+    padding:4px 12px;
+    background:#272727;
+    border-radius:8px;
+    font-size:14px;line-height:20px;
+    color:#D2D2D2;
+  }
+  .flag-side{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:24px;
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:#131313;
+  }
+  .stat-row{display:flex;flex-direction:column;gap:16px}
+  .stat{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:12px;
+    border-bottom:1px solid #272727;
+  }
+  .stat:last-child{border-bottom:0;padding-bottom:0}
+  .stat .k{font-size:14px;line-height:20px;color:var(--muted)}
+  .stat .v{font-family:"Geist Mono",monospace;font-size:16px;line-height:24px;color:var(--text)}
+
+  .repo-link{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:14px;line-height:20px;
+    color:var(--text);
+    transition:color 300ms var(--curve),gap 300ms var(--curve);
+  }
+  .repo-link:hover{color:var(--accent);gap:12px}
+  .repo-link svg{flex:none;transition:transform 500ms var(--curve)}
+  .repo-link:hover svg{transform:translate(2px,-2px)}
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .proj{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:24px;
+    min-height:100%;
+  }
+  .proj .top{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .proj h3{
+    margin:0;
+    font-size:20px;line-height:28px;font-weight:600;
+    letter-spacing:-0.01em;
+    word-break:break-word;
+  }
+  .proj p{
+    margin:0;
+    font-size:14px;line-height:20px;
+    color:var(--muted);
+    text-wrap:pretty;
+  }
+  .proj .foot{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding-top:8px;
+  }
+  .stars{
+    font-family:"Geist Mono",monospace;
+    font-size:12px;line-height:16px;
+    color:#7A7A7A;
+    white-space:nowrap;
+  }
+  .tags{display:flex;flex-wrap:wrap;gap:4px;margin:0;padding:0;list-style:none}
+  .tags li{
+    padding:2px 8px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-family:"Geist Mono",monospace;
+    font-size:12px;line-height:16px;
+    color:var(--muted);
+  }
+  .proj-cta{
+    display:flex;align-items:center;justify-content:center;
+    gap:8px;
+    min-height:100%;
+    padding:24px;
+    border:1px dashed var(--line);
+    border-radius:16px;
+    font-size:14px;line-height:20px;
+    color:var(--muted);
+    text-align:center;
+    transition:color 300ms var(--curve),border-color 300ms var(--curve);
+  }
+  .proj-cta:hover{color:var(--text);border-color:#313131}
+
+  /* ---------- skills ---------- */
+  .skill-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .skill-card{
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--surface);
+  }
+  .skill-card h3{
+    margin:0 0 16px;
+    font-size:14px;line-height:20px;
+    font-family:"Geist Mono",monospace;
+    font-weight:500;
+    color:var(--accent);
+    letter-spacing:0.04em;
+  }
+  .skill-card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .skill-card li{
+    display:flex;align-items:center;gap:8px;
+    font-size:16px;line-height:24px;
+    color:#D2D2D2;
+  }
+  .skill-card li::before{
+    content:"";
+    width:4px;height:4px;border-radius:9999px;
+    background:#7A7A7A;
+    flex:none;
+  }
+  .now{
+    margin-top:24px;
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:#131313;
+  }
+  .now h3{
+    margin:0 0 16px;
+    font-size:16px;line-height:24px;font-weight:600;
+  }
+  .now ol{
+    margin:0;padding:0;list-style:none;
+    display:grid;grid-template-columns:1fr;gap:12px;
+    counter-reset:n;
+  }
+  .now li{
+    display:flex;gap:12px;
+    font-size:14px;line-height:20px;
+    color:var(--muted);
+    counter-increment:n;
+  }
+  .now li::before{
+    content:"0" counter(n);
+    font-family:"Geist Mono",monospace;
+    font-size:12px;line-height:20px;
+    color:#7A7A7A;
+    flex:none;
+  }
+  .now li b{color:var(--text);font-weight:500}
+
+  /* ---------- contact ---------- */
+  .contact{
+    padding:80px 0;
+    border-top:1px solid var(--line);
+  }
+  .statement{
+    margin:0 0 16px;
+    font-size:36px;line-height:40px;
+    font-weight:600;
+    letter-spacing:-0.02em;
+    max-width:680px;
+    background:linear-gradient(90deg,#FFFFFF,#9B9B9B);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-wrap:balance;
+  }
+  @media (min-width:640px){
+    .statement{font-size:48px;line-height:1}
+  }
+  .contact .lede{max-width:620px}
+  .roles{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 40px;padding:0;list-style:none}
+  .roles li{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 12px;
+    border:1px solid #313131;
+    border-radius:8px;
+    font-size:14px;line-height:20px;
+  }
+  .roles li span{color:#7A7A7A}
+
+  .slots-head{
+    display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;
+    margin:0 0 16px;
+  }
+  .slots{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .slot{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 16px;
+    border:1px dashed #313131;
+    border-radius:8px;
+    background:#111111;
+    transition:border-color 300ms var(--curve),background-color 300ms var(--curve);
+  }
+  .slot:hover{border-color:#7A7A7A;background:#181818}
+  .slot:active{transform:scale(.995)}
+  .slot .lbl{display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px}
+  .slot .handle{font-family:"Geist Mono",monospace;font-size:12px;line-height:16px;color:#7A7A7A}
+  .pending{
+    display:inline-flex;align-items:center;
+    padding:2px 8px;
+    border-radius:4px;
+    background:#1F1F1F;
+    font-size:12px;line-height:16px;
+    color:#7A7A7A;
+    white-space:nowrap;
+  }
+  .slot.pulse .pending{background:#313131;color:var(--text)}
+  .slot.pulse{border-color:var(--accent)}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:48px 0 40px;
+  }
+  .foot-grid{
+    display:flex;flex-wrap:wrap;gap:24px;
+    align-items:flex-start;justify-content:space-between;
+  }
+  .foot-grid p{margin:0;font-size:14px;line-height:20px;color:var(--muted)}
+  .foot-grid .who{font-size:16px;line-height:24px;color:var(--text);font-weight:500}
+  .foot-links{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;line-height:20px}
+  .foot-links a{color:var(--muted);transition:color 300ms var(--curve)}
+  .foot-links a:hover{color:var(--text)}
+  .foot-bottom{
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;
+    margin-top:40px;
+    padding-top:16px;
+    border-top:1px solid #1F1F1F;
+    font-size:12px;line-height:16px;
+    color:#7A7A7A;
+  }
+  .foot-bottom a{transition:color 300ms var(--curve)}
+  .foot-bottom a:hover{color:var(--text)}
+
+  /* ---------- reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(32px);
+    transition:opacity 700ms var(--curve),transform 700ms var(--curve);
+  }
+  .reveal.in{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:1ms!important;animation-duration:1ms!important}
+    .reveal{transform:none;opacity:1}
+    .tagline .w{color:var(--text)}
+    .mobile-menu a{transform:none}
+  }
+
+  /* ---------- breakpoints ---------- */
+  @media (min-width:640px){
+    .slots{grid-template-columns:1fr 1fr}
+    .now ol{grid-template-columns:1fr 1fr}
+    .grid-2{grid-template-columns:1fr 1fr}
+  }
+  @media (min-width:900px){
+    .hero{padding:96px 0 96px}
+    .hero-grid{grid-template-columns:1fr 280px;gap:64px;align-items:center}
+    h1.hero-title{font-size:72px}
+    .tagline{padding:96px 0}
+    .tagline p{font-size:48px;line-height:1.15}
+    .sec{padding:96px 0}
+    .about-grid{grid-template-columns:1fr 360px;gap:64px;align-items:start}
+    .flag{grid-template-columns:1fr 280px;gap:40px;padding:32px}
+    .statement{font-size:60px}
+    .foot-grid{flex-wrap:nowrap}
+  }
+  @media (min-width:1024px){
+    .tagline p{font-size:60px}
+    .skill-grid{grid-template-columns:repeat(3,1fr)}
+    .slots{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:759px){
+    .nav-links{display:none}
+    .menu-toggle{display:flex}
+  }
+  @media (max-width:400px){
+    h1.hero-title{font-size:48px}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="nav" aria-label="站点导航">
+  <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span>Chasen</a>
+  <nav class="nav-links" aria-label="页面区块">
+    <a href="#about">关于</a>
+    <a href="#work">作品</a>
+    <a href="#skills">技能</a>
+    <a href="#contact">联系</a>
+  </nav>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="打开菜单">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" data-open="false" role="dialog" aria-modal="true" aria-label="菜单">
+  <a href="#about">关于</a>
+  <a href="#work">作品</a>
+  <a href="#skills">技能</a>
+  <a href="#contact">联系</a>
+  <p class="mm-foot">广州 · 20 岁 · AI 开发工程师<br>X @chasen_liao</p>
+</div>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>广州 · 20 岁 · 计算机科学大四</p>
+          <h1 class="hero-title">Chasen</h1>
+          <p class="hero-sub">AI 开发工程师 × AI 原住民。做 Pi 桌面客户端和 Agent Skills，<strong>也想试试 AI 产品经理</strong>。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#" data-pending>去 X 找我 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="btn btn-ghost" href="#work">看作品</a>
+          </div>
+          <p class="hero-note"><b>pi-agent-desktop</b> 331 star · X 约 <b>6k</b> 关注 · 一边实习，一边做 Agent 工具</p>
+        </div>
+        <figure class="portrait reveal">
+          <div class="portrait-frame">
+            <img src="avatar.jpg" alt="Chasen 的头像" width="400" height="400" loading="eager">
+          </div>
+          <figcaption><span class="mono">GZ / 2026</span><span>真人头像</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAGLINE REVEAL -->
+  <section class="tagline" aria-label="名字的来历">
+    <div class="wrap">
+      <p class="mono label">这个名字</p>
+      <p class="reveal-words" id="tagline">名字取自 chase。不停追逐，无限进步。</p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="sec" id="about">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="mono idx">01</span><h2>关于</h2></div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>我叫 Chasen，全名 Chasen Liao，在广州读计算机科学，今年大四，20 岁。名字取自 <em>chase</em>，不停追逐，无限进步。这句话用了挺久，也确实是我做事的方式：看到新模型、新工具就自己跑一遍，跑完把踩过的坑写下来。</p>
+          <p>现在本职是 AI 开发工程师，一边实习一边做 AI Agent 工具。主力是 Python 和 TypeScript / React，日常在 Pi、Claude Code、Codex 之间来回切。最花时间的那部分不是写代码，是想清楚一个功能到底该不该做，做了之后谁来用。</p>
+          <p>所以最近在认真考虑往 AI 产品经理方向走。还没定，简历上两个方向都开着。我不太想把这件事说得比实际更确定。</p>
+          <ul class="facts">
+            <li>广州</li>
+            <li>计算机科学 大四</li>
+            <li>实习中</li>
+            <li>开放广州 / 深圳</li>
+          </ul>
+        </div>
+        <figure class="chibi reveal">
+          <div class="chibi-frame">
+            <img src="chibi.jpg" alt="Chasen 的 Q 版角色设定卡，浅棕短发、青蓝耳机、粉色点缀" width="1152" height="864" loading="lazy">
+          </div>
+          <figcaption>角色设定：浅棕短发、青蓝耳机、粉色点缀。朋友画的，比我本人精神。</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="sec" id="work">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="mono idx">02</span><h2>精选作品</h2></div>
+      <p class="lede reveal">五个仓库，都是自己要用才做的。代码在 GitHub 上，欢迎直接看。</p>
+
+      <article class="card flag reveal" aria-labelledby="p1">
+        <div>
+          <div class="kicker">
+            <span class="mono">01</span>
+            <span class="pill">旗舰</span>
+          </div>
+          <h3 id="p1">pi-agent-desktop</h3>
+          <p>给 Pi 编程智能体做的 Electron 桌面客户端。把终端里的会话搬进原生窗口：会话可以分叉，对话走 SSE 流式返回，模型能中途切换，文件浏览器就在旁边。边用边改，现在还在迭代。</p>
+          <ul class="feats">
+            <li>原生窗口</li>
+            <li>会话分叉</li>
+            <li>SSE 流式对话</li>
+            <li>模型中途切换</li>
+            <li>内置文件浏览器</li>
+          </ul>
+        </div>
+        <div class="flag-side">
+          <div class="stat-row">
+            <div class="stat"><span class="k">GitHub star</span><span class="v">331</span></div>
+            <div class="stat"><span class="k">技术栈</span><span class="v">TS / Electron</span></div>
+            <div class="stat"><span class="k">状态</span><span class="v">持续迭代</span></div>
+          </div>
+          <a class="repo-link" href="https://github.com/Chasen-Liao/pi-agent-desktop" target="_blank" rel="noopener">
+            看仓库
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <div class="grid-2">
+        <article class="card proj reveal" aria-labelledby="p2">
+          <div class="top"><h3 id="p2">resume-skills</h3><span class="stars">38 star</span></div>
+          <p>一句话让 Agent 生成一份能看的简历，还能按 JD 匹配着改。投简历那阵子写的，后来自己一直在用。</p>
+          <div class="foot">
+            <ul class="tags"><li>Agent Skills</li></ul>
+            <a class="repo-link" href="https://github.com/Chasen-Liao/resume-skills" target="_blank" rel="noopener">仓库
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card proj reveal" aria-labelledby="p3">
+          <div class="top"><h3 id="p3">Chasen-Skills</h3><span class="stars">33 star</span></div>
+          <p>自用 Agent Skills 合集，npx skills 就能装。并行编排、X 内容复盘、AI 热帖雷达、个人 IP 资产构建，都是每天在用的东西。</p>
+          <div class="foot">
+            <ul class="tags"><li>Skills</li><li>CLI</li></ul>
+            <a class="repo-link" href="https://github.com/Chasen-Liao/Chasen-Skills" target="_blank" rel="noopener">仓库
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card proj reveal" aria-labelledby="p4">
+          <div class="top"><h3 id="p4">Everything-claude-code-Doc</h3><span class="stars">15 star</span></div>
+          <p>Everything Claude Code 的使用指南。边用边记，遇到不清楚的地方就去补一节，所以一直在更新。</p>
+          <div class="foot">
+            <ul class="tags"><li>文档</li></ul>
+            <a class="repo-link" href="https://github.com/Chasen-Liao/Everything-claude-code-Doc" target="_blank" rel="noopener">仓库
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card proj reveal" aria-labelledby="p5">
+          <div class="top"><h3 id="p5">SuperMew</h3><span class="stars">实验</span></div>
+          <p>Agentic RAG 的实验项目，主要在琢磨 Context Engineering 和三层记忆架构。没做完，但记录都在。</p>
+          <div class="foot">
+            <ul class="tags"><li>RAG</li><li>Memory</li></ul>
+            <a class="repo-link" href="https://github.com/Chasen-Liao/SuperMew" target="_blank" rel="noopener">仓库
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="sec" id="skills">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="mono idx">03</span><h2>每天在用什么</h2></div>
+      <p class="lede reveal">按日常强度分，不按熟练度打百分比。</p>
+
+      <div class="skill-grid reveal">
+        <div class="skill-card">
+          <h3>每天在用</h3>
+          <ul><li>Pi</li><li>Claude Code</li><li>Codex</li></ul>
+        </div>
+        <div class="skill-card">
+          <h3>主力</h3>
+          <ul><li>Python</li><li>TypeScript / React</li><li>Agent / RAG</li></ul>
+        </div>
+        <div class="skill-card">
+          <h3>做过</h3>
+          <ul><li>Electron</li><li>FastAPI</li><li>向量检索</li><li>HTML / CSS</li></ul>
+        </div>
+      </div>
+
+      <div class="now reveal">
+        <h3>最近在折腾</h3>
+        <ol>
+          <li><span><b>pi-agent-desktop 的下一步</b>，把会话管理和模型切换再顺一遍。</span></li>
+          <li><span><b>Skills 的复用</b>，看看哪些每天在用的流程能固化成一条命令。</span></li>
+          <li><span><b>从开发往产品想事情</b>，练着写需求、砍功能、判断值不值得做。</span></li>
+          <li><span><b>大四找工作</b>，同时看 AI 开发和 AI 产品，广州或深圳。</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <p class="mono reveal" style="margin:0 0 24px;">04 / 开放机会</p>
+      <h2 class="statement reveal">两个方向都在看</h2>
+      <p class="lede reveal">AI 开发工程师，或者 AI 产品经理。城市广州或深圳。如果你在做 Agent 工具、开发者产品或者 AI 应用，欢迎来聊。手上的项目随时可以看代码。</p>
+
+      <ul class="roles reveal">
+        <li>AI 开发工程师 <span>全职</span></li>
+        <li>AI 产品经理 <span>尝试</span></li>
+        <li>广州 / 深圳 <span>城市</span></li>
+      </ul>
+
+      <div class="slots-head reveal">
+        <span class="mono">找到我</span>
+        <span class="mono" style="color:#7A7A7A">链接待填</span>
+      </div>
+      <div class="slots">
+        <a class="slot" href="#" data-pending aria-disabled="true">
+          <span class="lbl">个人站</span><span class="pending">链接待填</span>
+        </a>
+        <a class="slot" href="#" data-pending aria-disabled="true">
+          <span class="lbl">博客</span><span class="pending">链接待填</span>
+        </a>
+        <a class="slot" href="#" data-pending aria-disabled="true">
+          <span class="lbl">GitHub <span class="handle">Chasen-Liao</span></span><span class="pending">链接待填</span>
+        </a>
+        <a class="slot" href="#" data-pending aria-disabled="true">
+          <span class="lbl">X <span class="handle">@chasen_liao</span></span><span class="pending">链接待填</span>
+        </a>
+        <a class="slot" href="#" data-pending aria-disabled="true">
+          <span class="lbl">Email</span><span class="pending">链接待填</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="who">Chasen Liao</p>
+        <p style="margin-top:8px;">AI 开发工程师 × AI 原住民<br>广州 · 开放广州与深圳的机会</p>
+      </div>
+      <div class="foot-links">
+        <a href="#about">关于</a>
+        <a href="#work">作品</a>
+        <a href="#skills">技能</a>
+        <a href="#contact">联系</a>
+        <a href="#" data-pending>X @chasen_liao</a>
+        <a href="#" data-pending>Email</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Chasen Liao</span>
+      <span>一个 index.html，手写 HTML / CSS / JS，没有构建工具</span>
+      <a href="#top">回顶部 ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- floating nav: mark current section ---- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+  var sections = navLinks.map(function (a) {
+    return document.querySelector(a.getAttribute('href'));
+  }).filter(Boolean);
+
+  if ('IntersectionObserver' in window && sections.length) {
+    var navIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        navLinks.forEach(function (a) {
+          var on = a.getAttribute('href') === '#' + e.target.id;
+          if (on) { a.setAttribute('aria-current', 'true'); }
+          else { a.removeAttribute('aria-current'); }
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(function (s) { navIO.observe(s); });
+  }
+
+  /* ---- mobile menu ---- */
+  var toggle = document.getElementById('menuToggle');
+  var menu = document.getElementById('mobileMenu');
+  var menuLinks = menu ? Array.prototype.slice.call(menu.querySelectorAll('a')) : [];
+
+  function setMenu(open) {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+    menu.setAttribute('data-open', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    menuLinks.forEach(function (a, i) {
+      a.style.transitionDelay = open ? (60 * (i + 1)) + 'ms' : '0ms';
+    });
+    if (open && menuLinks[0]) menuLinks[0].focus({ preventScroll: true });
+  }
+
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  }
+  menuLinks.forEach(function (a) {
+    a.addEventListener('click', function () { setMenu(false); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu && menu.getAttribute('data-open') === 'true') {
+      setMenu(false);
+      if (toggle) toggle.focus();
+    }
+  });
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 759 && menu && menu.getAttribute('data-open') === 'true') setMenu(false);
+  });
+
+  /* ---- section reveals ---- */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if (!reduce && 'IntersectionObserver' in window) {
+    var revIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          revIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(function (el) { revIO.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ---- tagline: reveal word by word (CJK per character) ---- */
+  var tagline = document.getElementById('tagline');
+  if (tagline) {
+    var raw = tagline.textContent.trim();
+    var chunks = raw.split(/(\s+)/).filter(function (s) { return s.length; });
+    var tokens = [];
+    chunks.forEach(function (chunk) {
+      if (/^\s+$/.test(chunk)) { tokens.push({ space: true, text: chunk }); return; }
+      var parts = chunk.match(/[A-Za-z0-9][A-Za-z0-9@._+\/]*|[^A-Za-z0-9\s]/g) || [];
+      parts.forEach(function (p) { tokens.push({ text: p }); });
+    });
+
+    var punct = /^[，。、；：！？）」』】…—·,.;:!?)]$/;
+    var built = [];
+    var spanEls = [];
+
+    tokens.forEach(function (t) {
+      if (t.space) { built.push(document.createTextNode(t.text)); return; }
+      if (punct.test(t.text) && spanEls.length) {
+        spanEls[spanEls.length - 1].textContent += t.text;
+        return;
+      }
+      var s = document.createElement('span');
+      s.className = 'w';
+      s.textContent = t.text;
+      spanEls.push(s);
+      built.push(s);
+    });
+
+    tagline.textContent = '';
+    built.forEach(function (n) { tagline.appendChild(n); });
+
+    if (reduce || !('IntersectionObserver' in window)) {
+      spanEls.forEach(function (s) { s.classList.add('lit'); });
+    } else {
+      var wordIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('lit');
+            wordIO.unobserve(e.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -30% 0px', threshold: 0 });
+      spanEls.forEach(function (s) { wordIO.observe(s); });
+    }
+  }
+
+  /* ---- placeholder links: keep them honest, no fake navigation ---- */
+  var pending = Array.prototype.slice.call(document.querySelectorAll('[data-pending]'));
+  pending.forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      var slot = el.closest ? el.closest('.slot') : null;
+      if (slot) {
+        slot.classList.add('pulse');
+        window.setTimeout(function () { slot.classList.remove('pulse'); }, 900);
+      }
+      var note = el.querySelector('.pending');
+      if (note) {
+        var original = note.textContent;
+        note.textContent = '还没填';
+        window.setTimeout(function () { note.textContent = original; }, 1100);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
