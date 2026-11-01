@@ -17,3 +17,5 @@
 
 # site build output
 site/dist/
+
+.agents/
